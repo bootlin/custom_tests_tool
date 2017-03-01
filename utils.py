@@ -8,6 +8,10 @@
 
 import urllib.request
 import urllib.error
+import urllib.parse
+
+import xmlrpc.client
+import ssl
 
 from html.parser import HTMLParser
 
@@ -54,3 +58,22 @@ class KCIHTMLParser(HTMLParser):
 
     def get_latest_full_url(self):
         return self.root_url + self.tree + "/" + self.get_latest_release()
+
+def get_connection(**kwargs):
+    u = urllib.parse.urlparse(kwargs["server"])
+    url = "%s://%s:%s@%s/RPC2" % (u.scheme,
+        kwargs["username"], kwargs["token"], u.netloc)
+
+    # Taken from Lavabo: https://github.com/free-electrons/lavabo/blob/master/utils.py#L88
+    try:
+        if 'https' == u.scheme:
+            context = hasattr(ssl, '_create_unverified_context') and ssl._create_unverified_context() or None
+            connection = xmlrpc.client.ServerProxy(url,
+                    transport=xmlrpc.client.SafeTransport(use_datetime=True, context=context))
+        else:
+            connection = xmlrpc.client.ServerProxy(url)
+        return connection
+    except (xmlrpc.client.ProtocolError, xmlrpc.client.Fault, IOError) as e:
+        print("Unable to connect to %s" % url)
+        sys.exit(1)
+
