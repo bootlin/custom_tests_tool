@@ -36,6 +36,8 @@ def get_config(section="ctt"):
             "server": None,
             "token": None,
             "stream": "/anonymous/test/",
+            "ssh_server": None,
+            "ssh_username": "root", # XXX that's not really good
             }
     filename = os.path.expanduser('~/.lavarc')
 
@@ -56,14 +58,18 @@ if __name__ == "__main__":
     job.add_argument('--job-name', default="custom_job", help='The name you want to give to your job')
     job.add_argument('--job-template', default="jobs_templates/minimal_linaro_kernel.json", help='The template you want to use for the job')
     job.add_argument('--kernel', help='Path to the kernel image you want to use')
+    job.add_argument('--dtb', help='Path to the dtb file you want to use')
     job.add_argument('--modules', help='Path to the modules tar.gz you want to use as overlay to rootfs')
 
     lava = parser.add_argument_group("LAVA server options")
     lava.add_argument('--stream', default=kwargs["stream"], help='The bundle stream where to send the job')
     lava.add_argument('--server', default=kwargs["server"], help='The LAVA server URL to send results')
-    lava.add_argument('--local-server', default=kwargs["local_server"], help='The local LAVA server IP')
     lava.add_argument('--username', default=kwargs["username"], help='The user name to talk to LAVA')
     lava.add_argument('--token', default=kwargs["token"], help='The token corresponding to the user to talk to LAVA')
+
+    ssh = parser.add_argument_group("SSH server options")
+    ssh.add_argument('--ssh-server', default=kwargs["ssh_server"], help='The ssh server IP, where to send the custom files')
+    ssh.add_argument('--ssh-username', default=kwargs["ssh_username"], help='The ssh username to send the custom files')
 
     parser.add_argument('--kernelci-tree', default="mainline", help='Path to the KernelCI tree you want to use')
     parser.add_argument('--send', action='store_true', help='Send the job directly, rather than saving it to output')

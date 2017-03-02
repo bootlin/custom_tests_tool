@@ -10,7 +10,10 @@ import os
 import json
 import collections
 import utils
+import paramiko
+import getpass
 
+REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
 
 class JSONHandler:
     """
@@ -26,6 +29,7 @@ class JSONHandler:
 
     def apply_overrides(self):
         self.override_kernel()
+        self.override_dtb()
         self.override_modules()
         self.override_job_name()
         self.override_lava_infos()
@@ -42,17 +46,36 @@ class JSONHandler:
             json.dump(self.job, f, indent=4)
         print("File saved to", file)
 
+    def override_dtb(self):
+        if self.kwargs["dtb"]:
+            print("Overriding DTB:")
+            local_path = os.path.abspath(self.kwargs["dtb"])
+            remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
+            self.send_file(local_path, remote_path)
+            self.job["actions"][0]["parameters"]["dtb"] = "file://" + remote_path
+            print("DTB overriden")
+        else:
+            print("DTB: Nothing to override")
+
     def override_kernel(self):
         if self.kwargs["kernel"]:
-            self.job["actions"][0]["parameters"]["kernel"] = os.path.abspath(self.kwargs["kernel"])
+            print("Overriding kernel:")
+            local_path = os.path.abspath(self.kwargs["kernel"])
+            remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
+            self.send_file(local_path, remote_path)
+            self.job["actions"][0]["parameters"]["kernel"] = "file://" + remote_path
+            print("kernel overriden")
         else:
             print("kernel: Nothing to override")
-        # Serve local kernel somewhere and compute the right URL, instead of
-        # just the given local path
 
     def override_modules(self):
         if self.kwargs["modules"]:
+            print("Overriding modules:")
+            local_path = os.path.abspath(self.kwargs["modules"])
+            remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
+            self.send_file(local_path, remote_path)
             self.job["actions"][0]["parameters"]["overlays"] += [os.path.abspath(self.kwargs["modules"])]
+            print("modules overriden")
         else:
             print("modules: Nothing to override")
 
@@ -67,6 +90,16 @@ class JSONHandler:
         # the kernel version, or anything else that can be useful
         self.job["job_name"] = self.kwargs["job_name"]
         print("job name: new name is: %s" % self.kwargs["job_name"])
+
+    def send_file(self, local, remote):
+        scp = utils.get_sftp(self.kwargs["ssh_server"], 22, self.kwargs["ssh_username"])
+        print("    Sending", local, "to", remote, "... ", end='')
+        try:
+            scp.put(local, remote)
+        except IOError as e:
+            utils.mkdir_p(scp, os.path.dirname(remote))
+            scp.put(local, remote)
+        print("Done")
 
     def send_to_lava(self):
         print("Sending to LAVA")
