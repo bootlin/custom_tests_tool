@@ -28,9 +28,11 @@ class JSONHandler:
         self.get_job_from_file(self.kwargs["job_template"])
 
     def apply_overrides(self):
+        self.override_ramdisk()
         self.override_kernel()
         self.override_dtb()
         self.override_modules()
+        self.override_tests()
         self.override_job_name()
         self.override_lava_infos()
 
@@ -45,6 +47,17 @@ class JSONHandler:
         with open(file, 'w') as f:
             json.dump(self.job, f, indent=4)
         print("File saved to", file)
+
+    def override_ramdisk(self):
+        if self.kwargs["ramdisk"]:
+            print("Overriding Ramdisk:")
+            local_path = os.path.abspath(self.kwargs["ramdisk"])
+            remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
+            self.send_file(local_path, remote_path)
+            self.job["actions"][0]["parameters"]["ramdisk"] = "file://" + remote_path
+            print("Ramdisk overriden")
+        else:
+            print("DTB: Nothing to override")
 
     def override_dtb(self):
         if self.kwargs["dtb"]:
@@ -74,15 +87,26 @@ class JSONHandler:
             local_path = os.path.abspath(self.kwargs["modules"])
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             self.send_file(local_path, remote_path)
-            self.job["actions"][0]["parameters"]["overlays"] += [os.path.abspath(self.kwargs["modules"])]
+            self.job["actions"][0]["parameters"]["overlays"] = ["file://" + remote_path]
             print("modules overriden")
         else:
             print("modules: Nothing to override")
 
+    def override_tests(self):
+        if self.kwargs["tests"]:
+            print("Overriding tests:")
+            local_path = os.path.abspath(self.kwargs["tests"])
+            remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
+            self.send_file(local_path, remote_path)
+            self.job["actions"][2]["parameters"]["testdef_urls"] = ["file://" + remote_path]
+            print("tests overriden")
+        else:
+            print("tests: Nothing to override")
+
     def override_lava_infos(self):
         try:
-            self.job["actions"][2]["parameters"]["server"] = self.kwargs["server"]
-            self.job["actions"][2]["parameters"]["stream"] = self.kwargs["stream"]
+            self.job["actions"][3]["parameters"]["server"] = self.kwargs["server"]
+            self.job["actions"][3]["parameters"]["stream"] = self.kwargs["stream"]
         except: pass
 
     def override_job_name(self):
@@ -106,7 +130,7 @@ class JSONHandler:
         job_str = json.dumps(self.job)
         ret = utils.get_connection(**self.kwargs).scheduler.submit_job(job_str)
         print("Job send (id:", ret, ")")
-        print("Potential working URL: ", "http://%s/scheduler/job/%s" % (self.kwargs['local_server'], ret))
+        print("Potential working URL: ", "http://%s/scheduler/job/%s" % (self.kwargs['ssh_server'], ret))
 
 
 

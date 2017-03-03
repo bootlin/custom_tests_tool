@@ -57,9 +57,11 @@ if __name__ == "__main__":
     job.add_argument('--output-dir', default="jobs", help='Path where the jobs will be stored (default=./jobs/)')
     job.add_argument('--job-name', default="custom_job", help='The name you want to give to your job')
     job.add_argument('--job-template', default="jobs_templates/minimal_linaro_kernel.json", help='The template you want to use for the job')
+    job.add_argument('--ramdisk', help='Path to the ramdisk image you want to use')
     job.add_argument('--kernel', help='Path to the kernel image you want to use')
     job.add_argument('--dtb', help='Path to the dtb file you want to use')
     job.add_argument('--modules', help='Path to the modules tar.gz you want to use as overlay to rootfs')
+    job.add_argument('--tests', help='Path to the test file you want to use run')
 
     lava = parser.add_argument_group("LAVA server options")
     lava.add_argument('--stream', default=kwargs["stream"], help='The bundle stream where to send the job')

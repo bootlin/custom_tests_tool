@@ -6,11 +6,26 @@
                 "dtb": "https://storage.kernelci.org/mainline/v4.10-rc8-47-g0722f57bfae9/arm-sunxi_defconfig/dtbs/sun8i-h3-orangepi-pc.dtb",
                 "kernel": "https://storage.kernelci.org/mainline/v4.10-rc8-47-g0722f57bfae9/arm-sunxi_defconfig/zImage",
                 "overlays": ["https://storage.kernelci.org/mainline/v4.10-rc8-47-g0722f57bfae9/arm-sunxi_defconfig/modules.tar.xz"],
-                "ramdisk": "http://storage.kernelci.org/images/rootfs/buildroot/armel/rootfs.cpio.gz"
+                "ramdisk": "http://storage.kernelci.org/images/rootfs/buildroot/armel/rootfs.cpio.gz",
+                "login_prompt": "buildroot login:",
+                "username": "root"
             }
         },
         {
             "command": "boot_linaro_image"
+        },
+        {
+            "command": "lava_test_shell",
+            "parameters": {
+                "testdef_urls": [
+                    {
+                        "git-repo": "git://git.linaro.org/qa/test-definitions.git",
+                        "testdef": "openembedded/ethernet.yaml"
+                    }
+                ],
+                "timeout": 900,
+                "skip_install": "all"
+            }
         },
         {
             "command": "submit_results",
