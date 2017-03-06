@@ -1,3 +1,6 @@
 env/
 jobs/
+*.log
 __pycache__/
+buildrootfs/output/
+buildrootfs/overlay/
