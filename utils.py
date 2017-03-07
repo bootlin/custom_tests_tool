@@ -14,16 +14,80 @@ import xmlrpc.client
 import ssl
 
 import os
+import argparse
+import configparser
+
 import sys
 import re
 
-import paramiko
+import requests
 
-from html.parser import HTMLParser
+import paramiko
 
 parse_re = re.compile('href="([^./"?][^"?]*)"')
 
-class KCIHTMLParser(HTMLParser):
+def get_file_config(f_name=None, section="ctt"):
+    filename = f_name or os.path.expanduser('~/.cttrc')
+
+    try:
+        config = configparser.ConfigParser()
+        config.read(filename)
+        return dict(config[section])
+    except Exception as e:
+        print(repr(e))
+        print("Likely you have no", section, "section in your configuration file, which is", filename)
+        return {}
+
+def get_args_config(kwargs):
+    parser = argparse.ArgumentParser(description='Build up LAVA jobs')
+    # parser.add_argument('--v1', '--json', action='store_true', help='Outputs the job as a JSON file, good for LAVA v1')
+    # parser.add_argument('--v2', '--yaml', action='store_true', help='Outputs the job as a YAML file, good for LAVA v2')
+    job = parser.add_argument_group("Job handling")
+    job.add_argument('--no-kci', action='store_true',
+            help="Don't go fetch file from KernelCI, but rather use my provided files (you must then provide a kernel, a dtb, a modules.tar.xz, and a rootfs)")
+    job.add_argument('--output-dir', default="jobs", help='Path where the jobs will be stored (default=./jobs/)')
+    job.add_argument('--job-name', default="custom_job", help='The name you want to give to your job')
+    job.add_argument('--job-template', default="jobs_templates/minimal_linaro_kernel.json", help='The template you want to use for the job')
+    job.add_argument('--ramdisk', help='Path to the ramdisk image you want to use')
+    job.add_argument('--kernel', help='Path to the kernel image you want to use')
+    job.add_argument('--dtb', help='Path to the dtb file you want to use')
+    job.add_argument('--modules', help='Path to the modules tar.gz you want to use as overlay to rootfs')
+    job.add_argument('--tests', help='Path to the test file you want to use run')
+
+    lava = parser.add_argument_group("LAVA server options")
+    lava.add_argument('--stream', default=kwargs["stream"], help='The bundle stream where to send the job')
+    lava.add_argument('--server', default=kwargs["server"], help='The LAVA server URL to send results')
+    lava.add_argument('--username', default=kwargs["username"], help='The user name to talk to LAVA')
+    lava.add_argument('--token', default=kwargs["token"], help='The token corresponding to the user to talk to LAVA')
+
+    kci = parser.add_argument_group("KernelCI options")
+    kci.add_argument('--api-token', default=kwargs["api_token"], help="The token to query KernelCI's API")
+    kci.add_argument('--kernelci-tree', default="mainline", help='Path to the KernelCI tree you want to use')
+
+    ssh = parser.add_argument_group("SSH server options")
+    ssh.add_argument('--ssh-server', default=kwargs["ssh_server"], help='The ssh server IP, where to send the custom files')
+    ssh.add_argument('--ssh-username', default=kwargs["ssh_username"], help='The ssh username to send the custom files')
+
+    parser.add_argument('--send', action='store_true', help='Send the job directly, rather than saving it to output')
+    parser.add_argument('-b', '--boards', required=False, nargs='+', help='List of board for which you want to create jobs')
+    kwargs.update(vars(parser.parse_args()))
+    return kwargs
+
+def get_config(section="ctt"):
+    kwargs = {
+            "username": None,
+            "server": None,
+            "token": None,
+            "stream": "/anonymous/test/",
+            "ssh_server": None,
+            "ssh_username": "root", # XXX that's not really good
+            "api_token": None,
+            }
+    kwargs.update(get_file_config())
+    kwargs = get_args_config(kwargs)
+    return kwargs
+
+class KCIFetcher():
     root_url = "https://storage.kernelci.org/"
     in_tbody = False
     in_tr = False
@@ -32,59 +96,23 @@ class KCIHTMLParser(HTMLParser):
     count = 5
 
     def __init__(self, *args, **kwargs):
-        self.tree = kwargs.pop("tree", "mainline")
-        return super(KCIHTMLParser, self).__init__(*args, **kwargs)
-
-    def handle_starttag(self, tag, attrs):
-        if tag == "tbody":
-            self.in_tbody = True
-        if tag == "tr":
-            self.in_tr = True
-
-    def handle_endtag(self, tag):
-        if tag == "tbody":
-            self.in_tbody = False
-        if tag == "tr":
-            self.in_tr = False
-
-    def handle_data(self, data):
-        if not self.stop_handling and self.in_tbody and self.in_tr:
-            if data in ["Parent directory/", "-"]:
-                pass
-            else:
-                self.latests += [data.strip('/')]
-                self.count -= 1
-                if self.count <= 0:
-                    self.stop_handling = True
+        self.kwargs = kwargs
 
     def get_latest_release(self):
-        url = self.root_url + self.tree + "/?C=M&O=D"
-
-        try:
-            page = urllib.request.urlopen(url)
-        except urllib.error.HTTPError as e:
-            return repr(e)
-
-        html = page.read().decode('utf-8')
-        print(html)
-        self.feed(html)
-        files = parse_re.findall(html)
-        print(files)
-        print("Which version do you want to use?")
-        for i in range(len(files[:5])):
-            print(i, " - ", files[i])
-
-        return files[int(input("Choose a number"))]
+        r = requests.get("https://api.kernelci.org/build?limit=1&date_range=5&job=mainline&field=kernel&sort=created_on",
+                headers={'Authorization': get_config()['api_token']})
+        r.raise_for_status()
+        return r.json()['result'][0]['kernel']
 
     def get_latest_full_url(self):
-        return self.root_url + self.tree + "/" + self.get_latest_release()
+        return self.root_url + self.kwargs["kernelci_tree"] + "/" + self.get_latest_release()
 
     def crawl(self, board, base_url=None):
+        print("Crawling KernelCI for %s" % board['name'])
         url = base_url or self.get_latest_full_url()
         if not url.endswith('/'):
             url += "/"
         try:
-            # print("Fetching %s" % url)
             html = urllib.request.urlopen(url).read().decode('utf-8')
         except urllib.error.HTTPError as e:
             return repr(e)
