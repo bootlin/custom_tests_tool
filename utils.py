@@ -15,16 +15,21 @@ import ssl
 
 import os
 import sys
+import re
 
 import paramiko
 
 from html.parser import HTMLParser
+
+parse_re = re.compile('href="([^./"?][^"?]*)"')
 
 class KCIHTMLParser(HTMLParser):
     root_url = "https://storage.kernelci.org/"
     in_tbody = False
     in_tr = False
     stop_handling = False
+    latests = []
+    count = 5
 
     def __init__(self, *args, **kwargs):
         self.tree = kwargs.pop("tree", "mainline")
@@ -47,8 +52,10 @@ class KCIHTMLParser(HTMLParser):
             if data in ["Parent directory/", "-"]:
                 pass
             else:
-                self.latest = data.strip('/')
-                self.stop_handling = True
+                self.latests += [data.strip('/')]
+                self.count -= 1
+                if self.count <= 0:
+                    self.stop_handling = True
 
     def get_latest_release(self):
         url = self.root_url + self.tree + "/?C=M&O=D"
@@ -58,11 +65,46 @@ class KCIHTMLParser(HTMLParser):
         except urllib.error.HTTPError as e:
             return repr(e)
 
-        self.feed(page.read().decode('utf-8'))
-        return self.latest
+        html = page.read().decode('utf-8')
+        print(html)
+        self.feed(html)
+        files = parse_re.findall(html)
+        print(files)
+        print("Which version do you want to use?")
+        for i in range(len(files[:5])):
+            print(i, " - ", files[i])
+
+        return files[int(input("Choose a number"))]
 
     def get_latest_full_url(self):
         return self.root_url + self.tree + "/" + self.get_latest_release()
+
+    def crawl(self, board, base_url=None):
+        url = base_url or self.get_latest_full_url()
+        if not url.endswith('/'):
+            url += "/"
+        try:
+            # print("Fetching %s" % url)
+            html = urllib.request.urlopen(url).read().decode('utf-8')
+        except urllib.error.HTTPError as e:
+            return repr(e)
+        files = parse_re.findall(html)
+        dirs = []
+        for name in files:
+            for defconfig in board['defconfigs']:
+                if defconfig == name[:-1]:
+                    print("Found a kernel for %s in %s" % (board["name"], url+name))
+                    common_url = url+name
+                    yield {
+                            'kernel': common_url + 'zImage',
+                            'dtb': common_url + 'dtbs/' + board['dt'] + '.dtb',
+                            'modules': common_url + 'modules.tar.xz',
+                            }
+
+
+
+    def get_latest_kernel(self):
+        return self.kernel_url
 
 def get_connection(**kwargs):
     u = urllib.parse.urlparse(kwargs["server"])

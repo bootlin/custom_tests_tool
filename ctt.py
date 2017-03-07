@@ -15,6 +15,7 @@ import urllib.parse
 from json_handler import JSONHandler
 from yaml_handler import YAMLHandler
 from utils import KCIHTMLParser, get_connection
+from boards import boards
 
 
 def main(**kwargs):
@@ -22,12 +23,19 @@ def main(**kwargs):
     print(kwargs)
     print("Latest Kernel CI URL in %s: %s" %
             (kwargs["kernelci_tree"], KCIHTMLParser(tree=kwargs["kernelci_tree"]).get_latest_full_url()))
-    h = JSONHandler(**kwargs)
-    h.apply_overrides()
-    if kwargs["send"]:
-        h.send_to_lava()
-    else:
-        h.save_job_to_file()
+    for b in kwargs["boards"]:
+        if b in boards.keys():
+            h = JSONHandler(b, **kwargs)
+            if kwargs["no_kci"]:
+                h.apply_overrides()
+            else:
+                print("Crawling KernelCI for %s" % b)
+                for data in KCIHTMLParser(tree=kwargs["kernelci_tree"]).crawl(boards[b]):
+                    h.apply_overrides(data)
+            if kwargs["send"]:
+                h.send_to_lava()
+            else:
+                h.save_job_to_file()
 
 
 def get_config(section="ctt"):
@@ -54,6 +62,8 @@ if __name__ == "__main__":
     # parser.add_argument('--v1', '--json', action='store_true', help='Outputs the job as a JSON file, good for LAVA v1')
     # parser.add_argument('--v2', '--yaml', action='store_true', help='Outputs the job as a YAML file, good for LAVA v2')
     job = parser.add_argument_group("Job handling")
+    job.add_argument('--no-kci', action='store_true',
+            help="Don't go fetch file from KernelCI, but rather use my provided files (you must then provide a kernel, a dtb, a modules.tar.xz, and a rootfs)")
     job.add_argument('--output-dir', default="jobs", help='Path where the jobs will be stored (default=./jobs/)')
     job.add_argument('--job-name', default="custom_job", help='The name you want to give to your job')
     job.add_argument('--job-template', default="jobs_templates/minimal_linaro_kernel.json", help='The template you want to use for the job')
@@ -75,6 +85,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--kernelci-tree', default="mainline", help='Path to the KernelCI tree you want to use')
     parser.add_argument('--send', action='store_true', help='Send the job directly, rather than saving it to output')
+    parser.add_argument('-b', '--boards', required=True, nargs='+', help='List of board for which you want to create jobs')
 
     kwargs.update(vars(parser.parse_args()))
 

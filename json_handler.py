@@ -23,18 +23,26 @@ class JSONHandler:
     LAVA before following the progress of the job to make some reporting when it
     completes (or not).
     """
-    def __init__(self, **kwargs):
+    def __init__(self, board, **kwargs):
+        self.board = board
         self.kwargs = kwargs
         self.get_job_from_file(self.kwargs["job_template"])
 
-    def apply_overrides(self):
+    def apply_overrides(self, kci_data=None):
+        if kci_data:
+            self.override_kernel(kci_data['kernel'])
+            self.override_dtb(kci_data['dtb'])
+            self.override_modules(kci_data['modules'])
+            self.override_job_name(kci_data)
+        else:
+            self.override_kernel()
+            self.override_dtb()
+            self.override_modules()
+            self.override_job_name()
         self.override_ramdisk()
-        self.override_kernel()
-        self.override_dtb()
-        self.override_modules()
         self.override_tests()
-        self.override_job_name()
         self.override_lava_infos()
+        self.override_device_type()
 
     def get_job_from_file(self, file):
         with open(file) as f:
@@ -43,52 +51,69 @@ class JSONHandler:
     def save_job_to_file(self):
         try: os.makedirs(self.kwargs["output_dir"])
         except: pass
-        file = os.path.join(self.kwargs["output_dir"], self.kwargs["job_name"] + ".json")
+        file = os.path.join(self.kwargs["output_dir"], self.job["job_name"] + ".json")
         with open(file, 'w') as f:
             json.dump(self.job, f, indent=4)
         print("File saved to", file)
 
+    def override_device_type(self):
+        print("device-type: Overriding")
+        self.job["device_type"] = self.board
+        print("device-type: Overridden")
+
     def override_ramdisk(self):
         if self.kwargs["ramdisk"]:
-            print("Overriding Ramdisk:")
+            print("ramdisk: Overriding")
             local_path = os.path.abspath(self.kwargs["ramdisk"])
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             self.send_file(local_path, remote_path)
             self.job["actions"][0]["parameters"]["ramdisk"] = "file://" + remote_path
-            print("Ramdisk overriden")
+            print("ramdisk: Overridden")
         else:
-            print("DTB: Nothing to override")
+            print("ramdisk: Nothing to override")
 
-    def override_dtb(self):
+    def override_dtb(self, dtb_url=None):
         if self.kwargs["dtb"]:
-            print("Overriding DTB:")
             local_path = os.path.abspath(self.kwargs["dtb"])
+            print("DTB: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             self.send_file(local_path, remote_path)
             self.job["actions"][0]["parameters"]["dtb"] = "file://" + remote_path
-            print("DTB overriden")
+            print("DTB: Overridden")
+        elif dtb_url:
+            print("DTB: Overriding with Kernel CI URL:", dtb_url)
+            self.job["actions"][0]["parameters"]["dtb"] = dtb_url
+            print("DTB: Overridden")
         else:
             print("DTB: Nothing to override")
 
-    def override_kernel(self):
+    def override_kernel(self, kernel_url=None):
         if self.kwargs["kernel"]:
-            print("Overriding kernel:")
             local_path = os.path.abspath(self.kwargs["kernel"])
+            print("kernel: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             self.send_file(local_path, remote_path)
             self.job["actions"][0]["parameters"]["kernel"] = "file://" + remote_path
-            print("kernel overriden")
+            print("kernel: Overridden")
+        elif kernel_url:
+            print("kernel: Overriding with Kernel CI URL:", kernel_url)
+            self.job["actions"][0]["parameters"]["kernel"] = kernel_url
+            print("kernel: Overridden")
         else:
             print("kernel: Nothing to override")
 
-    def override_modules(self):
+    def override_modules(self, modules_url=None):
         if self.kwargs["modules"]:
-            print("Overriding modules:")
             local_path = os.path.abspath(self.kwargs["modules"])
+            print("modules: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             self.send_file(local_path, remote_path)
             self.job["actions"][0]["parameters"]["overlays"] = ["file://" + remote_path]
-            print("modules overriden")
+            print("modules: Overridden")
+        elif modules_url:
+            print("modules: Overriding with Kernel CI URL:", modules_url)
+            self.job["actions"][0]["parameters"]["overlays"] = [modules_url]
+            print("modules: Overridden")
         else:
             print("modules: Nothing to override")
 
@@ -99,7 +124,7 @@ class JSONHandler:
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             self.send_file(local_path, remote_path)
             self.job["actions"][2]["parameters"]["testdef_urls"] = ["file://" + remote_path]
-            print("tests overriden")
+            print("tests Overridden")
         else:
             print("tests: Nothing to override")
 
@@ -109,11 +134,11 @@ class JSONHandler:
             self.job["actions"][3]["parameters"]["stream"] = self.kwargs["stream"]
         except: pass
 
-    def override_job_name(self):
+    def override_job_name(self, kci_data=None):
         # TODO: add some more information, like the user crafting the job, or
         # the kernel version, or anything else that can be useful
-        self.job["job_name"] = self.kwargs["job_name"]
-        print("job name: new name is: %s" % self.kwargs["job_name"])
+        self.job["job_name"] = self.kwargs["job_name"] + "-" + self.board
+        print("job name: new name is: %s" % self.job["job_name"])
 
     def send_file(self, local, remote):
         scp = utils.get_sftp(self.kwargs["ssh_server"], 22, self.kwargs["ssh_username"])
