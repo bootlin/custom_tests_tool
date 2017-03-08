@@ -127,6 +127,8 @@ class KCIFetcher():
         try:
             html = urllib.request.urlopen(url).read().decode('utf-8')
         except urllib.error.HTTPError as e:
+            print(red(repr(e)))
+            print(red("It seems that we have some problems using %s" % self.root_url))
             return repr(e)
         files = parse_re.findall(html)
         dirs = []
