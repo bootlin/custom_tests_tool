@@ -42,7 +42,7 @@ class JSONHandler:
             self.override_dtb()
             self.override_modules()
             self.override_job_name()
-        self.override_ramdisk()
+        self.override_rootfs()
         self.override_tests()
         self.override_lava_infos()
         self.override_device_type()
@@ -56,16 +56,16 @@ class JSONHandler:
         self.job["device_type"] = self.board["device_type"]
         print("device-type: Overridden")
 
-    def override_ramdisk(self):
-        if self.kwargs["ramdisk"]:
-            print("ramdisk: Overriding")
-            local_path = os.path.abspath(self.kwargs["ramdisk"])
+    def override_rootfs(self):
+        if self.kwargs["rootfs"]:
+            print("rootfs: Overriding")
+            local_path = os.path.abspath(self.kwargs["rootfs"])
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             self.send_file(local_path, remote_path)
             self.job["actions"][0]["parameters"]["ramdisk"] = "file://" + remote_path
-            print("ramdisk: Overridden")
+            print("rootfs: Overridden")
         else:
-            print("ramdisk: Nothing to override")
+            print("rootfs: Nothing to override")
 
     def override_dtb(self, dtb_url=None):
         if self.kwargs["dtb"]:
@@ -149,7 +149,7 @@ class JSONHandler:
         print("Sending to LAVA")
         job_str = json.dumps(self.job)
         ret = utils.get_connection(**self.kwargs).scheduler.submit_job(job_str)
-        print("Job send (id:", ret, ")")
+        print(green("Job send (id: %s)" % ret))
         print("Potential working URL: ", "http://%s/scheduler/job/%s" % (self.kwargs['ssh_server'], ret))
 
     def save_job_to_file(self):

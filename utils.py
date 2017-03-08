@@ -52,9 +52,9 @@ def get_args_config(kwargs):
     job.add_argument('--no-kci', action='store_true',
             help="Don't go fetch file from KernelCI, but rather use my provided files (you must then provide a kernel, a dtb, a modules.tar.xz, and a rootfs)")
     job.add_argument('--output-dir', default="jobs", help='Path where the jobs will be stored (default=./jobs/)')
-    job.add_argument('--job-name', default="custom_job", help='The name you want to give to your job')
+    job.add_argument('--job-name', default="ctt", help='The name you want to give to your job')
     job.add_argument('--job-template', default="jobs_templates/minimal_linaro_kernel.json", help='The template you want to use for the job')
-    job.add_argument('--ramdisk', help='Path to the ramdisk image you want to use')
+    job.add_argument('--rootfs', help='Path to the rootfs image you want to use (cpio.gz format)')
     job.add_argument('--kernel', help='Path to the kernel image you want to use')
     job.add_argument('--dtb', help='Path to the dtb file you want to use')
     job.add_argument('--modules', help='Path to the modules tar.gz you want to use as overlay to rootfs')
@@ -75,7 +75,7 @@ def get_args_config(kwargs):
     ssh.add_argument('--ssh-username', default=kwargs["ssh_username"], help='The ssh username to send the custom files')
 
     parser.add_argument('--send', action='store_true', help='Send the job directly, rather than saving it to output')
-    parser.add_argument('-b', '--boards', required=False, nargs='+', help='List of board for which you want to create jobs')
+    parser.add_argument('-b', '--boards', required=True, nargs='+', help='List of board for which you want to create jobs')
     kwargs.update(vars(parser.parse_args()))
     return kwargs
 
