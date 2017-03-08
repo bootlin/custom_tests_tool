@@ -72,7 +72,7 @@ class JSONHandler:
             local_path = os.path.abspath(self.kwargs["dtb"])
             print("DTB: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
-            self.send_file(local_path, remote_path)
+            remote_path = self.handle_file(local_path, remote_path)
             self.job["actions"][0]["parameters"]["dtb"] = "file://" + remote_path
             print("DTB: Overridden")
         elif dtb_url:
@@ -87,7 +87,7 @@ class JSONHandler:
             local_path = os.path.abspath(self.kwargs["kernel"])
             print("kernel: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
-            self.send_file(local_path, remote_path)
+            remote_path = self.handle_file(local_path, remote_path)
             self.job["actions"][0]["parameters"]["kernel"] = "file://" + remote_path
             print("kernel: Overridden")
         elif kernel_url:
@@ -102,7 +102,7 @@ class JSONHandler:
             local_path = os.path.abspath(self.kwargs["modules"])
             print("modules: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
-            self.send_file(local_path, remote_path)
+            remote_path = self.handle_file(local_path, remote_path)
             self.job["actions"][0]["parameters"]["overlays"] = ["file://" + remote_path]
             print("modules: Overridden")
         elif modules_url:
@@ -117,7 +117,7 @@ class JSONHandler:
             print("Overriding tests:")
             local_path = os.path.abspath(self.kwargs["tests"])
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
-            self.send_file(local_path, remote_path)
+            remote_path = self.handle_file(local_path, remote_path)
             self.job["actions"][2]["parameters"]["testdef_urls"] = ["file://" + remote_path]
             print("tests Overridden")
         else:
@@ -134,6 +134,13 @@ class JSONHandler:
         # the kernel version, or anything else that can be useful
         self.job["job_name"] = self.kwargs["job_name"] + "-" + self.board['device_type']
         print("job name: new name is: %s" % self.job["job_name"])
+
+    def handle_file(self, local, remote):
+        if self.kwargs["upload"]:
+            self.send_file(local, remote)
+            return remote
+        else:
+            return local
 
     def send_file(self, local, remote):
         scp = utils.get_sftp(self.kwargs["ssh_server"], 22, self.kwargs["ssh_username"])

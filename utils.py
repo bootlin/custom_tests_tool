@@ -74,6 +74,7 @@ def get_args_config(kwargs):
     ssh.add_argument('--ssh-server', default=kwargs["ssh_server"], help='The ssh server IP, where to send the custom files')
     ssh.add_argument('--ssh-username', default=kwargs["ssh_username"], help='The ssh username to send the custom files')
 
+    parser.add_argument('--upload', action='store_true', help='Send the custom files to the server')
     parser.add_argument('--send', action='store_true', help='Send the job directly, rather than saving it to output')
     parser.add_argument('-b', '--boards', required=True, nargs='+', help='List of board for which you want to create jobs')
     kwargs.update(vars(parser.parse_args()))
