@@ -4,11 +4,11 @@
             "command": "deploy_linaro_kernel",
 
             "parameters": {
-                "dtb": "https://storage.kernelci.org/mainline/v4.10-11319-gc82be9d2244a/arm-multi_v7_defconfig/dtbs/am335x-boneblack.dtb",
-                "kernel": "https://storage.kernelci.org/mainline/v4.10-11319-gc82be9d2244a/arm-multi_v7_defconfig/zImage",
-                "ramdisk": "https://storage.kernelci.org/images/rootfs/buildroot/armel/rootfs.cpio.gz",
+                "dtb": "/path/to/dtb",
+                "kernel": "/path/to/kernel",
+                "ramdisk": "/path/to/rootfs.cpio.gz",
                 "overlays": [
-                    "https://storage.kernelci.org/mainline/v4.10-11319-gc82be9d2244a/arm-multi_v7_defconfig/modules.tar.xz"
+                    "/path/to/modules.tar.xz"
                 ],
                 "login_prompt": "buildroot login:",
                 "username": "root"
@@ -33,8 +33,8 @@
             }
         }
     ],
-    "device_type": "beaglebone-black",
-    "job_name": "custom_job",
+    "device_type": "my-device-type",
+    "job_name": "my-custom-name",
     "logging_level": "DEBUG",
     "priority": "high",
     "timeout": 600
