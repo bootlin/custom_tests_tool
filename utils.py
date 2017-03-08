@@ -26,6 +26,12 @@ import paramiko
 
 parse_re = re.compile('href="([^./"?][^"?]*)"')
 
+def green(str):
+    return "\033[32m" + str + "\033[39m"
+
+def red(str):
+    return "\033[31m" + str + "\033[39m"
+
 def get_file_config(f_name=None, section="ctt"):
     filename = f_name or os.path.expanduser('~/.cttrc')
 
@@ -35,7 +41,7 @@ def get_file_config(f_name=None, section="ctt"):
         return dict(config[section])
     except Exception as e:
         print(repr(e))
-        print("Likely you have no", section, "section in your configuration file, which is", filename)
+        print(red("Likely you have no %s section in your configuration file, which is %s" % (section, filename)))
         return {}
 
 def get_args_config(kwargs):
@@ -99,10 +105,13 @@ class KCIFetcher():
         self.kwargs = kwargs
 
     def get_latest_release(self):
-        r = requests.get("https://api.kernelci.org/build?limit=1&date_range=5&job=mainline&field=kernel&sort=created_on",
-                headers={'Authorization': get_config()['api_token']})
-        r.raise_for_status()
-        return r.json()['result'][0]['kernel']
+        try:
+            r = requests.get("https://api.kernelci.org/build?limit=1&date_range=5&job=mainline&field=kernel&sort=created_on",
+                    headers={'Authorization': get_config()['api_token']})
+            r.raise_for_status()
+            return r.json()['result'][0]['kernel']
+        except Exception as e:
+            print(red(repr(e)))
 
     def get_latest_full_url(self):
         return self.root_url + self.kwargs["kernelci_tree"] + "/" + self.get_latest_release()
@@ -149,7 +158,7 @@ def get_connection(**kwargs):
             connection = xmlrpc.client.ServerProxy(url)
         return connection
     except (xmlrpc.client.ProtocolError, xmlrpc.client.Fault, IOError) as e:
-        print("Unable to connect to %s" % url)
+        print(red("Unable to connect to %s" % url))
         sys.exit(1)
 
 # The next three function are borrowed from Lavabo, thx Oleil! :)
@@ -163,7 +172,7 @@ def get_hostkey(hostname):
         hkeytype = hkeys[hostname].keys()[0]
         return hkeys[hostname][hkeytype]
 
-    print("WARNING: host key unavailable")
+    print(red("WARNING: host key unavailable"))
     return None
 
 def pkey_connect(transport, user):
@@ -191,7 +200,7 @@ def get_sftp(hostname, port, user):
     if hkey is not None:
         rkey = transport.get_remote_server_key()
         if rkey.get_name() != hkey.get_name() or rkey.asbytes() != hkey.asbytes():
-            print("ERROR: remote host identification has changed!")
+            print(red("ERROR: remote host identification has changed!"))
             sys.exit(1)
 
     # We don't use the connect() method directly because it can't handle
@@ -199,7 +208,7 @@ def get_sftp(hostname, port, user):
     # multiple time as a workaround because this genius calls start_client()
     pkey_connect(transport, user)
     if not transport.is_authenticated():
-        print("ERROR: Authentication failed.")
+        print(red("ERROR: Authentication failed."))
         transport.close()
         sys.exit(1)
 

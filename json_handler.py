@@ -12,6 +12,9 @@ import collections
 import utils
 import paramiko
 import getpass
+from boards import boards
+
+from utils import red, green
 
 REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
 
@@ -24,7 +27,7 @@ class JSONHandler:
     completes (or not).
     """
     def __init__(self, board, **kwargs):
-        self.board = board
+        self.board = boards[board]
         self.kwargs = kwargs
         self.get_job_from_file(self.kwargs["job_template"])
 
@@ -48,17 +51,9 @@ class JSONHandler:
         with open(file) as f:
             self.job = json.load(f, object_pairs_hook=collections.OrderedDict)
 
-    def save_job_to_file(self):
-        try: os.makedirs(self.kwargs["output_dir"])
-        except: pass
-        file = os.path.join(self.kwargs["output_dir"], self.job["job_name"] + ".json")
-        with open(file, 'w') as f:
-            json.dump(self.job, f, indent=4)
-        print("File saved to", file)
-
     def override_device_type(self):
         print("device-type: Overriding")
-        self.job["device_type"] = self.board
+        self.job["device_type"] = self.board["device_type"]
         print("device-type: Overridden")
 
     def override_ramdisk(self):
@@ -137,7 +132,7 @@ class JSONHandler:
     def override_job_name(self, kci_data=None):
         # TODO: add some more information, like the user crafting the job, or
         # the kernel version, or anything else that can be useful
-        self.job["job_name"] = self.kwargs["job_name"] + "-" + self.board
+        self.job["job_name"] = self.kwargs["job_name"] + "-" + self.board['device_type']
         print("job name: new name is: %s" % self.job["job_name"])
 
     def send_file(self, local, remote):
@@ -156,6 +151,14 @@ class JSONHandler:
         ret = utils.get_connection(**self.kwargs).scheduler.submit_job(job_str)
         print("Job send (id:", ret, ")")
         print("Potential working URL: ", "http://%s/scheduler/job/%s" % (self.kwargs['ssh_server'], ret))
+
+    def save_job_to_file(self):
+        try: os.makedirs(self.kwargs["output_dir"])
+        except: pass
+        file = os.path.join(self.kwargs["output_dir"], self.job["job_name"] + ".json")
+        with open(file, 'w') as f:
+            json.dump(self.job, f, indent=4)
+        print(green("File saved to %s" % file))
 
 
 

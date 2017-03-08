@@ -9,7 +9,7 @@
 
 from json_handler import JSONHandler
 from yaml_handler import YAMLHandler
-from utils import KCIFetcher, get_connection, get_config
+from utils import KCIFetcher, get_connection, get_config, red
 from boards import boards
 
 
@@ -28,6 +28,8 @@ def main(**kwargs):
                 h.send_to_lava()
             else:
                 h.save_job_to_file()
+        else:
+            print(red("No board named %s" % b))
 
 
 if __name__ == "__main__":
