@@ -58,14 +58,15 @@ class JSONHandler:
 
     def override_rootfs(self):
         if self.kwargs["rootfs"]:
-            print("rootfs: Overriding")
-            local_path = os.path.abspath(self.kwargs["rootfs"])
-            remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
-            self.send_file(local_path, remote_path)
-            self.job["actions"][0]["parameters"]["ramdisk"] = "file://" + remote_path
-            print("rootfs: Overridden")
+            rootfs = self.kwargs['rootfs']
         else:
-            print("rootfs: Nothing to override")
+            rootfs = os.path.join(self.kwargs["rootfs_path"], self.board["rootfs"])
+        print("rootfs: Overriding")
+        local_path = os.path.abspath(rootfs)
+        remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
+        remote_path = self.handle_file(local_path, remote_path)
+        self.job["actions"][0]["parameters"]["ramdisk"] = "file://" + remote_path
+        print("rootfs: Overridden")
 
     def override_dtb(self, dtb_url=None):
         if self.kwargs["dtb"]:

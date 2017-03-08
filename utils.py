@@ -52,6 +52,7 @@ def get_args_config(kwargs):
     job.add_argument('--no-kci', action='store_true',
             help="Don't go fetch file from KernelCI, but rather use my provided files (you must then provide a kernel, a dtb, a modules.tar.xz, and a rootfs)")
     job.add_argument('--output-dir', default="jobs", help='Path where the jobs will be stored (default=./jobs/)')
+    job.add_argument('--rootfs-path', default=kwargs["rootfs_path"], help='Path to the rootfs images directory where prebuilt rootfs are stored')
     job.add_argument('--job-name', default="ctt", help='The name you want to give to your job')
     job.add_argument('--job-template', default="jobs_templates/job_template.json", help='The template you want to use for the job')
     job.add_argument('--rootfs', help='Path to the rootfs image you want to use (cpio.gz format)')
@@ -89,6 +90,7 @@ def get_config(section="ctt"):
             "ssh_server": None,
             "ssh_username": "root", # XXX that's not really good
             "api_token": None,
+            "rootfs_path": ".",
             }
     kwargs.update(get_file_config())
     kwargs = get_args_config(kwargs)
