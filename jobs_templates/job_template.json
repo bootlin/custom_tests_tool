@@ -18,11 +18,12 @@
             "command": "boot_linaro_image"
         },
         {
-            "command": "lava_test_shell",
+            "command": "lava_command_run",
             "parameters": {
-                "testdef_urls": [ ],
-                "timeout": 900,
-                "skip_install": "all"
+                "commands": [
+                    "/tests/run.sh"
+                ],
+                "timeout": 900
             }
         },
         {

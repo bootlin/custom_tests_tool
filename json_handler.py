@@ -43,7 +43,7 @@ class JSONHandler:
             self.override_modules()
             self.override_job_name()
         self.override_rootfs()
-        self.override_tests()
+        # self.override_tests()
         self.override_lava_infos()
         self.override_device_type()
 
