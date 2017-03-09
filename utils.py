@@ -141,6 +141,7 @@ class KCIFetcher():
                             'kernel': common_url + 'zImage',
                             'dtb': common_url + 'dtbs/' + board['dt'] + '.dtb',
                             'modules': common_url + 'modules.tar.xz',
+                            'defconfig': defconfig,
                             }
 
 

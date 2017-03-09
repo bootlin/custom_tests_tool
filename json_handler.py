@@ -133,7 +133,14 @@ class JSONHandler:
     def override_job_name(self, kci_data=None):
         # TODO: add some more information, like the user crafting the job, or
         # the kernel version, or anything else that can be useful
-        self.job["job_name"] = self.kwargs["job_name"] + "-" + self.board['device_type']
+        if kci_data:
+            self.job["job_name"] = "%s--%s--%s" % (
+                    self.kwargs["job_name"],
+                    self.board['device_type'],
+                    kci_data["defconfig"],
+                    )
+        else:
+           self.job["job_name"] = self.kwargs["job_name"] + "--" + self.board['device_type']
         print("job name: new name is: %s" % self.job["job_name"])
 
     def handle_file(self, local, remote):
