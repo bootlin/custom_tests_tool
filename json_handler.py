@@ -65,8 +65,15 @@ class JSONHandler:
         local_path = os.path.abspath(rootfs)
         remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
         remote_path = self.handle_file(local_path, remote_path)
-        self.job["actions"][0]["parameters"]["ramdisk"] = "file://" + remote_path
-        print("rootfs: Overridden")
+        if self.board["test_plan"] == "boot":
+            self.job["actions"][0]["parameters"]["ramdisk"] = "file://" + remote_path
+            print("rootfs: ramdisk overridden")
+        elif self.board["test_plan"] == "boot-nfs":
+            self.job["actions"][0]["parameters"]["nfsrootfs"] = "file://" + remote_path
+            print("rootfs: nfsrootfs overridden")
+        else:
+            raise Exception(red("Invalid test_plan for board %s" %
+                    self.board["name"]))
 
     def override_dtb(self, dtb_url=None):
         if self.kwargs["dtb"]:

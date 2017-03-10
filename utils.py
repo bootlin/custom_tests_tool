@@ -107,6 +107,13 @@ class KCIFetcher():
     def __init__(self, *args, **kwargs):
         self.kwargs = kwargs
 
+    def get_image_name(defconfig):
+        if "arm64-" in defconfig:
+            return "Image"
+        elif "arm-" in defconfig:
+            return "zImage"
+        return "unknownImage"
+
     def get_latest_release(self):
         try:
             r = requests.get("https://api.kernelci.org/build?limit=1&date_range=5&job=mainline&field=kernel&sort=created_on",
@@ -138,7 +145,7 @@ class KCIFetcher():
                     print("Found a kernel for %s in %s" % (board["name"], url+name))
                     common_url = url+name
                     yield {
-                            'kernel': common_url + 'zImage',
+                            'kernel': common_url + KCIFetcher.get_image_name(defconfig),
                             'dtb': common_url + 'dtbs/' + board['dt'] + '.dtb',
                             'modules': common_url + 'modules.tar.xz',
                             'defconfig': defconfig,

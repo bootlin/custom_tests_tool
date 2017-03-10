@@ -6,7 +6,6 @@
             "parameters": {
                 "dtb": "/path/to/dtb",
                 "kernel": "/path/to/kernel",
-                "ramdisk": "/path/to/rootfs.cpio.gz",
                 "overlays": [
                     "/path/to/modules.tar.xz"
                 ],

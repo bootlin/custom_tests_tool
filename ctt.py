@@ -20,16 +20,19 @@ def main(**kwargs):
         kwargs['boards'] = boards.keys()
     for b in kwargs["boards"]:
         if b in boards.keys():
-            h = JSONHandler(b, **kwargs)
-            if kwargs["no_kci"]:
-                h.apply_overrides()
-            else:
-                for data in KCIFetcher(**kwargs).crawl(boards[b]):
-                    h.apply_overrides(data)
-                    if kwargs["send"]:
-                        h.send_to_lava()
-                    else:
-                        h.save_job_to_file()
+            try:
+                h = JSONHandler(b, **kwargs)
+                if kwargs["no_kci"]:
+                    h.apply_overrides()
+                else:
+                    for data in KCIFetcher(**kwargs).crawl(boards[b]):
+                        h.apply_overrides(data)
+                        if kwargs["send"]:
+                            h.send_to_lava()
+                        else:
+                            h.save_job_to_file()
+            except Exception as e:
+                print(e)
         else:
             print(red("No board named %s" % b))
 
