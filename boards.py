@@ -57,14 +57,14 @@ boards = {
         #    'rootfs': 'rootfs_aarch64.cpio.gz',
         #    'test_plan': 'boot',
         #    },
-        #'armada-375-db': { # Offline
-        #    'name': 'armada-375-db',
-        #    'device_type': 'armada-375-db',
-        #    'defconfigs': ['arm-multi_v7_defconfig'],
-        #    'dt': 'armada-375-db',
-        #    'rootfs': 'rootfs_armv7.cpio.gz',
-        #    'test_plan': 'boot',
-        #    },
+        'armada-375-db': { # Offline
+            'name': 'armada-375-db',
+            'device_type': 'armada-375-db',
+            'defconfigs': ['arm-multi_v7_defconfig'],
+            'dt': 'armada-375-db',
+            'rootfs': 'rootfs_armv7.cpio.gz',
+            'test_plan': 'boot',
+            },
         'armada-385-db-ap': {
             'name': 'Armada 385 DB AP',
             'device_type': 'armada-385-db-ap',
