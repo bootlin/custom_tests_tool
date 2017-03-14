@@ -43,7 +43,7 @@ class JSONHandler:
             self.override_modules()
             self.override_job_name()
         self.override_rootfs()
-        # self.override_tests()
+        self.override_tests()
         self.override_lava_infos()
         self.override_device_type()
 
@@ -122,14 +122,12 @@ class JSONHandler:
 
     def override_tests(self):
         if self.kwargs["tests"]:
-            print("Overriding tests:")
-            local_path = os.path.abspath(self.kwargs["tests"])
-            remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
-            remote_path = self.handle_file(local_path, remote_path)
-            self.job["actions"][2]["parameters"]["testdef_urls"] = ["file://" + remote_path]
+            print("tests: Overriding")
+            self.job["actions"][2]["parameters"]["commands"][0] = self.kwargs["tests"]
             print("tests Overridden")
         else:
-            print("tests: Nothing to override")
+            print("tests: Nothing to override, just passing device_type as parameter")
+            self.job["actions"][2]["parameters"]["commands"][0] += " " + self.board['device_type']
 
     def override_lava_infos(self):
         try:

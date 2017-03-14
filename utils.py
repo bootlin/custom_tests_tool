@@ -59,7 +59,7 @@ def get_args_config(kwargs):
     job.add_argument('--kernel', help='Path to the kernel image you want to use')
     job.add_argument('--dtb', help='Path to the dtb file you want to use')
     job.add_argument('--modules', help='Path to the modules tar.gz you want to use as overlay to rootfs')
-    job.add_argument('--tests', default="jobs_templates/test_launcher.yaml", help='Path to the test file you want to use run')
+    job.add_argument('--tests', help='Command you want to run as test')
 
     lava = parser.add_argument_group("LAVA server options")
     lava.add_argument('--stream', default=kwargs["stream"], help='The bundle stream where to send the job')
