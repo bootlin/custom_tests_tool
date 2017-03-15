@@ -241,7 +241,7 @@ boards = {
             'dt': 'am335x-boneblack',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['first_test.sh'],
+            'tests': ['first_test.sh', 'mmc.sh'],
             },
         #'berlin2q-marvell-dmp': { # No configuration in LAVA
         #    'name': 'berlin2q-marvell-dmp',
@@ -304,7 +304,7 @@ boards = {
             'dt': 'at91-sama5d3_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['first_test.sh'],
+            'tests': ['first_test.sh', 'mmc.sh'],
             },
         #'sama5d31ek': { # Offline (doesn't exists?)
         #    'name': 'sama5d31ek',
