@@ -116,7 +116,7 @@ class KCIFetcher():
 
     def get_latest_release(self):
         try:
-            r = requests.get("https://api.kernelci.org/build?limit=1&date_range=5&job=mainline&field=kernel&sort=created_on",
+            r = requests.get("https://api.kernelci.org/build?limit=1&date_range=5&job=%s&field=kernel&sort=created_on" % self.kwargs["kernelci_tree"],
                     headers={'Authorization': get_config()['api_token']})
             r.raise_for_status()
             return r.json()['result'][0]['kernel']
@@ -135,21 +135,25 @@ class KCIFetcher():
             html = urllib.request.urlopen(url).read().decode('utf-8')
         except urllib.error.HTTPError as e:
             print(red(repr(e)))
-            print(red("It seems that we have some problems using %s" % self.root_url))
+            print(red("It seems that we have some problems using %s" % url))
             return repr(e)
         files = parse_re.findall(html)
         dirs = []
+        something_found = False
         for name in files:
             for defconfig in board['defconfigs']:
                 if defconfig == name[:-1]:
                     print("Found a kernel for %s in %s" % (board["name"], url+name))
                     common_url = url+name
+                    something_found = True
                     yield {
                             'kernel': common_url + KCIFetcher.get_image_name(defconfig),
                             'dtb': common_url + 'dtbs/' + board['dt'] + '.dtb',
                             'modules': common_url + 'modules.tar.xz',
                             'defconfig': defconfig,
                             }
+        if not something_found:
+            print("Nothing found at addresse %s" % (url))
 
 
 

@@ -31,21 +31,32 @@ class JSONHandler:
         self.kwargs = kwargs
         self.get_job_from_file(self.kwargs["job_template"])
 
-    def apply_overrides(self, kci_data=None):
+    def make_jobs(self, kci_data=None):
+        job_name_prefix = self.kwargs["kernelci_tree"]
         if kci_data:
             self.override_kernel(kci_data['kernel'])
             self.override_dtb(kci_data['dtb'])
             self.override_modules(kci_data['modules'])
-            self.override_job_name(kci_data)
+            job_name_prefix += "--%s--%s" % (
+                    self.board['device_type'],
+                    kci_data["defconfig"],
+                    )
         else:
             self.override_kernel()
             self.override_dtb()
             self.override_modules()
-            self.override_job_name()
+            job_name_prefix += "--" + self.board['device_type']
         self.override_rootfs()
-        self.override_tests()
         self.override_lava_infos()
         self.override_device_type()
+        for test in self.board["tests"]:
+            job_name = job_name_prefix + "--" + test
+            self.override_job_name(job_name)
+            self.override_tests(test)
+            if self.kwargs["send"]:
+                self.send_to_lava()
+            else:
+                self.save_job_to_file()
 
     def get_job_from_file(self, file):
         with open(file) as f:
@@ -120,14 +131,10 @@ class JSONHandler:
         else:
             print("modules: Nothing to override")
 
-    def override_tests(self):
-        if self.kwargs["tests"]:
-            print("tests: Overriding")
-            self.job["actions"][2]["parameters"]["commands"][0] = self.kwargs["tests"]
-            print("tests Overridden")
-        else:
-            print("tests: Nothing to override, just passing device_type as parameter")
-            self.job["actions"][2]["parameters"]["commands"][0] += " " + self.board['device_type']
+    def override_tests(self, test):
+        print("tests: Overriding")
+        self.job["actions"][2]["parameters"]["commands"][0] = "/tests/tests/" + test + " " + self.board['device_type']
+        print("tests Overridden")
 
     def override_lava_infos(self):
         try:
@@ -135,17 +142,8 @@ class JSONHandler:
             self.job["actions"][3]["parameters"]["stream"] = self.kwargs["stream"]
         except: pass
 
-    def override_job_name(self, kci_data=None):
-        # TODO: add some more information, like the user crafting the job, or
-        # the kernel version, or anything else that can be useful
-        if kci_data:
-            self.job["job_name"] = "%s--%s--%s" % (
-                    self.kwargs["job_name"],
-                    self.board['device_type'],
-                    kci_data["defconfig"],
-                    )
-        else:
-           self.job["job_name"] = self.kwargs["job_name"] + "--" + self.board['device_type']
+    def override_job_name(self, name="job_name"):
+        self.job["job_name"] = name
         print("job name: new name is: %s" % self.job["job_name"])
 
     def handle_file(self, local, remote):

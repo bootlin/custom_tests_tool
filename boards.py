@@ -16,6 +16,7 @@ boards = {
             'dt': 'alpine-db', # The DT name (without extension)
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         #'alpine-v2-evp': { # Offline
         #    'name': 'alpine-v2-evp',
@@ -24,6 +25,7 @@ boards = {
         #    'dt': 'al/alpine-v2-evp',
         #    'rootfs': 'rootfs_aarch64.cpio.gz',
         #    'test_plan': 'boot',
+        #    'tests': ['first_test.sh'],
         #    },
         'armada-370-db': {
             'name': 'armada-370-db',
@@ -32,6 +34,7 @@ boards = {
             'dt': 'armada-370-db',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'armada-370-rd': {
             'name': 'Armada 370 RD',
@@ -40,6 +43,7 @@ boards = {
             'dt': 'armada-370-rd',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'armada-3720-db': {
             'name': 'Armada 3720 DB',
@@ -48,6 +52,7 @@ boards = {
             'dt': 'marvell/armada-3720-db',
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         #'armada-3720-espressobin': { # Offline
         #    'name': 'Armada 3720 Espressobin',
@@ -56,6 +61,7 @@ boards = {
         #    'dt': 'marvell/armada-3720-espressobin',
         #    'rootfs': 'rootfs_aarch64.cpio.gz',
         #    'test_plan': 'boot',
+        #    'tests': ['first_test.sh'],
         #    },
         'armada-375-db': { # Offline
             'name': 'armada-375-db',
@@ -64,6 +70,7 @@ boards = {
             'dt': 'armada-375-db',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'armada-385-db-ap': {
             'name': 'Armada 385 DB AP',
@@ -72,6 +79,7 @@ boards = {
             'dt': 'armada-385-db-ap',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'armada-388-clearfog': {
             'name': 'Armada 388 Clearfog',
@@ -80,6 +88,7 @@ boards = {
             'dt': 'armada-388-clearfog',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'armada-388-gp': {
             'name': 'Armada 388 GP',
@@ -88,6 +97,7 @@ boards = {
             'dt': 'armada-388-gp',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         #'armada-7040-db': { # Offline
         #    'name': 'armada-7040-db',
@@ -96,6 +106,7 @@ boards = {
         #    'dt': 'armada-7040-db',
         #    'rootfs': 'rootfs_aarch64.cpio.gz',
         #    'test_plan': 'boot',
+        #    'tests': ['first_test.sh'],
         #    },
         #'armada-8040-db': { # Offline
         #    'name': 'armada-8040-db',
@@ -104,6 +115,7 @@ boards = {
         #    'dt': 'armada-8040-db',
         #    'rootfs': 'rootfs_aarch64.cpio.gz',
         #    'test_plan': 'boot',
+        #    'tests': ['first_test.sh'],
         #    },
         'armada-398-db': {
             'name': 'Armada 398 DB',
@@ -112,6 +124,7 @@ boards = {
             'dt': 'armada-398-db',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'armada-xp-db': { # NFS boot
             'name': 'Armada XP DB',
@@ -120,6 +133,7 @@ boards = {
             'dt': 'armada-xp-db',
             'rootfs': 'rootfs_armv7.tar.gz',
             'test_plan': 'boot-nfs',
+            'tests': ['first_test.sh'],
             },
         'armada-xp-gp': { # NFS boot
             'name': 'Armada XP GP',
@@ -128,6 +142,7 @@ boards = {
             'dt': 'armada-xp-gp',
             'rootfs': 'rootfs_armv7.tar.gz',
             'test_plan': 'boot-nfs',
+            'tests': ['first_test.sh'],
             },
         'armada-xp-linksys-mamba': {
             'name': 'armada-xp-linksys-mamba',
@@ -136,6 +151,7 @@ boards = {
             'dt': 'armada-xp-linksys-mamba',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'armada-xp-openblocks-ax3-4': {
             'name': 'Armada XP Openblocks AX3 4',
@@ -144,6 +160,7 @@ boards = {
             'dt': 'armada-xp-openblocks-ax3-4',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         #'at91-sama5d2_xplained': { # Offline
         #    'name': 'at91-sama5d2_xplained',
@@ -152,6 +169,7 @@ boards = {
         #    'dt': 'at91-sama5d2_xplained',
         #    'rootfs': 'rootfs_armv7.cpio.gz',
         #    'test_plan': 'boot',
+        #    'tests': ['first_test.sh'],
         #    },
         'at91-sama5d4_xplained': {
             'name': 'AT91 sama5d4 Xplained',
@@ -160,6 +178,7 @@ boards = {
             'dt': 'at91-sama5d4_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'at91rm9200ek': {
             'name': 'at91rm9200ek',
@@ -168,6 +187,7 @@ boards = {
             'dt': 'at91rm9200ek',
             'rootfs': 'rootfs_armv4.tar.gz',
             'test_plan': 'boot-nfs',
+            'tests': ['first_test.sh'],
             },
         'at91sam9261ek': {
             'name': 'at91sam9261ek',
@@ -176,6 +196,7 @@ boards = {
             'dt': 'at91sam9261ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'at91sam9m10g45ek': {
             'name': 'at91sam9m10g45ek',
@@ -184,6 +205,7 @@ boards = {
             'dt': 'at91sam9m10g45ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'at91sam9x25ek': {
             'name': 'at91sam9x25ek',
@@ -192,6 +214,7 @@ boards = {
             'dt': 'at91sam9x25ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'at91sam9x35ek': {
             'name': 'at91sam9x35ek',
@@ -200,6 +223,7 @@ boards = {
             'dt': 'at91sam9x35ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'beagle-xm': {
             'name': 'beagle-xm',
@@ -208,6 +232,7 @@ boards = {
             'dt': 'omap3-beagle-xm',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'beaglebone-black': {
             'name': 'BeagleBone Black',
@@ -216,6 +241,7 @@ boards = {
             'dt': 'am335x-boneblack',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         #'berlin2q-marvell-dmp': { # No configuration in LAVA
         #    'name': 'berlin2q-marvell-dmp',
@@ -224,6 +250,7 @@ boards = {
         #    'dt': 'berlin2q-marvell-dmp',
         #    'rootfs': 'rootfs_armv7.cpio.gz',
         #    'test_plan': 'boot',
+        #    'tests': ['first_test.sh'],
         #    },
         'imx6q-nitrogen6x': {
             'name': 'imx6q nitrogen6x',
@@ -232,6 +259,7 @@ boards = {
             'dt': 'imx6q-nitrogen6x',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'kirkwood-db-88f6282': {
             'name': 'kirkwood-db-88f6282',
@@ -240,6 +268,7 @@ boards = {
             'dt': 'kirkwood-db-88f6282',
             'rootfs': 'rootfs_armv5.tar.gz',
             'test_plan': 'boot-nfs',
+            'tests': ['first_test.sh'],
             },
         'kirkwood-openblocks_a7': {
             'name': 'kirkwood-openblocks_a7',
@@ -248,6 +277,7 @@ boards = {
             'dt': 'kirkwood-openblocks_a7',
             'rootfs': 'rootfs_armv5.tar.gz',
             'test_plan': 'boot-nfs',
+            'tests': ['first_test.sh', 'second_test.sh'],
             },
         'optimus-a80': {
             'name': 'optimus-a80',
@@ -256,6 +286,7 @@ boards = {
             'dt': 'sun9i-a80-optimus',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'orion5x-rd88f5182-nas': {
             'name': 'orion5x-rd88f5182-nas',
@@ -264,6 +295,7 @@ boards = {
             'dt': 'orion5x-rd88f5182-nas',
             'rootfs': 'rootfs_armv5.tar.gz',
             'test_plan': 'boot-nfs',
+            'tests': ['first_test.sh'],
             },
         'sama5d3': {
             'name': 'sama5d3 Xplained',
@@ -272,6 +304,7 @@ boards = {
             'dt': 'at91-sama5d3_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         #'sama5d31ek': { # Offline (doesn't exists?)
         #    'name': 'sama5d31ek',
@@ -280,6 +313,7 @@ boards = {
         #    'dt': 'sama5d31ek',
         #    'rootfs': 'rootfs_armv7.cpio.gz',
         #    'test_plan': 'boot',
+        #    'tests': ['first_test.sh'],
         #    },
         'sama5d34ek': {
             'name': 'sama5d34ek',
@@ -288,6 +322,7 @@ boards = {
             'dt': 'sama5d34ek',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         #'sama5d35ek': { # Offline (doesn't exists?)
         #    'name': 'sama5d35ek',
@@ -296,6 +331,7 @@ boards = {
         #    'dt': 'sama5d35ek',
         #    'rootfs': 'rootfs_armv7.cpio.gz',
         #    'test_plan': 'boot',
+        #    'tests': ['first_test.sh'],
         #    },
         'sama5d36ek': { # Boots with some traces
             'name': 'sama5d36ek',
@@ -304,6 +340,7 @@ boards = {
             'dt': 'sama5d36ek',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'sama5d4ek': {
             'name': 'sama5d4ek',
@@ -312,6 +349,7 @@ boards = {
             'dt': 'sama5d4ek',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'sun5i-r8-chip': {
             'name': 'sun5i r8 chip',
@@ -320,6 +358,7 @@ boards = {
             'dt': 'sun5i-r8-chip',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'sun6i-a31-app4-evb1': {
             'name': 'sun6i-a31-app4-evb1',
@@ -328,6 +367,7 @@ boards = {
             'dt': 'sun6i-a31-app4-evb1',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'sun8i-a23-evb': {
             'name': 'sun8i-a23-evb',
@@ -336,6 +376,7 @@ boards = {
             'dt': 'sun8i-a23-evb',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         #'sun8i-a33-sinlinx-sina33': { # Offline
         #    'name': 'sun8i-a33-sinlinx-sina33',
@@ -344,6 +385,7 @@ boards = {
         #    'dt': 'sun8i-a33-sinlinx-sina33',
         #    'rootfs': 'rootfs_armv7.cpio.gz',
         #    'test_plan': 'boot',
+        #    'tests': ['first_test.sh'],
         #    },
         'sun8i-a83t-allwinner-h8homlet-v2': {
             'name': 'sun8i-a83t-allwinner-h8homlet-v2',
@@ -352,6 +394,7 @@ boards = {
             'dt': 'sun8i-a83t-allwinner-h8homlet-v2',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         'sun8i-h3-orangepi-pc': {
             'name': 'OrangePi PC',
@@ -360,6 +403,7 @@ boards = {
             'dt': 'sun8i-h3-orangepi-pc',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             },
         }
 

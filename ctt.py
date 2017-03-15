@@ -23,14 +23,10 @@ def main(**kwargs):
             try:
                 h = JSONHandler(b, **kwargs)
                 if kwargs["no_kci"]:
-                    h.apply_overrides()
+                    h.make_jobs()
                 else:
                     for data in KCIFetcher(**kwargs).crawl(boards[b]):
-                        h.apply_overrides(data)
-                        if kwargs["send"]:
-                            h.send_to_lava()
-                        else:
-                            h.save_job_to_file()
+                        h.make_jobs(data)
             except Exception as e:
                 print(e)
         else:
