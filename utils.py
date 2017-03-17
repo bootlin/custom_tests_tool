@@ -157,7 +157,7 @@ class KCIFetcher():
                             'defconfig': defconfig,
                             }
         if not something_found:
-            print("Nothing found at addresse %s" % (url))
+            print("Nothing found at address %s" % (url))
 
 
 

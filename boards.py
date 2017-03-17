@@ -34,7 +34,7 @@ boards = {
             'dt': 'armada-370-db',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['first_test.sh'],
+            'tests': ['first_test.sh', 'crypto.sh'],
             },
         'armada-370-rd': {
             'name': 'Armada 370 RD',
@@ -43,7 +43,7 @@ boards = {
             'dt': 'armada-370-rd',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['first_test.sh'],
+            'tests': ['first_test.sh', 'crypto.sh'],
             },
         'armada-3720-db': {
             'name': 'Armada 3720 DB',
@@ -70,7 +70,7 @@ boards = {
             'dt': 'armada-375-db',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['first_test.sh'],
+            'tests': ['first_test.sh', 'crypto.sh'],
             },
         'armada-385-db-ap': {
             'name': 'Armada 385 DB AP',
@@ -79,7 +79,7 @@ boards = {
             'dt': 'armada-385-db-ap',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['first_test.sh'],
+            'tests': ['first_test.sh', 'crypto.sh'],
             },
         'armada-388-clearfog': {
             'name': 'Armada 388 Clearfog',
@@ -88,7 +88,7 @@ boards = {
             'dt': 'armada-388-clearfog',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['first_test.sh'],
+            'tests': ['first_test.sh', 'crypto.sh'],
             },
         'armada-388-gp': {
             'name': 'Armada 388 GP',
@@ -97,7 +97,7 @@ boards = {
             'dt': 'armada-388-gp',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['first_test.sh'],
+            'tests': ['first_test.sh', 'crypto.sh'],
             },
         #'armada-7040-db': { # Offline
         #    'name': 'armada-7040-db',
@@ -133,7 +133,7 @@ boards = {
             'dt': 'armada-xp-db',
             'rootfs': 'rootfs_armv7.tar.gz',
             'test_plan': 'boot-nfs',
-            'tests': ['first_test.sh'],
+            'tests': ['first_test.sh', 'crypto.sh'],
             },
         'armada-xp-gp': { # NFS boot
             'name': 'Armada XP GP',
@@ -142,7 +142,7 @@ boards = {
             'dt': 'armada-xp-gp',
             'rootfs': 'rootfs_armv7.tar.gz',
             'test_plan': 'boot-nfs',
-            'tests': ['first_test.sh'],
+            'tests': ['first_test.sh', 'crypto.sh'],
             },
         'armada-xp-linksys-mamba': {
             'name': 'armada-xp-linksys-mamba',
@@ -151,7 +151,7 @@ boards = {
             'dt': 'armada-xp-linksys-mamba',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['first_test.sh'],
+            'tests': ['first_test.sh', 'crypto.sh'],
             },
         'armada-xp-openblocks-ax3-4': {
             'name': 'Armada XP Openblocks AX3 4',
@@ -160,7 +160,7 @@ boards = {
             'dt': 'armada-xp-openblocks-ax3-4',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['first_test.sh'],
+            'tests': ['first_test.sh', 'crypto.sh'],
             },
         #'at91-sama5d2_xplained': { # Offline
         #    'name': 'at91-sama5d2_xplained',
@@ -304,7 +304,7 @@ boards = {
             'dt': 'at91-sama5d3_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['first_test.sh', 'mmc.sh'],
+            'tests': ['first_test.sh', 'mmc.sh', 'usb.sh'],
             },
         #'sama5d31ek': { # Offline (doesn't exists?)
         #    'name': 'sama5d31ek',
