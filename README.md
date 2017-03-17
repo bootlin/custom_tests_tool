@@ -3,6 +3,11 @@
 ## Setup
 
   * Make yourself a virtualenv, or just install system wide the packages listed in `./requirements.txt`.
+```
+virtualenv --python=python3 env
+source env/bin/activate
+pip install -r requirements.txt
+```
   * That file can help you a lot not providing every argument every time you run the script:
 
 ```
@@ -30,6 +35,17 @@ server your sending the job, as long as it actually contains valid rootfs.
 
 ## Examples
 
+Before any work, don't forget to reactivate your virtualenv to setup the Python
+environment: `source env/bin/activate`
+
+`./ctt.py -h`
+
+Will give you exhaustive help on any option.
+
+`./ctt.py -l`
+
+Will give you list of supported boards.
+
 `./ctt.py -b sun8i-h3-orangepi-pc beaglebone-black --send`
 
 Will launch the default job on the OrangePi PC and Beaglebone Black. The default
@@ -39,6 +55,9 @@ by Kernel CI
 `./ctt.py -b sun8i-h3-orangepi-pc beaglebone-black --send --upload --kernel ../path/to/my/kernel/zImage`
 
 Will do quite the same but will upload a custom kernel instead of using KernelCI's one.
+
+The same way you can use `--rootfs`, `--dtb`, `--modules` to override the
+corresponding files.
 
 Be careful when you upload multiple time the same file name, since the storage
 is made on a per-user basis: you risk to override your own previous file.   

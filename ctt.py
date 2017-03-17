@@ -14,8 +14,15 @@ from boards import boards
 
 
 def main(**kwargs):
-    print("main kwargs: ")
-    print(kwargs)
+    if kwargs['list']:
+        print("Board list: ")
+        for b in sorted(boards.keys()):
+            print("\t - ", b)
+        return
+    if not kwargs['boards']:
+        print("No board specified, you may want to add a `-b my-board` option?")
+        print("See help for more informations")
+        return
     if kwargs['boards'][0] == 'all': # Helper to gain some time
         kwargs['boards'] = boards.keys()
     for b in kwargs["boards"]:

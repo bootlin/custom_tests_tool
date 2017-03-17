@@ -49,13 +49,11 @@ def get_args_config(kwargs):
     # parser.add_argument('--v1', '--json', action='store_true', help='Outputs the job as a JSON file, good for LAVA v1')
     # parser.add_argument('--v2', '--yaml', action='store_true', help='Outputs the job as a YAML file, good for LAVA v2')
     job = parser.add_argument_group("Job handling")
-    job.add_argument('--no-kci', action='store_true',
-            help="Don't go fetch file from KernelCI, but rather use my provided files (you must then provide a kernel, a dtb, a modules.tar.xz, and a rootfs)")
     job.add_argument('--output-dir', default="jobs", help='Path where the jobs will be stored (default=./jobs/)')
     job.add_argument('--rootfs-path', default=kwargs["rootfs_path"], help='Path to the rootfs images directory where prebuilt rootfs are stored')
     job.add_argument('--job-name', default="ctt", help='The name you want to give to your job')
     job.add_argument('--job-template', default="jobs_templates/job_template.json", help='The template you want to use for the job')
-    job.add_argument('--rootfs', help='Path to the rootfs image you want to use (cpio.gz format)')
+    job.add_argument('--rootfs', help='Path to the rootfs you want to use (cpio.gz format)')
     job.add_argument('--kernel', help='Path to the kernel image you want to use')
     job.add_argument('--dtb', help='Path to the dtb file you want to use')
     job.add_argument('--modules', help='Path to the modules tar.gz you want to use as overlay to rootfs')
@@ -70,6 +68,11 @@ def get_args_config(kwargs):
     kci = parser.add_argument_group("KernelCI options")
     kci.add_argument('--api-token', default=kwargs["api_token"], help="The token to query KernelCI's API")
     kci.add_argument('--kernelci-tree', default="mainline", help='Path to the KernelCI tree you want to use')
+    kci.add_argument('--no-kci', action='store_true',
+            help="""Don't go fetch file from KernelCI, but rather use my provided
+files (you must then provide a kernel, a dtb, a modules.tar.xz, and a rootfs)
+This is useful if something.kernelci.org is down.
+""")
 
     ssh = parser.add_argument_group("SSH server options")
     ssh.add_argument('--ssh-server', default=kwargs["ssh_server"], help='The ssh server IP, where to send the custom files')
@@ -77,7 +80,8 @@ def get_args_config(kwargs):
 
     parser.add_argument('--upload', action='store_true', help='Send the custom files to the server')
     parser.add_argument('--send', action='store_true', help='Send the job directly, rather than saving it to output')
-    parser.add_argument('-b', '--boards', required=True, nargs='+', help='List of board for which you want to create jobs')
+    parser.add_argument('-b', '--boards', default=[], nargs='+', help='List of board for which you want to create jobs')
+    parser.add_argument('-l', '--list', action='store_true', help="List all the known devices")
     kwargs.update(vars(parser.parse_args()))
     return kwargs
 
