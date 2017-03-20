@@ -34,7 +34,7 @@ boards = {
             'dt': 'armada-370-db',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['first_test.sh', 'crypto.sh'],
+            'tests': ['first_test.sh', 'crypto.sh', 'sata.sh'],
             },
         'armada-370-rd': {
             'name': 'Armada 370 RD',
