@@ -2,13 +2,16 @@
 
 ## Setup
 
-  * Make yourself a virtualenv, or just install system wide the packages listed in `./requirements.txt`.
+  * Make yourself a virtualenv, or just install system wide the packages listed
+in `./requirements.txt`.
+
 ```
 virtualenv --python=python3 env
 source env/bin/activate
 pip install -r requirements.txt
 ```
-  * That file can help you a lot not providing every argument every time you run the script:
+  * That file can help you a lot not providing every argument every time you run
+the script:
 
 ```
 $ cat ~/.cttrc
@@ -62,4 +65,39 @@ corresponding files.
 Be careful when you upload multiple time the same file name, since the storage
 is made on a per-user basis: you risk to override your own previous file.   
 To prevent this, just name your file differently.
+
+## Adding a new board
+
+If you wish to add a new board to the custom test tool, it must already be in
+LAVA (required), as well as being supported by kernel CI's images (optionnal,
+you can manually provide your own files).
+
+Then just edit the `boards.py` file. It contains just a Python dictionnary, and
+it's thus easy to add a new board:
+
+```python
+'beaglebone-black': { # The key is free to choose. Usally the DT name is a good
+                      # choice, but it's not mandatory
+    'name': 'BeagleBone Black', # A pretty name for displaying, also free
+    'device_type': 'beaglebone-black', # This is the device-type as named is the
+                                       # LAVA configuration
+    'defconfigs': ['arm-multi_v7_defconfig'], # This is a list of defconfigs
+                                              # built by Kernel CI.
+                                              # This value can be found at
+                                              # https://storage.kernelci.org/mainline/v4.11.xxx-XXXXXX
+                                              # for example.
+    'dt': 'am335x-boneblack', # This is the DT name as found in the kernel,
+                              # without the extension.
+    'rootfs': 'rootfs_armv7.cpio.gz', # The name of the rootfs you want to use.
+                                      # It must be available under the
+                                      # --rootfs-path option (or rootfs_path in
+                                      # the .cctrc file).
+    'test_plan': 'boot', # What LAVA test to you want tu run (only boot is
+                         # supported)
+    'tests': ['first_test.sh', 'mmc.sh'], # A list of test that can be (and
+                                          # will) be launched on the board.
+                                          # They will be run from the
+                                          # /tests/tests/ folder in the rootfs.
+    },
+```
 
