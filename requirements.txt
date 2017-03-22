@@ -2,3 +2,4 @@ ruamel.yaml
 argcomplete
 paramiko
 requests
+jinja2

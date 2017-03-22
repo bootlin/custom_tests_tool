@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding:utf-8 -*
-#
-# Skia < skia AT libskia DOT so >
-#
-# Beerware licensed software - 2017
-#
-
 import os
 import json
 import collections
@@ -13,54 +5,53 @@ import utils
 import paramiko
 import getpass
 from boards import boards
+from jinja2 import FileSystemLoader, Environment
 
 from utils import red, green
 
 REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
 
-class JSONHandler:
+class JobHandler:
     """
-    This class handle the JSON jobs.
-
-    This means updating a template with the given values, then sending it to
-    LAVA before following the progress of the job to make some reporting when it
-    completes (or not).
+    This class handle the jobs.
     """
     def __init__(self, board, **kwargs):
         self.board = boards[board]
         self.kwargs = kwargs
-        self.get_job_from_file(self.kwargs["job_template"])
+        self.job = {
+                "kernel": "",
+                "device_tree": "",
+                "rootfs": "",
+                "rootfs_type": "",
+                "modules": "",
+                "tests": "",
+                "lava_server": "",
+                "lava_stream": "",
+                "device_type": "",
+                "job_name": "",
+                }
+        self.jinja_env = Environment(loader=FileSystemLoader(os.getcwd()))
 
-    def _set_device_type(self, value):
-        self.job["device_type"] = self.board["device_type"]
+# Template handling
+    def get_job_from_file(self, file):
+        self.job_template = self.jinja_env.get_template(file)
 
-    def _set_device_tree(self, value):
-        self.job["actions"][0]["parameters"]["dtb"] = value
+    def save_job_to_file(self):
+        try: os.makedirs(self.kwargs["output_dir"])
+        except: pass
+        file = os.path.join(self.kwargs["output_dir"], self.job["job_name"] + ".json")
+        with open(file, 'w') as f:
+            f.write(self.job_template.render(self.job))
+        print(green("File saved to %s" % file))
 
-    def _set_rootfs(self, value, nfs=False):
-        if nfs:
-            self.job["actions"][0]["parameters"]["nfsrootfs"] = value
-        else:
-            self.job["actions"][0]["parameters"]["ramdisk"] = value
+    def send_to_lava(self):
+        print("Sending to LAVA")
+        job_str = json.dumps(self.job)
+        ret = utils.get_connection(**self.kwargs).scheduler.submit_job(job_str)
+        print(green("Job send (id: %s)" % ret))
+        print("Potential working URL: ", "http://%s/scheduler/job/%s" % (self.kwargs['ssh_server'], ret))
 
-    def _set_kernel(self, value):
-        self.job["actions"][0]["parameters"]["kernel"] = value
-
-    def _set_modules(self, value):
-        self.job["actions"][0]["parameters"]["overlays"] = [value]
-
-    def _set_tests(self, value):
-        self.job["actions"][2]["parameters"]["commands"][0] = value
-
-    def _set_lava_server(self, value):
-        self.job["actions"][3]["parameters"]["server"] = value
-
-    def _set_lava_stream(self, value):
-        self.job["actions"][3]["parameters"]["stream"] = value
-
-    def _set_job(self, value):
-        self.job["job_name"] = value
-
+# Job handling
     def make_jobs(self, kci_data={}):
         job_name_prefix = "%s--%s--" % (self.kwargs["kernelci_tree"],
                 self.board['device_type'])
@@ -81,13 +72,9 @@ class JSONHandler:
             else:
                 self.save_job_to_file()
 
-    def get_job_from_file(self, file):
-        with open(file) as f:
-            self.job = json.load(f, object_pairs_hook=collections.OrderedDict)
-
     def override_device_type(self):
         print("device-type: Overriding")
-        self._set_device_type(self.board['device_type'])
+        self.job["device_type"] = self.board['device_type']
         print("device-type: Overridden")
 
     def override_rootfs(self):
@@ -99,11 +86,12 @@ class JSONHandler:
         local_path = os.path.abspath(rootfs)
         remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
         remote_path = self.handle_file(local_path, remote_path)
+        self.job["rootfs"] = "file://" + remote_path
         if self.board["test_plan"] == "boot":
-            self._set_rootfs("file://" + remote_path)
+            self.job["rootfs_type"] = "ramdisk"
             print("rootfs: ramdisk overridden")
         elif self.board["test_plan"] == "boot-nfs":
-            self._set_rootfs("file://" + remote_path, True)
+            self.job["rootfs_type"] = "nfsrootfs"
             print("rootfs: nfsrootfs overridden")
         else:
             raise Exception(red("Invalid test_plan for board %s" %
@@ -115,11 +103,11 @@ class JSONHandler:
             print("DTB: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             remote_path = self.handle_file(local_path, remote_path)
-            self._set_device_tree("file://" + remote_path)
+            self.job["device_tree"] = "file://" + remote_path
             print("DTB: Overridden")
         elif dtb_url:
             print("DTB: Overriding with Kernel CI URL:", dtb_url)
-            self._set_device_tree(dtb_url)
+            self.job["device_tree"] = dtb_url
             print("DTB: Overridden")
         else:
             print("DTB: Nothing to override")
@@ -130,11 +118,11 @@ class JSONHandler:
             print("kernel: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             remote_path = self.handle_file(local_path, remote_path)
-            self._set_kernel("file://" + remote_path)
+            self.job["kernel"] = "file://" + remote_path
             print("kernel: Overridden")
         elif kernel_url:
             print("kernel: Overriding with Kernel CI URL:", kernel_url)
-            self._set_kernel(kernel_url)
+            self.job["kernel"] = kernel_url
             print("kernel: Overridden")
         else:
             print("kernel: Nothing to override")
@@ -145,32 +133,33 @@ class JSONHandler:
             print("modules: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             remote_path = self.handle_file(local_path, remote_path)
-            self._set_modules("file://" + remote_path)
+            self.job["modules"] = "file://" + remote_path
             print("modules: Overridden")
         elif modules_url:
             print("modules: Overriding with Kernel CI URL:", modules_url)
-            self._set_modules(modules_url)
+            self.job["modules"] = modules_url
             print("modules: Overridden")
         else:
             print("modules: Nothing to override")
 
     def override_tests(self, test):
         print("tests: Overriding")
-        self._set_tests("/tests/tests/" + test + " " + self.board['device_type'])
+        self.job["tests"] = test + " " + self.board['device_type']
         print("tests Overridden")
 
     def override_lava_infos(self):
         try:
-            self._set_lava_server(self.kwargs["server"])
-            self._set_lava_stream(self.kwargs["stream"])
+            self.job["lava_server"] = self.kwargs["server"]
+            self.job["lava_stream"] = self.kwargs["stream"]
         except: pass
 
     def override_job_name(self, name="job_name"):
         if self.kwargs.get('job_name'):
             name += "--" + self.kwargs.get('job_name')
-        self._set_job(name)
+        self.job["job_name"] = name
         print("job name: new name is: %s" % self.job["job_name"])
 
+# Files handling
     def handle_file(self, local, remote):
         if self.kwargs["upload"]:
             self.send_file(local, remote)
@@ -187,21 +176,4 @@ class JSONHandler:
             utils.mkdir_p(scp, os.path.dirname(remote))
             scp.put(local, remote)
         print("Done")
-
-    def send_to_lava(self):
-        print("Sending to LAVA")
-        job_str = json.dumps(self.job)
-        ret = utils.get_connection(**self.kwargs).scheduler.submit_job(job_str)
-        print(green("Job send (id: %s)" % ret))
-        print("Potential working URL: ", "http://%s/scheduler/job/%s" % (self.kwargs['ssh_server'], ret))
-
-    def save_job_to_file(self):
-        try: os.makedirs(self.kwargs["output_dir"])
-        except: pass
-        file = os.path.join(self.kwargs["output_dir"], self.job["job_name"] + ".json")
-        with open(file, 'w') as f:
-            json.dump(self.job, f, indent=4)
-        print(green("File saved to %s" % file))
-
-
 

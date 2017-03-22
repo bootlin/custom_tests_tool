@@ -2,12 +2,10 @@
 # -*- coding:utf-8 -*
 # PYTHON_ARGCOMPLETE_OK
 #
-# Skia < skia AT libskia DOT so >
-#
-# Beerware licensed software - 2017
+# Florent Jacquet <florent.jacquet@free-electrons.com>
 #
 
-from json_handler import JSONHandler
+from json_handler import JobHandler
 from yaml_handler import YAMLHandler
 from utils import KCIFetcher, get_connection, get_config, red
 from boards import boards
@@ -28,7 +26,8 @@ def main(**kwargs):
     for b in kwargs["boards"]:
         if b in boards.keys():
             try:
-                h = JSONHandler(b, **kwargs)
+                h = JobHandler(b, **kwargs)
+                h.get_job_from_file(kwargs['job_template'])
                 if kwargs["no_kci"]:
                     h.make_jobs()
                 else:

@@ -1,0 +1,41 @@
+{
+    "actions": [
+        {
+            "command": "deploy_linaro_kernel",
+            "parameters": {
+                "dtb": "{{ device_tree }}",
+                "kernel": "{{ kernel }}",
+                "overlays": [
+                    "{{ modules }}"
+                ],
+                "{{ rootfs_type }}": "{{ rootfs }}",
+                "login_prompt": "buildroot login:",
+                "username": "root"
+            }
+        },
+        {
+            "command": "boot_linaro_image"
+        },
+        {
+            "command": "lava_command_run",
+            "parameters": {
+                "commands": [
+                    "/tests/tests/{{ tests }}"
+                ],
+                "timeout": 900
+            }
+        },
+        {
+            "command": "submit_results",
+            "parameters": {
+                "server": "{{ lava_server }}",
+                "stream": "{{ lava_stream }}"
+            }
+        }
+    ],
+    "device_type": "{{ device_type }}",
+    "job_name": "{{ job_name }}",
+    "logging_level": "DEBUG",
+    "priority": "high",
+    "timeout": 600
+}
