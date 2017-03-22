@@ -31,26 +31,49 @@ class JSONHandler:
         self.kwargs = kwargs
         self.get_job_from_file(self.kwargs["job_template"])
 
-    def make_jobs(self, kci_data=None):
-        job_name_prefix = self.kwargs["kernelci_tree"]
-        if kci_data:
-            self.override_kernel(kci_data['kernel'])
-            self.override_dtb(kci_data['dtb'])
-            self.override_modules(kci_data['modules'])
-            job_name_prefix += "--%s--%s" % (
-                    self.board['device_type'],
-                    kci_data["defconfig"],
-                    )
+    def _set_device_type(self, value):
+        self.job["device_type"] = self.board["device_type"]
+
+    def _set_device_tree(self, value):
+        self.job["actions"][0]["parameters"]["dtb"] = value
+
+    def _set_rootfs(self, value, nfs=False):
+        if nfs:
+            self.job["actions"][0]["parameters"]["nfsrootfs"] = value
         else:
-            self.override_kernel()
-            self.override_dtb()
-            self.override_modules()
-            job_name_prefix += "--" + self.board['device_type']
+            self.job["actions"][0]["parameters"]["ramdisk"] = value
+
+    def _set_kernel(self, value):
+        self.job["actions"][0]["parameters"]["kernel"] = value
+
+    def _set_modules(self, value):
+        self.job["actions"][0]["parameters"]["overlays"] = [value]
+
+    def _set_tests(self, value):
+        self.job["actions"][2]["parameters"]["commands"][0] = value
+
+    def _set_lava_server(self, value):
+        self.job["actions"][3]["parameters"]["server"] = value
+
+    def _set_lava_stream(self, value):
+        self.job["actions"][3]["parameters"]["stream"] = value
+
+    def _set_job(self, value):
+        self.job["job_name"] = value
+
+    def make_jobs(self, kci_data={}):
+        job_name_prefix = "%s--%s--" % (self.kwargs["kernelci_tree"],
+                self.board['device_type'])
+        if kci_data:
+            job_name_prefix += kci_data["defconfig"] + "--"
+        self.override_kernel(kci_data.get('kernel'))
+        self.override_dtb(kci_data.get('dtb'))
+        self.override_modules(kci_data.get('modules'))
         self.override_rootfs()
         self.override_lava_infos()
         self.override_device_type()
         for test in self.board["tests"]:
-            job_name = job_name_prefix + "--" + test
+            job_name = job_name_prefix + test
             self.override_job_name(job_name)
             self.override_tests(test)
             if self.kwargs["send"]:
@@ -64,7 +87,7 @@ class JSONHandler:
 
     def override_device_type(self):
         print("device-type: Overriding")
-        self.job["device_type"] = self.board["device_type"]
+        self._set_device_type(self.board['device_type'])
         print("device-type: Overridden")
 
     def override_rootfs(self):
@@ -77,10 +100,10 @@ class JSONHandler:
         remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
         remote_path = self.handle_file(local_path, remote_path)
         if self.board["test_plan"] == "boot":
-            self.job["actions"][0]["parameters"]["ramdisk"] = "file://" + remote_path
+            self._set_rootfs("file://" + remote_path)
             print("rootfs: ramdisk overridden")
         elif self.board["test_plan"] == "boot-nfs":
-            self.job["actions"][0]["parameters"]["nfsrootfs"] = "file://" + remote_path
+            self._set_rootfs("file://" + remote_path, True)
             print("rootfs: nfsrootfs overridden")
         else:
             raise Exception(red("Invalid test_plan for board %s" %
@@ -92,11 +115,11 @@ class JSONHandler:
             print("DTB: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             remote_path = self.handle_file(local_path, remote_path)
-            self.job["actions"][0]["parameters"]["dtb"] = "file://" + remote_path
+            self._set_device_tree("file://" + remote_path)
             print("DTB: Overridden")
         elif dtb_url:
             print("DTB: Overriding with Kernel CI URL:", dtb_url)
-            self.job["actions"][0]["parameters"]["dtb"] = dtb_url
+            self._set_device_tree(dtb_url)
             print("DTB: Overridden")
         else:
             print("DTB: Nothing to override")
@@ -107,11 +130,11 @@ class JSONHandler:
             print("kernel: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             remote_path = self.handle_file(local_path, remote_path)
-            self.job["actions"][0]["parameters"]["kernel"] = "file://" + remote_path
+            self._set_kernel("file://" + remote_path)
             print("kernel: Overridden")
         elif kernel_url:
             print("kernel: Overriding with Kernel CI URL:", kernel_url)
-            self.job["actions"][0]["parameters"]["kernel"] = kernel_url
+            self._set_kernel(kernel_url)
             print("kernel: Overridden")
         else:
             print("kernel: Nothing to override")
@@ -122,28 +145,30 @@ class JSONHandler:
             print("modules: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             remote_path = self.handle_file(local_path, remote_path)
-            self.job["actions"][0]["parameters"]["overlays"] = ["file://" + remote_path]
+            self._set_modules("file://" + remote_path)
             print("modules: Overridden")
         elif modules_url:
             print("modules: Overriding with Kernel CI URL:", modules_url)
-            self.job["actions"][0]["parameters"]["overlays"] = [modules_url]
+            self._set_modules(modules_url)
             print("modules: Overridden")
         else:
             print("modules: Nothing to override")
 
     def override_tests(self, test):
         print("tests: Overriding")
-        self.job["actions"][2]["parameters"]["commands"][0] = "/tests/tests/" + test + " " + self.board['device_type']
+        self._set_tests("/tests/tests/" + test + " " + self.board['device_type'])
         print("tests Overridden")
 
     def override_lava_infos(self):
         try:
-            self.job["actions"][3]["parameters"]["server"] = self.kwargs["server"]
-            self.job["actions"][3]["parameters"]["stream"] = self.kwargs["stream"]
+            self._set_lava_server(self.kwargs["server"])
+            self._set_lava_stream(self.kwargs["stream"])
         except: pass
 
     def override_job_name(self, name="job_name"):
-        self.job["job_name"] = name
+        if self.kwargs.get('job_name'):
+            name += "--" + self.kwargs.get('job_name')
+        self._set_job(name)
         print("job name: new name is: %s" % self.job["job_name"])
 
     def handle_file(self, local, remote):

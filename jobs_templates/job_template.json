@@ -2,7 +2,6 @@
     "actions": [
         {
             "command": "deploy_linaro_kernel",
-
             "parameters": {
                 "dtb": "/path/to/dtb",
                 "kernel": "/path/to/kernel",
