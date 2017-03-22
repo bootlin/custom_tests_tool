@@ -1,0 +1,68 @@
+{
+    "actions": [
+        {
+            "command": "deploy_linaro_kernel",
+            "parameters":
+            {
+                "dtb": "{{ device_tree}}",
+                "kernel": "{{ kernel }}",
+                "overlays": [
+                    "{{ modules }}"
+                ],
+                "{{ rootfs_type }}": "{{ rootfs }}",
+                "role": "client",
+                "username": "root",
+                "login_prompt": "buildroot login:"
+            }
+        },
+        {
+            "command": "dummy_deploy",
+            "parameters":
+            {
+                "target_type": "ubuntu",
+                "role": "server"
+            }
+        },
+        {
+            "command": "boot_linaro_image",
+            "parameters":
+            {
+                "role": "client"
+            }
+        },
+        {
+            "command": "lava_test_shell",
+            "parameters":
+            {
+                "testdef_repos": [
+                    {
+                        "git-repo": "https://github.com/free-electrons/custom_tests",
+                        "testdef": "tests/{{ tests }}"
+                    }],
+                    "timeout": 1800
+            }
+        },
+        {
+            "command": "submit_results",
+            "parameters":
+            {
+                "server": "{{ lava_server }}",
+                "stream": "{{ lava_stream }}"
+            }
+        }],
+        "device_group": [
+            {
+                "role": "client",
+                "count": 1,
+                "device_type": "{{ device_type }}"
+            },
+            {
+                "role": "server",
+                "count": 1,
+                "device_type": "dummy-ssh"
+            }],
+            "job_name": "{{ job_name }}",
+            "logging_level": "DEBUG",
+            "priority": "high",
+            "timeout": 600
+}

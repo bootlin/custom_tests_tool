@@ -44,7 +44,7 @@ def get_args_config(kwargs):
     job.add_argument('--output-dir', default="jobs", help='Path where the jobs will be stored (default=./jobs/)')
     job.add_argument('--rootfs-path', default=kwargs["rootfs_path"], help='Path to the rootfs images directory where prebuilt rootfs are stored')
     job.add_argument('--job-name', help='The name you want to give to your job')
-    job.add_argument('--job-template', default="jobs_templates/simple_test_job_template.jinja", help='The template you want to use for the job')
+    # job.add_argument('--job-template', default="jobs_templates/simple_test_job_template.jinja", help='The template you want to use for the job')
     job.add_argument('--rootfs', help='Path to the rootfs you want to use (cpio.gz format)')
     job.add_argument('--kernel', help='Path to the kernel image you want to use')
     job.add_argument('--dtb', help='Path to the dtb file you want to use')

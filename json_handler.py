@@ -46,10 +46,15 @@ class JobHandler:
 
     def send_to_lava(self):
         print("Sending to LAVA")
-        job_str = json.dumps(self.job)
+        job_str = self.job_template.render(self.job)
         ret = utils.get_connection(**self.kwargs).scheduler.submit_job(job_str)
-        print(green("Job send (id: %s)" % ret))
-        print("Potential working URL: ", "http://%s/scheduler/job/%s" % (self.kwargs['ssh_server'], ret))
+        try:
+            for r in ret:
+                print(green("Job send (id: %s)" % r))
+                print("Potential working URL: ", "http://%s/scheduler/job/%s" % (self.kwargs['ssh_server'], r))
+        except:
+            print(green("Job send (id: %s)" % ret))
+            print("Potential working URL: ", "http://%s/scheduler/job/%s" % (self.kwargs['ssh_server'], ret))
 
 # Job handling
     def make_jobs(self, kci_data={}):
@@ -63,7 +68,17 @@ class JobHandler:
         self.override_rootfs()
         self.override_lava_infos()
         self.override_device_type()
-        for test in self.board["tests"]:
+        self.get_job_from_file("jobs_templates/simple_test_job_template.jinja")
+        for test in self.board.get("tests", []):
+            job_name = job_name_prefix + test
+            self.override_job_name(job_name)
+            self.override_tests(test, True)
+            if self.kwargs["send"]:
+                self.send_to_lava()
+            else:
+                self.save_job_to_file()
+        self.get_job_from_file("jobs_templates/multinode_job_template.jinja")
+        for test in self.board.get("tests_multinode", []):
             job_name = job_name_prefix + test
             self.override_job_name(job_name)
             self.override_tests(test)
@@ -142,9 +157,12 @@ class JobHandler:
         else:
             print("modules: Nothing to override")
 
-    def override_tests(self, test):
+    def override_tests(self, test, append_device_type=False):
         print("tests: Overriding")
-        self.job["tests"] = test + " " + self.board['device_type']
+        if append_device_type:
+            self.job["tests"] = test + " " + self.board['device_type']
+        else:
+            self.job["tests"] = test
         print("tests Overridden")
 
     def override_lava_infos(self):
