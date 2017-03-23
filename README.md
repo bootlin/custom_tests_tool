@@ -41,19 +41,27 @@ server your sending the job, as long as it actually contains valid rootfs.
 Before any work, don't forget to reactivate your virtualenv to setup the Python
 environment: `source env/bin/activate`
 
+#### Help
+
 `./ctt.py -h`
 
 Will give you exhaustive help on any option.
 
+#### Listing boards
+
 `./ctt.py -l`
 
 Will give you list of supported boards.
+
+#### Sending simple job
 
 `./ctt.py -b sun8i-h3-orangepi-pc beaglebone-black --send`
 
 Will launch the default job on the OrangePi PC and Beaglebone Black. The default
 job consists in running the test suite using the latest mainline kernel provided
 by Kernel CI
+
+#### Customizing boot files
 
 `./ctt.py -b sun8i-h3-orangepi-pc beaglebone-black --send --upload --kernel ../path/to/my/kernel/zImage`
 
@@ -65,6 +73,21 @@ corresponding files.
 Be careful when you upload multiple time the same file name, since the storage
 is made on a per-user basis: you risk to override your own previous file.   
 To prevent this, just name your file differently.
+
+#### Customizing tests
+
+`./ctt.py -b armada-370-db -t sata.sh --send`
+
+Will send only the sata test on the Armada 370 DB.
+`-t` or `--tests` is a list, so you can give as much tests as you want. The
+tests need to be filenames that are available in the `./tests/` folder of the
+test repository.
+
+The `-m` or `--tests-multinode` option is also available and does the same thing
+with the multinode job template.
+
+Using any of these options will override the two tests lists in the `board.py`
+file, so that you have the tests you gave manually that will be made into jobs.
 
 ## Adding a new board
 

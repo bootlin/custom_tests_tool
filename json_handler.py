@@ -69,7 +69,18 @@ class JobHandler:
         self.override_lava_infos()
         self.override_device_type()
         self.get_job_from_file("jobs_templates/simple_test_job_template.jinja")
-        for test in self.board.get("tests", []):
+        use_default = True
+        tests = tests_multinode = []
+        if self.kwargs['tests']:
+            tests = self.kwargs['tests']
+            use_default = False
+        if self.kwargs['tests_multinode']:
+            tests_multinode = self.kwargs['tests_multinode']
+            use_default = False
+        if use_default:
+            tests = self.board.get("tests", [])
+            tests_multinode = self.board.get("tests_multinode", [])
+        for test in tests:
             job_name = job_name_prefix + test
             self.override_job_name(job_name)
             self.override_tests(test, True)
@@ -78,7 +89,7 @@ class JobHandler:
             else:
                 self.save_job_to_file()
         self.get_job_from_file("jobs_templates/multinode_job_template.jinja")
-        for test in self.board.get("tests_multinode", []):
+        for test in tests_multinode:
             job_name = job_name_prefix + test
             self.override_job_name(job_name)
             self.override_tests(test)

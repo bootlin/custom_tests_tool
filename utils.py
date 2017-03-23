@@ -49,6 +49,8 @@ def get_args_config(kwargs):
     job.add_argument('--kernel', help='Path to the kernel image you want to use')
     job.add_argument('--dtb', help='Path to the dtb file you want to use')
     job.add_argument('--modules', help='Path to the modules tar.gz you want to use as overlay to rootfs')
+    job.add_argument('-t', '--tests', default=[], nargs='+', help='The tests for which you want to generate jobs')
+    job.add_argument('-m', '--tests-multinode', default=[], nargs='+', help='The multinode tests for which you want to generate jobs')
 
     lava = parser.add_argument_group("LAVA server options")
     lava.add_argument('--stream', default=kwargs["stream"], help='The bundle stream where to send the job')

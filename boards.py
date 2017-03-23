@@ -297,6 +297,7 @@ boards = {
             'dt': 'at91-sama5d3_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
+            'tests': ['first_test.sh'],
             'tests_multinode': ['network.yaml'],
             },
         #'sama5d31ek': { # Offline (doesn't exists?)
