@@ -234,7 +234,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh', 'mmc.sh'],
-            'tests_multinode': ['iperf.yaml'],
+            'tests_multinode': ['network.yaml'],
             },
         #'berlin2q-marvell-dmp': { # No configuration in LAVA
         #    'name': 'berlin2q-marvell-dmp',
@@ -297,7 +297,7 @@ boards = {
             'dt': 'at91-sama5d3_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests_multinode': ['iperf.yaml'],
+            'tests_multinode': ['network.yaml'],
             },
         #'sama5d31ek': { # Offline (doesn't exists?)
         #    'name': 'sama5d31ek',
