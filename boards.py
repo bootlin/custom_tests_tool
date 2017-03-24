@@ -6,9 +6,11 @@ boards = {
             'defconfigs': ['arm-multi_v7_defconfig'], # This are the defconfigs you want to use with this board
                                                       # It must be available in kernel CI mainline subtree
             'dt': 'alpine-db', # The DT name (without extension)
-            'rootfs': 'rootfs_armv7.cpio.gz',
-            'test_plan': 'boot',
-            'tests': ['first_test.sh'],
+            'rootfs': 'rootfs_armv7.cpio.gz', # The rootfs to use (must exist in rootfs_path)
+            'test_plan': 'boot', # boot or boot-nfs if the board can not boot with ramdisk
+            'tests': ['first_test.sh'], # A list of tests run in single node mode. The files must exist in the custom tests repository
+            'tests_multinode': ['network.yaml'], # A list of tests run in multi node mode. The files must exist in the custom tests repository
+
             },
         #'alpine-v2-evp': { # Offline
         #    'name': 'alpine-v2-evp',
@@ -27,6 +29,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh', 'crypto.sh', 'sata.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'armada-370-rd': {
             'name': 'Armada 370 RD',
@@ -36,6 +39,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh', 'crypto.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'armada-3720-db': {
             'name': 'Armada 3720 DB',
@@ -45,6 +49,7 @@ boards = {
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         #'armada-3720-espressobin': { # Offline
         #    'name': 'Armada 3720 Espressobin',
@@ -63,6 +68,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh', 'crypto.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'armada-385-db-ap': {
             'name': 'Armada 385 DB AP',
@@ -72,6 +78,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh', 'crypto.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'armada-388-clearfog': {
             'name': 'Armada 388 Clearfog',
@@ -81,6 +88,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh', 'crypto.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'armada-388-gp': {
             'name': 'Armada 388 GP',
@@ -90,6 +98,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh', 'crypto.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         #'armada-7040-db': { # Offline
         #    'name': 'armada-7040-db',
@@ -100,15 +109,16 @@ boards = {
         #    'test_plan': 'boot',
         #    'tests': ['first_test.sh'],
         #    },
-        #'armada-8040-db': { # Offline
-        #    'name': 'armada-8040-db',
-        #    'device_type': 'armada-8040-db',
-        #    'defconfigs': ['arm64-defconfig'],
-        #    'dt': 'armada-8040-db',
-        #    'rootfs': 'rootfs_aarch64.cpio.gz',
-        #    'test_plan': 'boot',
-        #    'tests': ['first_test.sh'],
-        #    },
+        'armada-8040-db': { # Offline
+            'name': 'armada-8040-db',
+            'device_type': 'armada-8040-db',
+            'defconfigs': ['arm64-defconfig'],
+            'dt': 'armada-8040-db',
+            'rootfs': 'rootfs_aarch64.cpio.gz',
+            'test_plan': 'boot',
+            'tests': ['first_test.sh'],
+            'tests_multinode': ['network.yaml'],
+            },
         'armada-398-db': {
             'name': 'Armada 398 DB',
             'device_type': 'armada-398-db',
@@ -117,6 +127,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'armada-xp-db': { # NFS boot
             'name': 'Armada XP DB',
@@ -126,6 +137,7 @@ boards = {
             'rootfs': 'rootfs_armv7.tar.gz',
             'test_plan': 'boot-nfs',
             'tests': ['first_test.sh', 'crypto.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'armada-xp-gp': { # NFS boot
             'name': 'Armada XP GP',
@@ -135,6 +147,7 @@ boards = {
             'rootfs': 'rootfs_armv7.tar.gz',
             'test_plan': 'boot-nfs',
             'tests': ['first_test.sh', 'crypto.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'armada-xp-linksys-mamba': {
             'name': 'armada-xp-linksys-mamba',
@@ -144,6 +157,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh', 'crypto.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'armada-xp-openblocks-ax3-4': {
             'name': 'Armada XP Openblocks AX3 4',
@@ -153,6 +167,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh', 'crypto.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         #'at91-sama5d2_xplained': { # Offline
         #    'name': 'at91-sama5d2_xplained',
@@ -171,6 +186,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'at91rm9200ek': {
             'name': 'at91rm9200ek',
@@ -180,6 +196,7 @@ boards = {
             'rootfs': 'rootfs_armv4.tar.gz',
             'test_plan': 'boot-nfs',
             'tests': ['first_test.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'at91sam9261ek': {
             'name': 'at91sam9261ek',
@@ -189,6 +206,7 @@ boards = {
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'at91sam9m10g45ek': {
             'name': 'at91sam9m10g45ek',
@@ -198,6 +216,7 @@ boards = {
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'at91sam9x25ek': {
             'name': 'at91sam9x25ek',
@@ -207,6 +226,7 @@ boards = {
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'at91sam9x35ek': {
             'name': 'at91sam9x35ek',
@@ -216,6 +236,7 @@ boards = {
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'beagle-xm': {
             'name': 'beagle-xm',
@@ -348,7 +369,7 @@ boards = {
         'sun5i-r8-chip': {
             'name': 'sun5i r8 chip',
             'device_type': 'sun5i-r8-chip',
-            'defconfigs': ['arm-multi_v7_defconfig'],
+            'defconfigs': ['arm-sunxi_defconfig', 'arm-multi_v7_defconfig'],
             'dt': 'sun5i-r8-chip',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -362,6 +383,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'sun8i-a23-evb': {
             'name': 'sun8i-a23-evb',
@@ -371,6 +393,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'sun8i-a33-sinlinx-sina33': { # Offline
             'name': 'sun8i-a33-sinlinx-sina33',
@@ -389,6 +412,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
+            'tests_multinode': ['network.yaml'],
             },
         'sun8i-h3-orangepi-pc': {
             'name': 'OrangePi PC',
