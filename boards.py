@@ -10,7 +10,7 @@ boards = {
             'test_plan': 'boot', # boot or boot-nfs if the board can not boot with ramdisk
             'tests': ['first_test.sh'], # A list of tests run in single node mode. The files must exist in the custom tests repository
             'tests_multinode': [], # A list of tests run in multi node mode. The files must exist in the custom tests repository
-
+            # This one has no network support, so the list remains empty for now
             },
         #'alpine-v2-evp': { # Offline
         #    'name': 'alpine-v2-evp',
@@ -40,6 +40,7 @@ boards = {
             'test_plan': 'boot',
             'tests': ['first_test.sh', 'crypto.sh'],
             'tests_multinode': ['network.yaml'],
+            # 'tests_multinode': ['network.yaml'], No network support
             },
         'armada-3720-db': {
             'name': 'Armada 3720 DB',
@@ -68,7 +69,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh', 'crypto.sh'],
-            'tests_multinode': ['network.yaml'],
+            # 'tests_multinode': ['network.yaml'], No network support
             },
         'armada-385-db-ap': {
             'name': 'Armada 385 DB AP',
@@ -78,7 +79,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh', 'crypto.sh'],
-            'tests_multinode': ['network.yaml'],
+            # 'tests_multinode': ['network.yaml'], No network support
             },
         'armada-388-clearfog': {
             'name': 'Armada 388 Clearfog',
@@ -127,7 +128,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
-            'tests_multinode': ['network.yaml'],
+            # 'tests_multinode': ['network.yaml'], No network support
             },
         'armada-xp-db': { # NFS boot
             'name': 'Armada XP DB',
@@ -383,7 +384,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
-            'tests_multinode': ['network.yaml'],
+            # 'tests_multinode': ['network.yaml'], Network over USB, may require more configuration
             },
         'sun8i-a23-evb': {
             'name': 'sun8i-a23-evb',
@@ -393,7 +394,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
-            'tests_multinode': ['network.yaml'],
+            # 'tests_multinode': ['network.yaml'], Network over USB, may require more configuration
             },
         'sun8i-a33-sinlinx-sina33': { # Offline
             'name': 'sun8i-a33-sinlinx-sina33',
@@ -412,7 +413,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
-            'tests_multinode': ['network.yaml'],
+            # 'tests_multinode': ['network.yaml'], No network support
             },
         'sun8i-h3-orangepi-pc': {
             'name': 'OrangePi PC',
@@ -421,7 +422,7 @@ boards = {
             'dt': 'sun8i-h3-orangepi-pc',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['first_test.sh'],
+            # 'tests': ['first_test.sh'], No network support
             },
         }
 
