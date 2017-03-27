@@ -9,7 +9,7 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz', # The rootfs to use (must exist in rootfs_path)
             'test_plan': 'boot', # boot or boot-nfs if the board can not boot with ramdisk
             'tests': ['first_test.sh'], # A list of tests run in single node mode. The files must exist in the custom tests repository
-            'tests_multinode': ['network.yaml'], # A list of tests run in multi node mode. The files must exist in the custom tests repository
+            'tests_multinode': [], # A list of tests run in multi node mode. The files must exist in the custom tests repository
 
             },
         #'alpine-v2-evp': { # Offline
