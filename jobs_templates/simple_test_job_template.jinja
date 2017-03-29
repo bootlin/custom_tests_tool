@@ -3,12 +3,20 @@
         {
             "command": "deploy_linaro_kernel",
             "parameters": {
+                {% if device_tree %}
                 "dtb": "{{ device_tree }}",
+                {% endif %}
+                {% if kernel %}
                 "kernel": "{{ kernel }}",
+                {% endif %}
+                {% if modules %}
                 "overlays": [
                     "{{ modules }}"
                 ],
+                {% endif %}
+                {% if rootfs %}
                 "{{ rootfs_type }}": "{{ rootfs }}",
+                {% endif %}
                 "login_prompt": "buildroot login:",
                 "username": "root"
             }
@@ -37,5 +45,21 @@
     "job_name": "{{ job_name }}",
     "logging_level": "DEBUG",
     "priority": "high",
+    "notify_on_incomplete": [
+        {% for address in notify_on_incomplete -%}
+            "{{ address}}"
+            {%- if not loop.last -%}
+            ,
+            {% endif %}
+        {%- endfor %}
+    ],
+    "notify": [
+        {% for address in notify -%}
+            "{{ address}}"
+            {%- if not loop.last -%}
+            ,
+            {% endif %}
+        {%- endfor %}
+    ],
     "timeout": 600
 }

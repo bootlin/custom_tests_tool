@@ -29,6 +29,7 @@ class JobHandler:
                 "lava_stream": "",
                 "device_type": "",
                 "job_name": "",
+                "notify": []
                 }
         self.jinja_env = Environment(loader=FileSystemLoader(os.getcwd()))
 
@@ -68,6 +69,7 @@ class JobHandler:
         self.override_rootfs()
         self.override_lava_infos()
         self.override_device_type()
+        self.override_recipients()
         self.get_job_from_file("jobs_templates/simple_test_job_template.jinja")
         use_default = True
         tests = tests_multinode = []
@@ -97,6 +99,12 @@ class JobHandler:
                 self.send_to_lava()
             else:
                 self.save_job_to_file()
+
+    def override_recipients(self):
+        print("notify recipients: Overriding")
+        for n in "notify", "notify_on_incomplete":
+            self.job[n] = self.kwargs[n] or self.board.get(n, [])
+        print("notify recipients: Overridden")
 
     def override_device_type(self):
         print("device-type: Overriding")

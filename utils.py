@@ -30,7 +30,14 @@ def get_file_config(f_name=None, section="ctt"):
     try:
         config = configparser.ConfigParser()
         config.read(filename)
-        return dict(config[section])
+        kwargs = dict(config[section])
+        try:
+            kwargs['notify'] = kwargs['notify'].split(',')
+        except: pass
+        try:
+            kwargs['notify_on_incomplete'] = kwargs['notify_on_incomplete'].split(',')
+        except: pass
+        return kwargs
     except Exception as e:
         print(repr(e))
         print(red("Likely you have no %s section in your configuration file, which is %s" % (section, filename)))
@@ -74,13 +81,15 @@ This is useful if something.kernelci.org is down.
 
     parser.add_argument('--upload', action='store_true', help='Send the custom files to the server')
     parser.add_argument('--send', action='store_true', help='Send the job directly, rather than saving it to output')
+    parser.add_argument('--notify', default=kwargs['notify'], nargs='+', help='List of addresses to which the notifications will be sent.')
+    parser.add_argument('--notify-on-incomplete', default=kwargs['notify_on_incomplete'], nargs='+', help='List of addresses to which the notifications will be sent if the job is incomplete.')
     parser.add_argument('-b', '--boards', default=[], nargs='+', help='List of board for which you want to create jobs')
     parser.add_argument('-l', '--list', action='store_true', help="List all the known devices")
     kwargs.update(vars(parser.parse_args()))
     return kwargs
 
 def get_config(section="ctt"):
-    kwargs = {
+    kwargs = { # args here can be set in the .cttrc file
             "username": None,
             "server": None,
             "token": None,
@@ -89,6 +98,8 @@ def get_config(section="ctt"):
             "ssh_username": "root", # XXX that's not really good
             "api_token": None,
             "rootfs_path": ".",
+            "notify": [],
+            "notify_on_incomplete": [],
             }
     kwargs.update(get_file_config())
     kwargs = get_args_config(kwargs)

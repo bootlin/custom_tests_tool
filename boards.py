@@ -354,6 +354,7 @@ boards = {
             'test_plan': 'boot',
             'tests': ['first_test.sh', 'mmc.sh', 'usb.sh'],
             'tests_multinode': ['network.yaml'],
+            'notify': ['florent.jacquet@free-electrons.com'],
             },
         #'sama5d31ek': { # Offline (doesn't exists?)
         #    'name': 'sama5d31ek',

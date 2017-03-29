@@ -60,9 +60,26 @@
                 "role": "laptop",
                 "count": 1,
                 "device_type": "dummy-ssh"
-            }],
-            "job_name": "{{ job_name }}",
-            "logging_level": "DEBUG",
-            "priority": "high",
-            "timeout": 600
+            }
+        ],
+        "job_name": "{{ job_name }}",
+        "logging_level": "DEBUG",
+        "priority": "high",
+        "notify_on_incomplete": [
+            {% for address in notify_on_incomplete -%}
+            "{{ address }}"
+            {%- if not loop.last -%}
+            ,
+            {% endif %}
+            {%- endfor %}
+        ],
+        "notify": [
+            {% for address in notify -%}
+            "{{ address }}"
+            {%- if not loop.last -%}
+            ,
+            {% endif %}
+            {%- endfor %}
+        ],
+        "timeout": 600
 }
