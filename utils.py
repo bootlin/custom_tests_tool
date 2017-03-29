@@ -60,7 +60,8 @@ def get_args_config(kwargs):
 
     kci = parser.add_argument_group("KernelCI options")
     kci.add_argument('--api-token', default=kwargs["api_token"], help="The token to query KernelCI's API")
-    kci.add_argument('--kernelci-tree', default="mainline", help='Path to the KernelCI tree you want to use')
+    kci.add_argument('--kernelci-tree', default="mainline", help='The KernelCI tree you want to use (default: mainline)')
+    kci.add_argument('--kernelci-branch', default="master", help='The KernelCI branch you want to use (default: master)')
     kci.add_argument('--no-kci', action='store_true',
             help="""Don't go fetch file from KernelCI, but rather use my provided
 files (you must then provide a kernel, a dtb, a modules.tar.xz, and a rootfs)
@@ -104,16 +105,16 @@ class KCIFetcher():
     def __init__(self, *args, **kwargs):
         self.kwargs = kwargs
 
-    def get_image_name(defconfig):
-        if "arm64-" in defconfig:
-            return "Image"
-        elif "arm-" in defconfig:
+    def get_image_name(board):
+        if board['arch'] == 'arm':
             return "zImage"
+        elif board['arch'] == 'arm64':
+            return "Image"
         return "unknownImage"
 
     def get_latest_release(self):
         try:
-            r = requests.get("https://api.kernelci.org/build?limit=1&date_range=5&job=%s&field=kernel&sort=created_on" % self.kwargs["kernelci_tree"],
+            r = requests.get("https://api.kernelci.org/build?limit=1&job=%s&field=kernel&sort=created_on&git_branch=%s" % (self.kwargs["kernelci_tree"], self.kwargs["kernelci_branch"]),
                     headers={'Authorization': get_config()['api_token']})
             r.raise_for_status()
             return r.json()['result'][0]['kernel']
@@ -121,11 +122,12 @@ class KCIFetcher():
             print(red(repr(e)))
 
     def get_latest_full_url(self):
-        return self.root_url + self.kwargs["kernelci_tree"] + "/" + self.get_latest_release()
+        return self.root_url + self.kwargs["kernelci_tree"] + "/" + self.kwargs["kernelci_branch"] + "/" + self.get_latest_release()
 
     def crawl(self, board, base_url=None):
         print("Crawling KernelCI for %s" % board['name'])
         url = base_url or self.get_latest_full_url()
+        url = '/'.join([url, board['arch']])
         if not url.endswith('/'):
             url += "/"
         try:
@@ -144,7 +146,7 @@ class KCIFetcher():
                     common_url = url+name
                     something_found = True
                     yield {
-                            'kernel': common_url + KCIFetcher.get_image_name(defconfig),
+                            'kernel': common_url + KCIFetcher.get_image_name(board),
                             'dtb': common_url + 'dtbs/' + board['dt'] + '.dtb',
                             'modules': common_url + 'modules.tar.xz',
                             'defconfig': defconfig,
