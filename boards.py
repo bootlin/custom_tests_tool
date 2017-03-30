@@ -55,7 +55,7 @@ boards = {
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
-            'tests_multinode': ['network.yaml'],
+            # 'tests_multinode': ['network.yaml'], No network support
             },
         #'armada-3720-espressobin': { # Offline
         #    'name': 'Armada 3720 Espressobin',
@@ -228,7 +228,7 @@ boards = {
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
-            'tests_multinode': ['network.yaml'],
+            # 'tests_multinode': ['network.yaml'], No network support
             },
         'at91sam9m10g45ek': {
             'name': 'at91sam9m10g45ek',
