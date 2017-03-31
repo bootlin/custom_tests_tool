@@ -10,7 +10,7 @@ from xmlrpc import client
 from flask import Flask, render_template
 
 
-hostname = "192.168.1.3"
+hostname = "farm"
 server = client.ServerProxy("http://%s/RPC2" % (hostname))
 
 print(server.system.listMethods())

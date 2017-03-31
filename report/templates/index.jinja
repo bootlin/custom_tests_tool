@@ -31,12 +31,12 @@
                                     {% for r in devices[device_name][test] %}
                                         {% if r['result'] == "fail" %}
                                             <p class="text-warning">
-                                            <a href="http://192.168.1.3/scheduler/job/{{ r['job_id'] }}">Job #{{ r['job_id']}}</a>
+                                            <a href="http://farm/scheduler/job/{{ r['job_id'] }}">Job #{{ r['job_id']}}</a>
                                             {{ r['result'] }}
                                             </p>
                                         {% elif r['result'] == "pass" %}
                                             <p class="text-success">
-                                            <a href="http://192.168.1.3/scheduler/job/{{ r['job_id'] }}">Job #{{ r['job_id']}}</a>
+                                            <a href="http://farm/scheduler/job/{{ r['job_id'] }}">Job #{{ r['job_id']}}</a>
                                             {{ r['result'] }}
                                             </p>
                                         {% endif %}

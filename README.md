@@ -20,7 +20,7 @@ server: https://my.lava.instan.ce/RPC2
 username: <lava_username>
 token: MyAwEsOmELAVAtOkEn
 stream: /anonymous/test/
-ssh_server: 192.168.1.3
+ssh_server: farm.tld
 ssh_username: user-with-write-access-somewhere
 api_token: my-awesome-token
 rootfs_path: /root/buildroot-ci/out/
