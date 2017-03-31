@@ -2,5 +2,5 @@ env/
 jobs/
 *.log
 __pycache__/
-buildrootfs/output/
-buildrootfs/overlay/
+report/env
+report/cache.html
