@@ -36,7 +36,7 @@ def index():
 @app.route("/refresh")
 def generate():
     devices = {d[0]:{t:[] for t in tests_list.keys()} for d in server.scheduler.all_devices()}
-    print(devices)
+    # print(devices)
     for b in reversed(server.dashboard.bundles('/anonymous/custom-tests/')[-400:]):
         print('.', end='', flush=True)
         # print(b)
@@ -53,6 +53,7 @@ def generate():
                     if r["test_case_id"].startswith(prefix):
                         devices[t["attributes"]["target"]][test].append({
                             "job_id": b["associated_job"],
+                            "job_name": b["content_filename"],
                             "result": r["result"]
                             })
                         # print(json.dumps(bundle_json, indent=2))

@@ -9,7 +9,10 @@
     </head>
     <body>
         <header>
-            <h4>LAVA custom tests results</h4>
+            <h4>
+                LAVA custom tests results
+                <a href="/refresh" class="btn-sm btn-info">refresh</a>
+            </h4>
         </header>
         <section>
             <table class="table table-striped table-hover">
@@ -29,21 +32,22 @@
                                 {% if devices[device_name][test] %}
                                 <td>
                                     {% for r in devices[device_name][test] %}
-                                        {% if r['result'] == "fail" %}
-                                            <p class="text-warning">
-                                            <a href="http://farm/scheduler/job/{{ r['job_id'] }}">Job #{{ r['job_id']}}</a>
-                                            {{ r['result'] }}
-                                            </p>
-                                        {% elif r['result'] == "pass" %}
-                                            <p class="text-success">
-                                            <a href="http://farm/scheduler/job/{{ r['job_id'] }}">Job #{{ r['job_id']}}</a>
-                                            {{ r['result'] }}
-                                            </p>
+                                        {% if not loop.first %}
+                                            <hr>
                                         {% endif %}
+                                        {% if r['result'] == "fail" %}
+                                            <a class="btn-sm btn-warning"
+                                                style="vertical-align: top" href="http://farm/scheduler/job/{{ r['job_id'] }}">Job #{{ r['job_id']}}</a>
+                                        {% elif r['result'] == "pass" %}
+                                            <a class="btn-sm btn-success"
+                                                style="vertical-align: top" href="http://farm/scheduler/job/{{ r['job_id'] }}">Job #{{ r['job_id']}}</a>
+                                        {% endif %}
+                                            <small style="display: inline-block;
+                                                margin: 0px;"> {{ r['job_name']|replace('--', '<br/>') }} </small>
                                     {% endfor %}
                                 </td>
                                 {% else %}
-                                <td class="unknown">No test run</td>
+                                <td class="unknown"><small>No test run</small></td>
                                 {% endif %}
                             {% endfor %}
                         </tr>
