@@ -53,7 +53,7 @@ def generate():
                     if r["test_case_id"].startswith(prefix):
                         devices[t["attributes"]["target"]][test].append({
                             "job_id": b["associated_job"],
-                            "job_name": b["content_filename"],
+                            "job_name": b["content_filename"].split('--'),
                             "result": r["result"]
                             })
                         # print(json.dumps(bundle_json, indent=2))

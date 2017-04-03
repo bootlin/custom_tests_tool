@@ -43,7 +43,8 @@
                                                 style="vertical-align: top" href="http://farm/scheduler/job/{{ r['job_id'] }}">Job #{{ r['job_id']}}</a>
                                         {% endif %}
                                             <small style="display: inline-block;
-                                                margin: 0px;"> {{ r['job_name']|replace('--', '<br/>') }} </small>
+                                                margin: 0px;">
+                                                {{ [r['job_name'][0], r['job_name'][2]]|join('<br/>') }} </small>
                                     {% endfor %}
                                 </td>
                                 {% else %}
