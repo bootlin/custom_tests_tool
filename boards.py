@@ -448,17 +448,17 @@ boards = {
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
             },
-        'sun8i-a83t-allwinner-h8homlet-v2': {
-            'name': 'sun8i-a83t-allwinner-h8homlet-v2',
-            'device_type': 'sun8i-a83t-allwinner-h8homlet-v2',
-            'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
-            'dt': 'sun8i-a83t-allwinner-h8homlet-v2',
-            'rootfs': 'rootfs_armv7.cpio.gz',
-            'test_plan': 'boot',
-            'tests': ['first_test.sh'],
-            # 'tests_multinode': ['network.yaml'], No network support
-            },
+        # 'sun8i-a83t-allwinner-h8homlet-v2': {
+        #     'name': 'sun8i-a83t-allwinner-h8homlet-v2',
+        #     'device_type': 'sun8i-a83t-allwinner-h8homlet-v2',
+        #     'arch': 'arm',
+        #     'defconfigs': ['multi_v7_defconfig'],
+        #     'dt': 'sun8i-a83t-allwinner-h8homlet-v2',
+        #     'rootfs': 'rootfs_armv7.cpio.gz',
+        #     'test_plan': 'boot',
+        #     'tests': ['first_test.sh'],
+        #     # 'tests_multinode': ['network.yaml'], No network support
+        #     },
         'sun8i-h3-orangepi-pc': {
             'name': 'OrangePi PC',
             'device_type': 'sun8i-h3-orangepi-pc',
