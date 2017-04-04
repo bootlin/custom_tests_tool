@@ -8,6 +8,7 @@ import sys
 import json
 from xmlrpc import client
 from flask import Flask, render_template
+from datetime import datetime
 
 
 hostname = "farm"
@@ -58,7 +59,7 @@ def generate():
                             })
                         # print(json.dumps(bundle_json, indent=2))
     print('\n', end='')
-    html = render_template("index.jinja", devices=devices, tests=tests_list)
+    html = render_template("index.jinja", devices=devices, tests=tests_list, datetime=datetime)
     with open("cache.html", 'w') as f:
         f.write(html)
     return html
