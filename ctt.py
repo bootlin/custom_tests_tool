@@ -40,7 +40,5 @@ def main(**kwargs):
 
 if __name__ == "__main__":
     kwargs = get_config()
-
-
     main(**kwargs)
 

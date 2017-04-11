@@ -33,6 +33,11 @@ class JobHandler:
                 }
         self.jinja_env = Environment(loader=FileSystemLoader(os.getcwd()))
 
+    def get_device_status(self):
+        return utils.get_connection(**self.kwargs).scheduler.get_device_status(
+                self.board["device_type"] + "_01"
+                )
+
 # Template handling
     def get_job_from_file(self, file):
         self.job_template = self.jinja_env.get_template(file)
@@ -46,6 +51,15 @@ class JobHandler:
         print(green("File saved to %s" % file))
 
     def send_to_lava(self):
+        try:
+            dev = self.get_device_status()
+            if dev["status"] == "offline":
+                print(red("Device seems offline, not sending the job"))
+                return
+        except Exception as e:
+            print(red(repr(e)))
+            print(red("Not sending the job"))
+            return
         print("Sending to LAVA")
         job_str = self.job_template.render(self.job)
         ret = utils.get_connection(**self.kwargs).scheduler.submit_job(job_str)

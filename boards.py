@@ -13,16 +13,16 @@ boards = {
             'tests_multinode': [], # A list of tests run in multi node mode. The files must exist in the custom tests repository
             # This one has no network support, so the list remains empty for now
             },
-        #'alpine-v2-evp': { # Offline
-        #    'name': 'alpine-v2-evp',
-        #    'device_type': 'alpine-v2-evp',
-        #    'arch': 'arm64',
-        #    'defconfigs': ['defconfig'],
-        #    'dt': 'al/alpine-v2-evp',
-        #    'rootfs': 'rootfs_aarch64.cpio.gz',
-        #    'test_plan': 'boot',
-        #    'tests': ['first_test.sh'],
-        #    },
+        'alpine-v2-evp': {
+            'name': 'alpine-v2-evp',
+            'device_type': 'alpine-v2-evp',
+            'arch': 'arm64',
+            'defconfigs': ['defconfig'],
+            'dt': 'al/alpine-v2-evp',
+            'rootfs': 'rootfs_aarch64.cpio.gz',
+            'test_plan': 'boot',
+            'tests': ['first_test.sh'],
+            },
         'armada-370-db': {
             'name': 'armada-370-db',
             'device_type': 'armada-370-db',
@@ -67,7 +67,7 @@ boards = {
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
             },
-        'armada-375-db': { # Offline
+        'armada-375-db': {
             'name': 'armada-375-db',
             'device_type': 'armada-375-db',
             'arch': 'arm',
@@ -111,17 +111,17 @@ boards = {
             'tests': ['first_test.sh', 'crypto.sh'],
             'tests_multinode': ['network.yaml'],
             },
-        #'armada-7040-db': { # Offline
-        #    'name': 'armada-7040-db',
-        #    'device_type': 'armada-7040-db',
-        #    'arch': 'arm64',
-        #    'defconfigs': ['defconfig'],
-        #    'dt': 'armada-7040-db',
-        #    'rootfs': 'rootfs_aarch64.cpio.gz',
-        #    'test_plan': 'boot',
-        #    'tests': ['first_test.sh'],
-        #    },
-        'armada-8040-db': { # Offline
+        'armada-7040-db': {
+            'name': 'armada-7040-db',
+            'device_type': 'armada-7040-db',
+            'arch': 'arm64',
+            'defconfigs': ['defconfig'],
+            'dt': 'armada-7040-db',
+            'rootfs': 'rootfs_aarch64.cpio.gz',
+            'test_plan': 'boot',
+            'tests': ['first_test.sh'],
+            },
+        'armada-8040-db': {
             'name': 'armada-8040-db',
             'device_type': 'armada-8040-db',
             'arch': 'arm64',
@@ -356,7 +356,7 @@ boards = {
             'tests_multinode': ['network.yaml'],
             'notify': ['florent.jacquet@free-electrons.com'],
             },
-        #'sama5d31ek': { # Offline (doesn't exists?)
+        #'sama5d31ek': { # doesn't exists
         #    'name': 'sama5d31ek',
         #    'device_type': 'sama5d31ek',
         #    'arch': 'arm',
@@ -376,7 +376,7 @@ boards = {
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
             },
-        #'sama5d35ek': { # Offline (doesn't exists?)
+        #'sama5d35ek': { # doesn't exists
         #    'name': 'sama5d35ek',
         #    'device_type': 'sama5d35ek',
         #    'arch': 'arm',
@@ -438,7 +438,7 @@ boards = {
             'tests': ['first_test.sh'],
             # 'tests_multinode': ['network.yaml'], Network over USB, may require more configuration
             },
-        'sun8i-a33-sinlinx-sina33': { # Offline
+        'sun8i-a33-sinlinx-sina33': {
             'name': 'sun8i-a33-sinlinx-sina33',
             'device_type': 'sun8i-a33-sinlinx-sina33',
             'arch': 'arm',
