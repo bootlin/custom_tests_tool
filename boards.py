@@ -57,16 +57,16 @@ boards = {
             'tests': ['first_test.sh'],
             # 'tests_multinode': ['network.yaml'], No network support
             },
-        #'armada-3720-espressobin': { # Offline
-        #    'name': 'Armada 3720 Espressobin',
-        #    'device_type': 'armada-3720-espressobin',
-        #    'arch': 'arm64',
-        #    'defconfigs': ['defconfig'],
-        #    'dt': 'marvell/armada-3720-espressobin',
-        #    'rootfs': 'rootfs_aarch64.cpio.gz',
-        #    'test_plan': 'boot',
-        #    'tests': ['first_test.sh'],
-        #    },
+        'armada-3720-espressobin': {
+            'name': 'Armada 3720 Espressobin',
+            'device_type': 'armada-3720-espressobin',
+            'arch': 'arm64',
+            'defconfigs': ['defconfig'],
+            'dt': 'marvell/armada-3720-espressobin',
+            'rootfs': 'rootfs_aarch64.cpio.gz',
+            'test_plan': 'boot',
+            'tests': ['first_test.sh'],
+            },
         'armada-375-db': { # Offline
             'name': 'armada-375-db',
             'device_type': 'armada-375-db',
@@ -126,11 +126,11 @@ boards = {
             'device_type': 'armada-8040-db',
             'arch': 'arm64',
             'defconfigs': ['defconfig'],
-            'dt': 'armada-8040-db',
+            'dt': 'marvell/armada-8040-db',
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
-            'tests_multinode': ['network.yaml'],
+            # 'tests_multinode': ['network.yaml'], No network support
             },
         'armada-398-db': {
             'name': 'Armada 398 DB',
@@ -187,16 +187,16 @@ boards = {
             'tests': ['first_test.sh', 'crypto.sh'],
             'tests_multinode': ['network.yaml'],
             },
-        #'at91-sama5d2_xplained': { # Offline
-        #    'name': 'at91-sama5d2_xplained',
-        #    'device_type': 'at91-sama5d2_xplained',
-        #    'arch': 'arm',
-        #    'defconfigs': ['multi_v7_defconfig'],
-        #    'dt': 'at91-sama5d2_xplained',
-        #    'rootfs': 'rootfs_armv7.cpio.gz',
-        #    'test_plan': 'boot',
-        #    'tests': ['first_test.sh'],
-        #    },
+        'at91-sama5d2_xplained': {
+            'name': 'at91-sama5d2_xplained',
+            'device_type': 'at91-sama5d2_xplained',
+            'arch': 'arm',
+            'defconfigs': ['multi_v7_defconfig'],
+            'dt': 'at91-sama5d2_xplained',
+            'rootfs': 'rootfs_armv7.cpio.gz',
+            'test_plan': 'boot',
+            'tests': ['first_test.sh'],
+            },
         'at91-sama5d4_xplained': {
             'name': 'AT91 sama5d4 Xplained',
             'device_type': 'at91-sama5d4_xplained',
@@ -448,17 +448,17 @@ boards = {
             'test_plan': 'boot',
             'tests': ['first_test.sh'],
             },
-        # 'sun8i-a83t-allwinner-h8homlet-v2': {
-        #     'name': 'sun8i-a83t-allwinner-h8homlet-v2',
-        #     'device_type': 'sun8i-a83t-allwinner-h8homlet-v2',
-        #     'arch': 'arm',
-        #     'defconfigs': ['multi_v7_defconfig'],
-        #     'dt': 'sun8i-a83t-allwinner-h8homlet-v2',
-        #     'rootfs': 'rootfs_armv7.cpio.gz',
-        #     'test_plan': 'boot',
-        #     'tests': ['first_test.sh'],
-        #     # 'tests_multinode': ['network.yaml'], No network support
-        #     },
+        'sun8i-a83t-allwinner-h8homlet-v2': {
+            'name': 'sun8i-a83t-allwinner-h8homlet-v2',
+            'device_type': 'sun8i-a83t-allwinner-h8homlet-v2',
+            'arch': 'arm',
+            'defconfigs': ['multi_v7_defconfig'],
+            'dt': 'sun8i-a83t-allwinner-h8homlet-v2',
+            'rootfs': 'rootfs_armv7.cpio.gz',
+            'test_plan': 'boot',
+            'tests': ['first_test.sh'],
+            # 'tests_multinode': ['network.yaml'], No network support
+            },
         'sun8i-h3-orangepi-pc': {
             'name': 'OrangePi PC',
             'device_type': 'sun8i-h3-orangepi-pc',
@@ -467,7 +467,7 @@ boards = {
             'dt': 'sun8i-h3-orangepi-pc',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            # 'tests': ['first_test.sh'], No network support
+            'tests': ['first_test.sh'],
             },
         }
 
