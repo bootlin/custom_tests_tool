@@ -45,8 +45,6 @@ def get_file_config(f_name=None, section="ctt"):
 
 def get_args_config(kwargs):
     parser = argparse.ArgumentParser(description='Build up LAVA jobs')
-    # parser.add_argument('--v1', '--json', action='store_true', help='Outputs the job as a JSON file, good for LAVA v1')
-    # parser.add_argument('--v2', '--yaml', action='store_true', help='Outputs the job as a YAML file, good for LAVA v2')
     job = parser.add_argument_group("Job handling")
     job.add_argument('--output-dir', default="jobs", help='Path where the jobs will be stored (default=./jobs/)')
     job.add_argument('--rootfs-path', default=kwargs["rootfs_path"], help='Path to the rootfs images directory where prebuilt rootfs are stored')

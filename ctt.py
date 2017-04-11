@@ -5,13 +5,16 @@
 # Florent Jacquet <florent.jacquet@free-electrons.com>
 #
 
-from json_handler import JobHandler
-from yaml_handler import YAMLHandler
+from job_crafter import JobCrafter
 from utils import KCIFetcher, get_connection, get_config, red
 from boards import boards
 
 
 def main(**kwargs):
+    con = get_connection(**kwargs)
+    print(con.scheduler.get_device_status("beaglebone-black_01"))
+
+
     if kwargs['list']:
         print("Board list: ")
         for b in sorted(boards.keys()):
@@ -26,7 +29,7 @@ def main(**kwargs):
     for b in kwargs["boards"]:
         if b in boards.keys():
             try:
-                h = JobHandler(b, **kwargs)
+                h = JobCrafter(b, **kwargs)
                 if kwargs["no_kci"]:
                     h.make_jobs()
                 else:

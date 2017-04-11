@@ -1,5 +1,4 @@
 import os
-import json
 import collections
 import utils
 import paramiko
@@ -11,7 +10,7 @@ from utils import red, green
 
 REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
 
-class JobHandler:
+class JobCrafter:
     """
     This class handle the jobs.
     """
@@ -42,10 +41,10 @@ class JobHandler:
     def get_job_from_file(self, file):
         self.job_template = self.jinja_env.get_template(file)
 
-    def save_job_to_file(self):
+    def save_job_to_file(self, ext):
         try: os.makedirs(self.kwargs["output_dir"])
         except: pass
-        file = os.path.join(self.kwargs["output_dir"], self.job["job_name"] + ".json")
+        file = os.path.join(self.kwargs["output_dir"], self.job["job_name"] + "." + ext)
         with open(file, 'w') as f:
             f.write(self.job_template.render(self.job))
         print(green("File saved to %s" % file))
@@ -84,7 +83,6 @@ class JobHandler:
         self.override_lava_infos()
         self.override_device_type()
         self.override_recipients()
-        self.get_job_from_file("jobs_templates/simple_test_job_template.jinja")
         use_default = True
         tests = tests_multinode = []
         if self.kwargs['tests']:
@@ -96,6 +94,15 @@ class JobHandler:
         if use_default:
             tests = self.board.get("tests", [])
             tests_multinode = self.board.get("tests_multinode", [])
+        if self.get_device_status()["is_pipeline"]:
+            template_simple = "jobs_templates/simple_test_job_template_v2.jinja"
+            template_multi = "jobs_templates/multinode_job_template_v2.jinja"
+            job_extension = "yaml"
+        else:
+            template_simple = "jobs_templates/simple_test_job_template.jinja"
+            template_multi = "jobs_templates/multinode_job_template.jinja"
+            job_extension = "json"
+        self.get_job_from_file(template_simple)
         for test in tests:
             job_name = job_name_prefix + test
             self.override_job_name(job_name)
@@ -103,8 +110,8 @@ class JobHandler:
             if self.kwargs["send"]:
                 self.send_to_lava()
             else:
-                self.save_job_to_file()
-        self.get_job_from_file("jobs_templates/multinode_job_template.jinja")
+                self.save_job_to_file(job_extension)
+        self.get_job_from_file(template_multi)
         for test in tests_multinode:
             job_name = job_name_prefix + test
             self.override_job_name(job_name)
@@ -112,7 +119,7 @@ class JobHandler:
             if self.kwargs["send"]:
                 self.send_to_lava()
             else:
-                self.save_job_to_file()
+                self.save_job_to_file(job_extension)
 
     def override_recipients(self):
         print("notify recipients: Overriding")
