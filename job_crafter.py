@@ -33,9 +33,17 @@ class JobCrafter:
         self.jinja_env = Environment(loader=FileSystemLoader(os.getcwd()))
 
     def get_device_status(self):
-        return utils.get_connection(**self.kwargs).scheduler.get_device_status(
-                self.board["device_type"] + "_01"
-                )
+        try:
+            return self._device_status
+        except:
+            self._device_status = utils.get_connection(**self.kwargs).scheduler.get_device_status(
+                    self.board["device_type"] + "_01"
+                    )
+            return self._device_status
+
+    @property
+    def is_pipeline(self):
+        return self.get_device_status()["is_pipeline"]
 
 # Template handling
     def get_job_from_file(self, file):
@@ -72,10 +80,13 @@ class JobCrafter:
 
 # Job handling
     def make_jobs(self, kci_data={}):
+        # Set job name's prefix
         job_name_prefix = "%s--%s--" % (self.kwargs["kernelci_tree"],
                 self.board['device_type'])
         if kci_data:
             job_name_prefix += kci_data["defconfig"] + "--"
+
+        # Override basic values that are constant over each test
         self.override_kernel(kci_data.get('kernel'))
         self.override_dtb(kci_data.get('dtb'))
         self.override_modules(kci_data.get('modules'))
@@ -83,6 +94,8 @@ class JobCrafter:
         self.override_lava_infos()
         self.override_device_type()
         self.override_recipients()
+
+        # Define which test to run
         use_default = True
         tests = tests_multinode = []
         if self.kwargs['tests']:
@@ -94,24 +107,36 @@ class JobCrafter:
         if use_default:
             tests = self.board.get("tests", [])
             tests_multinode = self.board.get("tests_multinode", [])
-        if self.get_device_status()["is_pipeline"]:
+
+        # Define which template to use
+        if self.is_pipeline:
+            job_extension = "yaml"
             template_simple = "jobs_templates/simple_test_job_template_v2.jinja"
             template_multi = "jobs_templates/multinode_job_template_v2.jinja"
-            job_extension = "yaml"
         else:
+            job_extension = "json"
             template_simple = "jobs_templates/simple_test_job_template.jinja"
             template_multi = "jobs_templates/multinode_job_template.jinja"
-            job_extension = "json"
+
+        # Simple tests
         self.get_job_from_file(template_simple)
+        self.is_multinode = False
         for test in tests:
             job_name = job_name_prefix + test
             self.override_job_name(job_name)
-            self.override_tests(test, True)
+            self.override_tests(test, (not self.is_pipeline))
             if self.kwargs["send"]:
                 self.send_to_lava()
             else:
                 self.save_job_to_file(job_extension)
+
+        # Reset to v1 for multinode jobs as they still don't work correctly
+        job_extension = "json"
+        template_multi = "jobs_templates/multinode_job_template.jinja"
+
+        # MultiNode tests
         self.get_job_from_file(template_multi)
+        self.is_multinode = True
         for test in tests_multinode:
             job_name = job_name_prefix + test
             self.override_job_name(job_name)
@@ -199,6 +224,13 @@ class JobCrafter:
 
     def override_tests(self, test, append_device_type=False):
         print("tests: Overriding")
+        if self.is_pipeline or self.is_multinode:
+            ext = ".yaml"
+            folder = "tests/"
+        else:
+            ext = ".sh"
+            folder = "scripts/"
+        test = folder + test + ext
         if append_device_type:
             self.job["tests"] = test + " " + self.board['device_type']
         else:

@@ -71,8 +71,10 @@ actions:
     definitions:
     - repository: git://github.com/free-electrons/custom_tests.git
       from: git
-      path: tests/first_test.yaml
-      name: first-test
+      path: {{ tests }}
+      name: "{{ tests|replace('/', '-')|replace('.', '_') }}"
+      parameters:
+        DEVICE: "{{ device_type }}"
 
 
 
