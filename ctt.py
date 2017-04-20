@@ -11,8 +11,8 @@ from boards import boards
 
 
 def main(**kwargs):
-    con = get_connection(**kwargs)
-    print(con.scheduler.get_device_status("beaglebone-black_01"))
+    # con = get_connection(**kwargs)
+    # print(con.dashboard.bundles("/anonymous/skia/"))
 
 
     if kwargs['list']:
