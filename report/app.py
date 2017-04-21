@@ -36,6 +36,24 @@ def index():
 
 @app.route("/refresh")
 def generate():
+    """
+    devices = {
+        "device_name": {
+            "test_name": [
+                {
+                    "job_id": 4000,
+                    "job_name": "bleh",
+                    "result": "pass",
+                    },
+                {
+                    "job_id": 4001,
+                    "job_name": "bleh--2",
+                    "result": "fail",
+                    }
+            ]
+            }
+        }
+    """
     devices = {d[0]:{t:[] for t in tests_list.keys()} for d in server.scheduler.all_devices()}
     # print(devices)
     for b in reversed(server.dashboard.bundles('/anonymous/custom-tests/')[-400:]):
