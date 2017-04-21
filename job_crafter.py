@@ -130,10 +130,6 @@ class JobCrafter:
             else:
                 self.save_job_to_file(job_extension)
 
-        # Reset to v1 for multinode jobs as they still don't work correctly
-        job_extension = "json"
-        template_multi = "jobs_templates/multinode_job_template.jinja"
-
         # MultiNode tests
         self.get_job_from_file(template_multi)
         self.is_multinode = True
