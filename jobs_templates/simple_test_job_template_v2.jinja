@@ -69,7 +69,7 @@ actions:
     - repository: git://github.com/free-electrons/custom_tests.git
       from: git
       path: {{ tests }}
-      name: "{{ tests|replace('/', '-')|replace('.', '_') }}"
+      name: custom-tests
       parameters:
         DEVICE: "{{ device_type }}"
 
