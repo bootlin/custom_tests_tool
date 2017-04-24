@@ -34,25 +34,28 @@ actions:
     timeout:
       minutes: 4
     to: tftp
-    {% if kernel %}
+    {%- if kernel %}
     kernel:
       url: {{ kernel }}
-    {% endif %}
-    {% if rootfs %}
-    ramdisk:
+      type: {% if kernel.endswith("/Image") %}image{% else %}zimage{% endif %}
+    {%- endif %}
+    {%- if rootfs %}
+    {{ rootfs_type }}:
       url: {{ rootfs }}
       compression: gz
+      {%- if rootfs_type == "ramdisk" %}
       add-header: u-boot
-    {% endif %}
-    {% if modules %}
+      {% endif %}
+    {%- endif %}
+    {%- if modules %}
     modules:
       url: {{ modules }}
       compression: xz
-    {% endif %}
-    {% if device_tree %}
+    {%- endif %}
+    {%- if device_tree %}
     dtb:
       url: {{ device_tree }}
-    {% endif %}
+    {%- endif %}
     os: oe
 
 - deploy:
@@ -76,8 +79,11 @@ actions:
     role:
     - board
     method: u-boot
+    {%- if rootfs_type == "ramdisk" %}
     commands: ramdisk
-    type: bootz
+    {% else %}
+    commands: nfs
+    {% endif %}
     prompts:
     # escape the brackets to ensure that the prompt does not match
     # kernel debug lines which may mention initramfs
@@ -88,7 +94,7 @@ actions:
       login_prompt: 'login:'
       username: 'root'
     timeout:
-      minutes: 2
+      minutes: 3
 
 # TEST_BLOCK
 - test:
