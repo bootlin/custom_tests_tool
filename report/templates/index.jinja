@@ -12,7 +12,8 @@
             <h4>
                 LAVA custom tests results
                 <a href="/refresh" class="btn-sm btn-info">refresh</a>
-                <small>Last update: {{ datetime.now() }}</small>
+                <small>Last update: {{ datetime.now() }}</small> //
+                <small>Time to generate: {{ datetime.now() - start_time }}</small>
             </h4>
         </header>
         <section>
@@ -20,7 +21,7 @@
                 <thead>
                     <tr>
                         <td>Board</td>
-                        {% for test in tests.keys()|sort %}
+                        {% for test in tests|sort %}
                         <td>{{ test }}</td>
                         {% endfor %}
                     </tr>
@@ -29,7 +30,7 @@
                     {% for device_name,results in devices|dictsort %}
                         <tr>
                             <td>{{ device_name }}</td>
-                            {% for test in tests.keys()|sort %}
+                            {% for test in tests|sort %}
                                 {% if devices[device_name][test] %}
                                 <td>
                                     {% for r in devices[device_name][test] %}
