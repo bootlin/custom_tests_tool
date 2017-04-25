@@ -66,6 +66,21 @@ actions:
     timeout:
       minutes: 5
     definitions:
+    - repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: shell-test
+          description: "test the shell"
+          os:
+          - oe
+          scope:
+          - functional
+        run:
+          steps:
+          - lava-test-shell shell --shell true
+      from: inline
+      name: shell-test
+      path: inline/shell-test.yaml
     - repository: git://github.com/free-electrons/custom_tests.git
       from: git
       path: {{ tests }}

@@ -116,7 +116,7 @@ boards = {
             'device_type': 'armada-7040-db',
             'arch': 'arm64',
             'defconfigs': ['defconfig'],
-            'dt': 'armada-7040-db',
+            'dt': 'marvell/armada-7040-db',
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
             'tests': ['first_test'],

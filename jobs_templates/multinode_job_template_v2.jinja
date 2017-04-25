@@ -107,17 +107,15 @@ actions:
     - repository:
         metadata:
           format: Lava-Test Test Definition 1.0
-          name: install-ssh
-          description: "install step"
+          name: start-ssh
+          description: "start the ssh side of the job"
           os:
-          - debian
-          scope:
-          - functional
+          - oe
         run:
           steps:
           - lava-send lava_start
       from: inline
-      name: ssh-inline
+      name: start-ssh
       path: inline/ssh-install.yaml
     - repository: git://github.com/free-electrons/custom_tests.git
       from: git
