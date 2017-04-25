@@ -13,8 +13,12 @@ from datetime import datetime
 
 hostname = "farm"
 
-username = "custom-tests"
+username = "my-user"
 token = "my-awesome-token"
+
+with open("credentials", "r") as f:
+    username = f.readline().strip()
+    token = f.readline().strip()
 
 server = client.ServerProxy("http://%s:%s@%s/RPC2" % (username, token, hostname))
 
