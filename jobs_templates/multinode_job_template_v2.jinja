@@ -124,5 +124,18 @@ actions:
       parameters:
         DEVICE: "{{ device_type }}"
 
+{% if notify %}
+notify:
+  recipients:
+  {%- for email in notify %}
+  - to:
+     method: email
+     email: {{ email }}
+  {%- endfor %}
+  criteria:
+    status: complete
+  verbosity: verbose
+{% endif %}
+
 
 
