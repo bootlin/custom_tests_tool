@@ -56,9 +56,9 @@ def generate():
     """
     start_time = datetime.now()
     devices = {}
-    for device in [i[0] for i in server.scheduler.all_devices()]:
+    for device in [i[0] for i in server.scheduler.all_devices() if i[4]]:
         devices[device] = {}
-        for job in server.scheduler.get_recent_jobs_for_device(device, 20):
+        for job in server.scheduler.get_recent_jobs_for_device(device, 20, True):
             j_id = job["id"]
             job_name = job['description']
             print('.', end='', flush=True)
