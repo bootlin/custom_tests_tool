@@ -14,6 +14,7 @@ import configparser
 import smtplib
 from email.mime.text import MIMEText
 
+from boards import boards
 
 hostname = "farm"
 
@@ -32,16 +33,8 @@ def main():
     server = client.ServerProxy("http://%s:%s@%s/RPC2" % (username, token, hostname))
     end_date = datetime.now().replace(hour=11, minute=0, second=0,
             microsecond=0)
-    start_date = end_date - timedelta(hours=24)
-    job_list = []
-    job_list.append("".join([
-        '{:<10}'.format("tree"),
-        '{:<35}'.format("device"),
-        '{:<20}'.format("defconfig"),
-        '{:<14}'.format("test"),
-        "link",
-        ])
-    )
+    start_date = end_date - timedelta(hours=72)
+    mail_list = {}
     for j in server.results.query("testjob",
             "testjob__end_time__gt__%s,"
             "testjob__end_time__lt__%s,"
@@ -50,30 +43,45 @@ def main():
             "testsuite__name__exact__1_custom-tests"
             % (start_date, end_date)):
         d = j["description"].split("--")
-        job_list.append("".join([
+        job_report = "".join([
             '{:<10}'.format(d[0]),
             '{:<35}'.format(d[1]),
             '{:<20}'.format(d[2]),
             '{:<14}'.format(d[3]),
             "http://farm/scheduler/job/%s" % j["id"],
             ])
-        )
-        # job_list.append("    link: http://farm/scheduler/job/%s" % j["id"])
+        board = boards.get(j["requested_device_type_id"], None)
+        if board:
+            for email in board.get("notify", []):
+                if email in mail_list.keys():
+                    mail_list[email].append(job_report)
+                else:
+                    mail_list[email] = [job_report]
+    pprint(mail_list)
 
-    msg = MIMEText(
-            "The following devices failed one of there job during the last 24 hours:\n"
-            "At least one of them is yours.\n"
-            "\n" + '\n'.join(job_list))
-    print(msg)
-    user = "guy@libskia.so"
-    msg['Subject'] = "Custom tests summary"
-    msg['To'] = user
-    msg['From'] = kwargs["mail"]
     server = smtplib.SMTP(kwargs["server"], kwargs["port"])
     server.ehlo()
     server.starttls()
     server.login(kwargs["login"], kwargs["password"])
-    server.sendmail(kwargs["mail"], [user], msg.as_string())
+    for user,job_list in mail_list.items():
+        msg_list = []
+        msg_list.append("".join([
+            '{:<10}'.format("tree"),
+            '{:<35}'.format("device"),
+            '{:<20}'.format("defconfig"),
+            '{:<14}'.format("test"),
+            "link",
+            ])
+        )
+        msg_list += job_list
+        print(msg_list)
+        msg = MIMEText(
+                "The following jobs failed during the last 24 hours:\n"
+                "\n" + '\n'.join(msg_list))
+        msg['Subject'] = "CI summary"
+        msg['From'] = kwargs["mail"]
+        msg['To'] = user
+        server.sendmail(kwargs["mail"], [user], msg.as_string())
     server.quit()
     return
 

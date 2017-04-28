@@ -344,7 +344,7 @@ boards = {
             'test_plan': 'boot-nfs',
             'tests': ['first_test'],
             },
-        'sama5d3': {
+        'sama53d': {
             'name': 'sama5d3 Xplained',
             'device_type': 'sama53d',
             'arch': 'arm',
