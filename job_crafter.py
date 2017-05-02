@@ -145,7 +145,10 @@ class JobCrafter:
     def override_recipients(self):
         print("notify recipients: Overriding")
         for n in "notify", "notify_on_incomplete":
-            self.job[n] = self.kwargs[n] or self.board.get(n, [])
+            if self.kwargs['default_notify']:
+                self.job[n] = self.board.get(n, [])
+            else:
+                self.job[n] = self.kwargs[n]
         print("notify recipients: Overridden")
 
     def override_device_type(self):
