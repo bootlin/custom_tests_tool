@@ -40,7 +40,8 @@ server your sending the job, as long as it actually contains valid rootfs.
   * `notify` is a comma separated list of addresses where the test results will
 be sent, whatever the status of the job.
   * `notify_on_incomplete` is a comma separated list of addresses where the test
-results will be sent if the job ends as `Incomplete`.
+results will be sent if the job ends as `Incomplete`. Mostly useful for LAVA
+admins.
 
 If you don't specify `notify` or `notify_on_incomplete`, the notifications will
 be sent to the addresses listed in the `boards.py` file, in a per board basis.
@@ -87,12 +88,12 @@ To prevent this, just name your file differently.
 
 #### Customizing tests
 
-`./ctt.py -b armada-370-db -t sata.sh --send`
+`./ctt.py -b armada-370-db -t sata --send`
 
 Will send only the sata test on the Armada 370 DB.
 `-t` or `--tests` is a list, so you can give as much tests as you want. The
 tests need to be filenames that are available in the `./tests/` folder of the
-test repository.
+test repository (without the extension).
 
 The `-m` or `--tests-multinode` option is also available and does the same thing
 with the multinode job template.
@@ -110,16 +111,17 @@ Then just edit the `boards.py` file. It contains just a Python dictionnary, and
 it's thus easy to add a new board:
 
 ```python
-'beaglebone-black': { # The key is free to choose. Usally the DT name is a good
-                      # choice, but it's not mandatory
+'beaglebone-black': { # The key must be the device type name as known to LAVA
+                      # for the daily notifications to work.
+                      # Otherwise, it's free to choose
     'name': 'BeagleBone Black', # A pretty name for displaying, also free
     'device_type': 'beaglebone-black', # This is the device-type as named is the
                                        # LAVA configuration
-    'defconfigs': ['arm-multi_v7_defconfig'], # This is a list of defconfigs
-                                              # built by Kernel CI.
-                                              # This value can be found at
-                                              # https://storage.kernelci.org/mainline/v4.11.xxx-XXXXXX
-                                              # for example.
+    'defconfigs': ['multi_v7_defconfig'], # This is a list of defconfigs built
+                                          # by Kernel CI.
+                                          # This value can be found at
+                                          # https://storage.kernelci.org/mainline/master/v4.11.xxx-XXXXXX
+                                          # for example.
     'dt': 'am335x-boneblack', # This is the DT name as found in the kernel,
                               # without the extension.
     'rootfs': 'rootfs_armv7.cpio.gz', # The name of the rootfs you want to use.
@@ -128,10 +130,16 @@ it's thus easy to add a new board:
                                       # the .cctrc file).
     'test_plan': 'boot', # What LAVA test to you want tu run (only boot is
                          # supported)
-    'tests': ['first_test.sh', 'mmc.sh'], # A list of test that can be (and
-                                          # will) be launched on the board.
-                                          # They will be run from the
-                                          # /tests/tests/ folder in the rootfs.
+    'tests': ['first_test', 'mmc'], # A list of test that can be (and will) be
+                                    # launched on the board.
+                                    # They will be added to the job, and must be
+                                    # existing YAML files in the custom test
+                                    # repository's tests folder (without the
+                                    # extension)
+    'tests_multinode': ['network'], # It's the same as the 'tests' option, but
+                                    # using the multinode template
+    'notify': ['tux@free-electrons.com'], # The list of people to notify if the
+                                          # board begins to fail
     },
 ```
 
