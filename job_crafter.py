@@ -172,8 +172,12 @@ class JobCrafter:
                     self.board["name"]))
 
     def override_dtb(self, dtb_url=None):
-        if self.kwargs["dtb"]:
-            local_path = os.path.abspath(self.kwargs["dtb"])
+        if self.kwargs["dtb"] or self.kwargs["dtb_folder"]:
+            if self.kwargs["dtb"]:
+                local_path = os.path.abspath(self.kwargs["dtb"])
+            else:
+                local_path = os.path.abspath(os.path.join(self.kwargs["dtb_folder"],
+                    self.board['dt'] + '.dtb'))
             print("DTB: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             remote_path = self.handle_file(local_path, remote_path)
