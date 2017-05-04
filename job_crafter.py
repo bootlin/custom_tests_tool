@@ -109,14 +109,9 @@ class JobCrafter:
             tests_multinode = self.board.get("tests_multinode", [])
 
         # Define which template to use
-        if self.is_pipeline:
-            job_extension = "yaml"
-            template_simple = "jobs_templates/simple_test_job_template_v2.jinja"
-            template_multi = "jobs_templates/multinode_job_template_v2.jinja"
-        else:
-            job_extension = "json"
-            template_simple = "jobs_templates/simple_test_job_template.jinja"
-            template_multi = "jobs_templates/multinode_job_template.jinja"
+        job_extension = "yaml"
+        template_simple = "jobs_templates/simple_test_job_template_v2.jinja"
+        template_multi = "jobs_templates/multinode_job_template_v2.jinja"
 
         # Simple tests
         self.get_job_from_file(template_simple)
@@ -224,11 +219,11 @@ class JobCrafter:
     def override_tests(self, test, append_device_type=False):
         print("tests: Overriding")
         if self.is_pipeline or self.is_multinode:
-            ext = ".yaml"
-            folder = "tests/"
+            ext = ""
+            folder = ""
         else:
-            ext = ".sh"
-            folder = "scripts/"
+            ext = ""
+            folder = ""
         test = folder + test + ext
         if append_device_type:
             self.job["tests"] = test + " " + self.board['device_type']

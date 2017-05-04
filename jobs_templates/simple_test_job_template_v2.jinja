@@ -77,16 +77,17 @@ actions:
           - functional
         run:
           steps:
-          - lava-test-shell shell --shell true
+          - lava-test-case shell --shell true
       from: inline
       name: shell-test
       path: inline/shell-test.yaml
     - repository: git://github.com/free-electrons/test_suite.git
       from: git
-      path: {{ tests }}
+      path: tests/generic.yaml
       name: custom-tests
       parameters:
         DEVICE: "{{ device_type }}"
+        TEST: "{{ tests }}"
 
 {% if notify %}
 notify:

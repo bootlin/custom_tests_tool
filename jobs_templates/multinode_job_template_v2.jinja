@@ -99,8 +99,21 @@ actions:
 # TEST_BLOCK
 - test:
     role:
-    - board
     - laptop
+    timeout:
+      minutes: 5
+    definitions:
+    - repository: git://github.com/free-electrons/test_suite.git
+      from: git
+      path: tests/generic_multinode.yaml
+      name: custom-tests
+      parameters:
+        DEVICE: "dummy-ssh"
+        TEST: "{{ tests }}"
+
+- test:
+    role:
+    - board
     timeout:
       minutes: 5
     definitions:
@@ -119,10 +132,11 @@ actions:
       path: inline/ssh-install.yaml
     - repository: git://github.com/free-electrons/test_suite.git
       from: git
-      path: {{ tests }}
+      path: tests/generic_multinode.yaml
       name: custom-tests
       parameters:
         DEVICE: "{{ device_type }}"
+        TEST: "{{ tests }}"
 
 {% if notify %}
 notify:
