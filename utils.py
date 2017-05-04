@@ -78,7 +78,7 @@ This is useful if something.kernelci.org is down.
     ssh.add_argument('--ssh-username', default=kwargs["ssh_username"], help='The ssh username to send the custom files')
 
     parser.add_argument('--upload', action='store_true', help='Send the custom files to the server')
-    parser.add_argument('--send', action='store_true', help='Send the job directly, rather than saving it to output')
+    parser.add_argument('--no-send', action='store_true', help='Don\'t send the job directly, save it to output')
     parser.add_argument('--default-notify', action='store_true', help='Use the default notify list provided by the boards configuration')
     parser.add_argument('--notify', default=kwargs['notify'], nargs='+', help='List of addresses to which the notifications will be sent.')
     parser.add_argument('--notify-on-incomplete', default=kwargs['notify_on_incomplete'], nargs='+', help='List of addresses to which the notifications will be sent if the job is incomplete.')

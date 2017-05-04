@@ -125,10 +125,10 @@ class JobCrafter:
             job_name = job_name_prefix + test
             self.override_job_name(job_name)
             self.override_tests(test, (not self.is_pipeline))
-            if self.kwargs["send"]:
-                self.send_to_lava()
-            else:
+            if self.kwargs["no_send"]:
                 self.save_job_to_file(job_extension)
+            else:
+                self.send_to_lava()
 
         # MultiNode tests
         self.get_job_from_file(template_multi)
@@ -137,10 +137,10 @@ class JobCrafter:
             job_name = job_name_prefix + test
             self.override_job_name(job_name)
             self.override_tests(test)
-            if self.kwargs["send"]:
-                self.send_to_lava()
-            else:
+            if self.kwargs["no_send"]:
                 self.save_job_to_file(job_extension)
+            else:
+                self.send_to_lava()
 
     def override_recipients(self):
         print("notify recipients: Overriding")
