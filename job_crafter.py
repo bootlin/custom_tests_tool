@@ -30,7 +30,7 @@ class JobCrafter:
                 "job_name": "",
                 "notify": []
                 }
-        self.jinja_env = Environment(loader=FileSystemLoader(os.getcwd()))
+        self.jinja_env = Environment(loader=FileSystemLoader(os.path.dirname(__file__)))
 
     def get_device_status(self):
         try:
