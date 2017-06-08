@@ -154,13 +154,15 @@ class JobCrafter:
     def override_rootfs(self):
         if self.kwargs["rootfs"]:
             rootfs = self.kwargs['rootfs']
+            print("rootfs: Overriding with local file")
+            local_path = os.path.abspath(rootfs)
+            remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
+            remote_path = self.handle_file(local_path, remote_path)
+            self.job["rootfs"] = "file://" + remote_path
         else:
+            print("rootfs: Using default file")
             rootfs = os.path.join(self.kwargs["rootfs_path"], self.board["rootfs"])
-        print("rootfs: Overriding")
-        local_path = os.path.abspath(rootfs)
-        remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
-        remote_path = self.handle_file(local_path, remote_path)
-        self.job["rootfs"] = "file://" + remote_path
+            self.job["rootfs"] = "file://" + rootfs
         if self.board["test_plan"] == "boot":
             self.job["rootfs_type"] = "ramdisk"
             print("rootfs: ramdisk overridden")
