@@ -4,3 +4,4 @@ jobs/
 __pycache__/
 dashboard/env
 dashboard/cache.html
+*.conf
