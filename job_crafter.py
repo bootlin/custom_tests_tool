@@ -6,17 +6,19 @@ import getpass
 from boards import boards
 from jinja2 import FileSystemLoader, Environment
 
-from utils import red, green
+from utils import red, green, KCIFetcher
 
 REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
+TEMPLATE_FOLDER = "jobs_templates"
+DEFAULT_TEMPLATE = "generic_simple_job.jinja"
 
 class JobCrafter:
     """
     This class handle the jobs.
     """
-    def __init__(self, board, **kwargs):
+    def __init__(self, board, options):
         self.board = boards[board]
-        self.kwargs = kwargs
+        self.options = options
         self.job = {
                 "kernel": "",
                 "device_tree": "",
@@ -36,23 +38,20 @@ class JobCrafter:
         try:
             return self._device_status
         except:
-            self._device_status = utils.get_connection(**self.kwargs).scheduler.get_device_status(
+            self._device_status = utils.get_connection(**self.options).scheduler.get_device_status(
                     self.board["device_type"] + "_01"
                     )
             return self._device_status
 
-    @property
-    def is_pipeline(self):
-        return self.get_device_status()["is_pipeline"]
-
 # Template handling
-    def get_job_from_file(self, file):
+    def get_template_from_file(self, file):
+        print("template: using %s" % file)
         self.job_template = self.jinja_env.get_template(file)
 
-    def save_job_to_file(self, ext):
-        try: os.makedirs(self.kwargs["output_dir"])
+    def save_job_to_file(self, ext="yaml"):
+        try: os.makedirs(self.options["output_dir"])
         except: pass
-        file = os.path.join(self.kwargs["output_dir"], self.job["job_name"] + "." + ext)
+        file = os.path.join(self.options["output_dir"], self.job["job_name"] + "." + ext)
         with open(file, 'w') as f:
             f.write(self.job_template.render(self.job))
         print(green("File saved to %s" % file))
@@ -69,81 +68,82 @@ class JobCrafter:
             return
         print("Sending to LAVA")
         job_str = self.job_template.render(self.job)
-        ret = utils.get_connection(**self.kwargs).scheduler.submit_job(job_str)
+        ret = utils.get_connection(**self.options).scheduler.submit_job(job_str)
         try:
             for r in ret:
                 print(green("Job send (id: %s)" % r))
-                print("Potential working URL: ", "http://%s/scheduler/job/%s" % (self.kwargs['ssh_server'], r))
+                print("Potential working URL: ", "http://%s/scheduler/job/%s" %
+                        (self.options['ssh_server'], r))
         except:
             print(green("Job send (id: %s)" % ret))
-            print("Potential working URL: ", "http://%s/scheduler/job/%s" % (self.kwargs['ssh_server'], ret))
+            print("Potential working URL: ", "http://%s/scheduler/job/%s" %
+                    (self.options['ssh_server'], ret))
 
 # Job handling
-    def make_jobs(self, kci_data={}):
-        # Set job name's prefix
-        job_name_prefix = "%s--%s--" % (self.kwargs["kernelci_tree"],
-                self.board['device_type'])
-        if kci_data:
-            job_name_prefix += kci_data["defconfig"] + "--"
-
+    def make_jobs(self):
         # Override basic values that are constant over each test
-        self.override_kernel(kci_data.get('kernel'))
-        self.override_dtb(kci_data.get('dtb'))
-        self.override_modules(kci_data.get('modules'))
         self.override_rootfs()
         self.override_lava_infos()
         self.override_device_type()
         self.override_recipients()
 
         # Define which test to run
-        use_default = True
-        tests = tests_multinode = []
-        if self.kwargs['tests']:
-            tests = self.kwargs['tests']
-            use_default = False
-        if self.kwargs['tests_multinode']:
-            tests_multinode = self.kwargs['tests_multinode']
-            use_default = False
-        if use_default:
+        tests = []
+        if self.options['tests']:
+            tests = [t for t in self.board['tests'] if t['name'] in self.options['tests']]
+        else:
             tests = self.board.get("tests", [])
-            tests_multinode = self.board.get("tests_multinode", [])
-
-        # Define which template to use
-        job_extension = "yaml"
-        template_simple = "jobs_templates/simple_test_job_template_v2.jinja"
-        template_multi = "jobs_templates/multinode_job_template_v2.jinja"
-
-        # Simple tests
-        self.get_job_from_file(template_simple)
-        self.is_multinode = False
         for test in tests:
-            job_name = job_name_prefix + test
-            self.override_job_name(job_name)
-            self.override_tests(test, (not self.is_pipeline))
-            if self.kwargs["no_send"]:
-                self.save_job_to_file(job_extension)
-            else:
-                self.send_to_lava()
+            if self.options['kernel']:
+                # If we use a custom kernel
+                job_name = "%s--custom_kernel--%s" % (self.board['device_type'],
+                        test['name'])
 
-        # MultiNode tests
-        self.get_job_from_file(template_multi)
-        self.is_multinode = True
-        for test in tests_multinode:
-            job_name = job_name_prefix + test
-            self.override_job_name(job_name)
-            self.override_tests(test)
-            if self.kwargs["no_send"]:
-                self.save_job_to_file(job_extension)
+                self.override_kernel()
+                self.override_dtb()
+                self.override_modules()
+
+                self.get_template_from_file(os.path.join(TEMPLATE_FOLDER,
+                    test.get('template', DEFAULT_TEMPLATE)))
+
+                self.override_tests(test['name'])
+                self.override_job_name(job_name)
+                if self.options["no_send"]:
+                    self.save_job_to_file()
+                else:
+                    self.send_to_lava()
             else:
-                self.send_to_lava()
+                # No custom kernel, go fetch artifacts on kernelci.org
+                for defconfig in test.get('defconfigs', self.board['defconfigs']):
+                    kci_data = KCIFetcher(**self.options).crawl(self.board, defconfig)
+                    job_name = "%s--%s--%s--%s" % (
+                            self.board['device_type'],
+                            self.options["kernelci_tree"],
+                            defconfig,
+                            test['name']
+                            )
+
+                    self.override_kernel(kci_data.get('kernel'))
+                    self.override_dtb(kci_data.get('dtb'))
+                    self.override_modules(kci_data.get('modules'))
+
+                    self.get_template_from_file(os.path.join(TEMPLATE_FOLDER,
+                        test.get('template', DEFAULT_TEMPLATE)))
+
+                    self.override_tests(test['name'])
+                    self.override_job_name(job_name)
+                    if self.options["no_send"]:
+                        self.save_job_to_file()
+                    else:
+                        self.send_to_lava()
 
     def override_recipients(self):
         print("notify recipients: Overriding")
         for n in "notify", "notify_on_incomplete":
-            if self.kwargs['default_notify']:
+            if self.options['default_notify']:
                 self.job[n] = self.board.get(n, [])
             else:
-                self.job[n] = self.kwargs[n]
+                self.job[n] = self.options[n]
         print("notify recipients: Overridden")
 
     def override_device_type(self):
@@ -152,8 +152,8 @@ class JobCrafter:
         print("device-type: Overridden")
 
     def override_rootfs(self):
-        if self.kwargs["rootfs"]:
-            rootfs = self.kwargs['rootfs']
+        if self.options["rootfs"]:
+            rootfs = self.options['rootfs']
             print("rootfs: Overriding with local file")
             local_path = os.path.abspath(rootfs)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
@@ -161,7 +161,7 @@ class JobCrafter:
             self.job["rootfs"] = "file://" + remote_path
         else:
             print("rootfs: Using default file")
-            rootfs = os.path.join(self.kwargs["rootfs_path"], self.board["rootfs"])
+            rootfs = os.path.join(self.options["rootfs_path"], self.board["rootfs"])
             self.job["rootfs"] = "file://" + rootfs
         if self.board["test_plan"] == "boot":
             self.job["rootfs_type"] = "ramdisk"
@@ -174,11 +174,11 @@ class JobCrafter:
                     self.board["name"]))
 
     def override_dtb(self, dtb_url=None):
-        if self.kwargs["dtb"] or self.kwargs["dtb_folder"]:
-            if self.kwargs["dtb"]:
-                local_path = os.path.abspath(self.kwargs["dtb"])
+        if self.options["dtb"] or self.options["dtb_folder"]:
+            if self.options["dtb"]:
+                local_path = os.path.abspath(self.options["dtb"])
             else:
-                local_path = os.path.abspath(os.path.join(self.kwargs["dtb_folder"],
+                local_path = os.path.abspath(os.path.join(self.options["dtb_folder"],
                     self.board['dt'] + '.dtb'))
             print("DTB: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
@@ -193,8 +193,8 @@ class JobCrafter:
             print("DTB: Nothing to override")
 
     def override_kernel(self, kernel_url=None):
-        if self.kwargs["kernel"]:
-            local_path = os.path.abspath(self.kwargs["kernel"])
+        if self.options["kernel"]:
+            local_path = os.path.abspath(self.options["kernel"])
             print("kernel: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             remote_path = self.handle_file(local_path, remote_path)
@@ -208,8 +208,8 @@ class JobCrafter:
             print("kernel: Nothing to override")
 
     def override_modules(self, modules_url=None):
-        if self.kwargs["modules"]:
-            local_path = os.path.abspath(self.kwargs["modules"])
+        if self.options["modules"]:
+            local_path = os.path.abspath(self.options["modules"])
             print("modules: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             remote_path = self.handle_file(local_path, remote_path)
@@ -222,43 +222,34 @@ class JobCrafter:
         else:
             print("modules: Nothing to override")
 
-    def override_tests(self, test, append_device_type=False):
+    def override_tests(self, test):
         print("tests: Overriding")
-        if self.is_pipeline or self.is_multinode:
-            ext = ""
-            folder = ""
-        else:
-            ext = ""
-            folder = ""
-        test = folder + test + ext
-        if append_device_type:
-            self.job["tests"] = test + " " + self.board['device_type']
-        else:
-            self.job["tests"] = test
-        print("tests Overridden")
+        test = test
+        self.job["tests"] = test
+        print("tests: Overridden")
 
     def override_lava_infos(self):
         try:
-            self.job["lava_server"] = self.kwargs["server"]
-            self.job["lava_stream"] = self.kwargs["stream"]
+            self.job["lava_server"] = self.options["server"]
+            self.job["lava_stream"] = self.options["stream"]
         except: pass
 
     def override_job_name(self, name="job_name"):
-        if self.kwargs.get('job_name'):
-            name += "--" + self.kwargs.get('job_name')
+        if self.options.get('job_name'):
+            name += "--" + self.options.get('job_name')
         self.job["job_name"] = name
-        print("job name: new name is: %s" % self.job["job_name"])
+        print("job name: %s" % self.job["job_name"])
 
 # Files handling
     def handle_file(self, local, remote):
-        if self.kwargs["upload"]:
+        if not local.startswith("http"):
             self.send_file(local, remote)
             return remote
         else:
             return local
 
     def send_file(self, local, remote):
-        scp = utils.get_sftp(self.kwargs["ssh_server"], 22, self.kwargs["ssh_username"])
+        scp = utils.get_sftp(self.options["ssh_server"], 22, self.options["ssh_username"])
         print("    Sending", local, "to", remote, "... ", end='')
         try:
             scp.put(local, remote)

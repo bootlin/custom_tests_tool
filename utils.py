@@ -135,7 +135,7 @@ class KCIFetcher():
     def get_latest_full_url(self):
         return self.root_url + self.kwargs["kernelci_tree"] + "/" + self.kwargs["kernelci_branch"] + "/" + self.get_latest_release()
 
-    def crawl(self, board, base_url=None):
+    def crawl(self, board, defconfig, base_url=None):
         print("Crawling KernelCI for %s" % board['name'])
         url = base_url or self.get_latest_full_url()
         url = '/'.join([url, board['arch']])
@@ -149,21 +149,17 @@ class KCIFetcher():
             return repr(e)
         files = parse_re.findall(html)
         dirs = []
-        something_found = False
         for name in files:
-            for defconfig in board['defconfigs']:
-                if defconfig == name[:-1]:
-                    print("Found a kernel for %s in %s" % (board["name"], url+name))
-                    common_url = url+name
-                    something_found = True
-                    yield {
-                            'kernel': common_url + KCIFetcher.get_image_name(board),
-                            'dtb': common_url + 'dtbs/' + board['dt'] + '.dtb',
-                            'modules': common_url + 'modules.tar.xz',
-                            'defconfig': defconfig,
-                            }
-        if not something_found:
-            print("Nothing found at address %s" % (url))
+            if defconfig == name[:-1]:
+                print("Found a kernel for %s in %s" % (board["name"], url+name))
+                common_url = url+name
+                return {
+                        'kernel': common_url + KCIFetcher.get_image_name(board),
+                        'dtb': common_url + 'dtbs/' + board['dt'] + '.dtb',
+                        'modules': common_url + 'modules.tar.xz',
+                        'defconfig': defconfig,
+                        }
+        print("Nothing found at address %s" % (url))
 
 
 

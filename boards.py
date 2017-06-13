@@ -9,9 +9,17 @@ boards = {
             'dt': 'alpine-db', # The DT name (without extension)
             'rootfs': 'rootfs_armv7.cpio.gz', # The rootfs to use (must exist in rootfs_path)
             'test_plan': 'boot', # boot or boot-nfs if the board can not boot with ramdisk
-            'tests': ['boot'], # A list of tests run in single node mode. The files must exist in the custom tests repository
-            'tests_multinode': [], # A list of tests run in multi node mode. The files must exist in the custom tests repository
-            # This one has no network support, so the list remains empty for now
+            'tests': [ # A list of tests to run.
+                {
+                    'name': 'boot', # Name matching a file in the script folder of the test suite
+                    'defconfigs': ['multi_v7_defconfig'], # You can override the defconfigs to use, but it's not mandatory
+                    'template': 'generic_simple_job.jinja', # You can also override the template. If not, default is generic_simple_job.jinja
+                    },
+                # {
+                #     'name': 'network',
+                #     'template': 'generic_multinode_job.jinja',
+                #     },
+                ],
             'notify': [], # The list of email addresses to notify in case of failure
             },
         'alpine-v2-evp': {
@@ -22,7 +30,11 @@ boards = {
             'dt': 'al/alpine-v2-evp',
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'armada-370-db': {
@@ -33,8 +45,21 @@ boards = {
             'dt': 'armada-370-db',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot', 'crypto', 'sata'],
-            'tests_multinode': ['network'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'crypto',
+                    },
+                {
+                    'name': 'sata',
+                    },
+                {
+                    'name': 'network',
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': [],
             },
         'armada-370-rd': {
@@ -45,9 +70,18 @@ boards = {
             'dt': 'armada-370-rd',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot', 'crypto'],
-            'tests_multinode': ['network'],
-            # 'tests_multinode': ['network'], No network support
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'crypto',
+                    },
+                {
+                    'name': 'network',
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': [],
             },
         'armada-3720-db': {
@@ -58,8 +92,11 @@ boards = {
             'dt': 'marvell/armada-3720-db',
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
-            # 'tests_multinode': ['network'], No network support
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'armada-3720-espressobin': {
@@ -70,7 +107,11 @@ boards = {
             'dt': 'marvell/armada-3720-espressobin',
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'armada-375-db': {
@@ -81,8 +122,14 @@ boards = {
             'dt': 'armada-375-db',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot', 'crypto'],
-            # 'tests_multinode': ['network'], No network support
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'crypto',
+                    },
+                ],
             'notify': [],
             },
         'armada-385-db-ap': {
@@ -93,8 +140,14 @@ boards = {
             'dt': 'armada-385-db-ap',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot', 'crypto'],
-            # 'tests_multinode': ['network'], No network support
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'crypto',
+                    },
+                ],
             'notify': [],
             },
         'armada-388-clearfog': {
@@ -105,8 +158,18 @@ boards = {
             'dt': 'armada-388-clearfog',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot', 'crypto'],
-            'tests_multinode': ['network'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'crypto',
+                    },
+                {
+                    'name': 'network',
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': [],
             },
         'armada-388-gp': {
@@ -117,8 +180,18 @@ boards = {
             'dt': 'armada-388-gp',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot', 'crypto'],
-            'tests_multinode': ['network'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'crypto',
+                    },
+                {
+                    'name': 'network',
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': [],
             },
         'armada-7040-db': {
@@ -129,7 +202,11 @@ boards = {
             'dt': 'marvell/armada-7040-db',
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'armada-8040-db': {
@@ -140,8 +217,11 @@ boards = {
             'dt': 'marvell/armada-8040-db',
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
-            # 'tests_multinode': ['network'], No network support
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'armada-398-db': {
@@ -152,8 +232,11 @@ boards = {
             'dt': 'armada-398-db',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
-            # 'tests_multinode': ['network'], No network support
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'armada-xp-db': { # NFS boot
@@ -164,8 +247,18 @@ boards = {
             'dt': 'armada-xp-db',
             'rootfs': 'rootfs_armv7.tar.gz',
             'test_plan': 'boot-nfs',
-            'tests': ['boot', 'crypto'],
-            'tests_multinode': ['network'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'crypto',
+                    },
+                {
+                    'name': 'network',
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': [],
             },
         'armada-xp-gp': { # NFS boot
@@ -176,8 +269,18 @@ boards = {
             'dt': 'armada-xp-gp',
             'rootfs': 'rootfs_armv7.tar.gz',
             'test_plan': 'boot-nfs',
-            'tests': ['boot', 'crypto'],
-            'tests_multinode': ['network'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'crypto',
+                    },
+                {
+                    'name': 'network',
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': [],
             },
         'armada-xp-linksys-mamba': {
@@ -188,8 +291,18 @@ boards = {
             'dt': 'armada-xp-linksys-mamba',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot', 'crypto'],
-            'tests_multinode': ['network'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'crypto',
+                    },
+                {
+                    'name': 'network',
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': [],
             },
         'armada-xp-openblocks-ax3-4': {
@@ -200,8 +313,18 @@ boards = {
             'dt': 'armada-xp-openblocks-ax3-4',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot', 'crypto'],
-            'tests_multinode': ['network'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'crypto',
+                    },
+                {
+                    'name': 'network',
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': [],
             },
         'at91-sama5d2_xplained': {
@@ -212,7 +335,11 @@ boards = {
             'dt': 'at91-sama5d2_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'at91-sama5d4_xplained': {
@@ -223,8 +350,15 @@ boards = {
             'dt': 'at91-sama5d4_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
-            'tests_multinode': ['network'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'network',
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': [],
             },
         'at91rm9200ek': {
@@ -235,8 +369,15 @@ boards = {
             'dt': 'at91rm9200ek',
             'rootfs': 'rootfs_armv4.tar.gz',
             'test_plan': 'boot-nfs',
-            'tests': ['boot'],
-            'tests_multinode': ['network'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'network',
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': [],
             },
         'at91sam9261ek': {
@@ -247,8 +388,11 @@ boards = {
             'dt': 'at91sam9261ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
-            # 'tests_multinode': ['network'], No network support
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'at91sam9m10g45ek': {
@@ -259,8 +403,15 @@ boards = {
             'dt': 'at91sam9m10g45ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
-            'tests_multinode': ['network'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'network',
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': [],
             },
         'at91sam9x25ek': {
@@ -271,8 +422,15 @@ boards = {
             'dt': 'at91sam9x25ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
-            'tests_multinode': ['network'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'network',
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': [],
             },
         'at91sam9x35ek': {
@@ -283,8 +441,15 @@ boards = {
             'dt': 'at91sam9x35ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
-            'tests_multinode': ['network'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'network',
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': [],
             },
         'beagle-xm': {
@@ -295,7 +460,11 @@ boards = {
             'dt': 'omap3-beagle-xm',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'beaglebone-black': {
@@ -306,20 +475,25 @@ boards = {
             'dt': 'am335x-boneblack',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot', 'mmc'],
-            'tests_multinode': ['network'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    'defconfigs': ['multi_v7_defconfig'],
+                    'template': 'generic_simple_job.jinja',
+                    },
+                {
+                    'name': 'mmc',
+                    'defconfigs': ['multi_v7_defconfig'],
+                    'template': 'generic_simple_job.jinja',
+                    },
+                {
+                    'name': 'network',
+                    'defconfigs': ['multi_v7_defconfig'],
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': [],
             },
-        #'berlin2q-marvell-dmp': { # No configuration in LAVA
-        #    'name': 'berlin2q-marvell-dmp',
-        #    'device_type': 'berlin2q-marvell-dmp',
-        #    'arch': 'arm',
-        #    'defconfigs': ['multi_v7_defconfig'],
-        #    'dt': 'berlin2q-marvell-dmp',
-        #    'rootfs': 'rootfs_armv7.cpio.gz',
-        #    'test_plan': 'boot',
-        #    'tests': ['boot'],
-        #    },
         'imx6q-nitrogen6x': {
             'name': 'imx6q nitrogen6x',
             'device_type': 'imx6q-nitrogen6x',
@@ -328,7 +502,11 @@ boards = {
             'dt': 'imx6q-nitrogen6x',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'kirkwood-db-88f6282': {
@@ -339,7 +517,11 @@ boards = {
             'dt': 'kirkwood-db-88f6282',
             'rootfs': 'rootfs_armv5.tar.gz',
             'test_plan': 'boot-nfs',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'kirkwood-openblocks_a7': {
@@ -350,7 +532,11 @@ boards = {
             'dt': 'kirkwood-openblocks_a7',
             'rootfs': 'rootfs_armv5.tar.gz',
             'test_plan': 'boot-nfs',
-            'tests': ['boot', 'second_test'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'optimus-a80': {
@@ -361,7 +547,11 @@ boards = {
             'dt': 'sun9i-a80-optimus',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'orion5x-rd88f5182-nas': {
@@ -372,7 +562,11 @@ boards = {
             'dt': 'orion5x-rd88f5182-nas',
             'rootfs': 'rootfs_armv5.tar.gz',
             'test_plan': 'boot-nfs',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'sama53d': {
@@ -383,21 +577,23 @@ boards = {
             'dt': 'at91-sama5d3_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot', 'mmc', 'usb'],
-            'tests_multinode': ['network'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                {
+                    'name': 'mmc',
+                    },
+                {
+                    'name': 'usb',
+                    },
+                {
+                    'name': 'network',
+                    'template': 'generic_multinode_job.jinja',
+                    },
+                ],
             'notify': ['florent.jacquet@free-electrons.com'],
             },
-        #'sama5d31ek': { # doesn't exists
-        #    'name': 'sama5d31ek',
-        #    'device_type': 'sama5d31ek',
-        #    'arch': 'arm',
-        #    'defconfigs': ['multi_v7_defconfig'],
-        #    'dt': 'sama5d31ek',
-        #    'rootfs': 'rootfs_armv7.cpio.gz',
-        #    'test_plan': 'boot',
-        #    'tests': ['boot'],
-        #    'notify': [],
-        #    },
         'sama5d34ek': {
             'name': 'sama5d34ek',
             'device_type': 'sama5d34ek',
@@ -406,21 +602,14 @@ boards = {
             'dt': 'sama5d34ek',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
-        #'sama5d35ek': { # doesn't exists
-        #    'name': 'sama5d35ek',
-        #    'device_type': 'sama5d35ek',
-        #    'arch': 'arm',
-        #    'defconfigs': ['multi_v7_defconfig'],
-        #    'dt': 'sama5d35ek',
-        #    'rootfs': 'rootfs_armv7.cpio.gz',
-        #    'test_plan': 'boot',
-        #    'tests': ['boot'],
-        #    'notify': [],
-        #    },
-        'sama5d36ek': { # Boots with some traces
+        'sama5d36ek': {
             'name': 'sama5d36ek',
             'device_type': 'sama5d36ek',
             'arch': 'arm',
@@ -428,7 +617,11 @@ boards = {
             'dt': 'sama5d36ek',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'sama5d4ek': {
@@ -439,7 +632,11 @@ boards = {
             'dt': 'sama5d4ek',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'sun5i-r8-chip': {
@@ -450,7 +647,11 @@ boards = {
             'dt': 'sun5i-r8-chip',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'sun6i-a31-app4-evb1': {
@@ -461,8 +662,11 @@ boards = {
             'dt': 'sun6i-a31-app4-evb1',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
-            # 'tests_multinode': ['network'], Network over USB, may require more configuration
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'sun8i-a23-evb': {
@@ -473,8 +677,11 @@ boards = {
             'dt': 'sun8i-a23-evb',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
-            # 'tests_multinode': ['network'], Network over USB, may require more configuration
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'sun8i-a33-sinlinx-sina33': {
@@ -485,7 +692,11 @@ boards = {
             'dt': 'sun8i-a33-sinlinx-sina33',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'sun8i-a83t-allwinner-h8homlet-v2': {
@@ -496,8 +707,11 @@ boards = {
             'dt': 'sun8i-a83t-allwinner-h8homlet-v2',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
-            # 'tests_multinode': ['network'], No network support
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         'sun8i-h3-orangepi-pc': {
@@ -508,7 +722,11 @@ boards = {
             'dt': 'sun8i-h3-orangepi-pc',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
-            'tests': ['boot'],
+            'tests': [
+                {
+                    'name': 'boot',
+                    },
+                ],
             'notify': [],
             },
         }

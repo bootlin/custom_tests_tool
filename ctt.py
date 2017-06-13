@@ -6,7 +6,7 @@
 #
 
 from job_crafter import JobCrafter
-from utils import KCIFetcher, get_connection, get_config, red
+from utils import get_config, red
 from boards import boards
 
 
@@ -29,12 +29,8 @@ def main(**kwargs):
     for b in kwargs["boards"]:
         if b in boards.keys():
             try:
-                h = JobCrafter(b, **kwargs)
-                if kwargs["no_kci"]:
-                    h.make_jobs()
-                else:
-                    for data in KCIFetcher(**kwargs).crawl(boards[b]):
-                        h.make_jobs(data)
+                h = JobCrafter(b, kwargs)
+                h.make_jobs()
             except Exception as e:
                 print(e)
         else:
