@@ -67,20 +67,25 @@ Will give you list of supported boards.
 
 #### Sending simple job
 
-`./ctt.py -b sun8i-h3-orangepi-pc beaglebone-black --send`
+`./ctt.py -b sun8i-h3-orangepi-pc beaglebone-black`
 
 Will launch the default job on the OrangePi PC and Beaglebone Black. The default
 job consists in running the test suite using the latest mainline kernel provided
-by Kernel CI
+by Kernel CI.
 
 #### Customizing boot files
 
-`./ctt.py -b sun8i-h3-orangepi-pc beaglebone-black --send --upload --kernel ../path/to/my/kernel/zImage`
+`./ctt.py -b sun8i-h3-orangepi-pc beaglebone-black --kernel ../path/to/my/kernel/zImage`
 
 Will do quite the same but will upload a custom kernel instead of using KernelCI's one.
 
 The same way you can use `--rootfs`, `--dtb`, `--modules` to override the
 corresponding files.
+
+If you submit jobs for multiple boards, and all your DTB files are in the same
+folder, and they are named as described in the `boards.py` file (every
+conditions should be met in a standard Linux work tree), you can use the
+`--dtb-folder` option in order to let *ctt* guess which local file to use.
 
 Be careful when you upload multiple time the same file name, since the storage
 is made on a per-user basis: you risk to override your own previous file.   
@@ -88,26 +93,22 @@ To prevent this, just name your file differently.
 
 #### Customizing tests
 
-`./ctt.py -b armada-370-db -t sata --send`
+`./ctt.py -b armada-370-db -t sata`
 
-Will send only the sata test on the Armada 370 DB.
+Will send only the *sata* test on the Armada 370 DB.
 `-t` or `--tests` is a list, so you can give as much tests as you want. The
-tests need to be filenames that are available in the `./tests/` folder of the
-test repository (without the extension).
+tests need to be available for the given board(s) in the `boards.py` file.
 
-The `-m` or `--tests-multinode` option is also available and does the same thing
-with the multinode job template.
-
-Using any of these options will override the two tests lists in the `board.py`
-file, so that you have the tests you gave manually that will be made into jobs.
+Using this option will override the tests list in the `boards.py` file, so that
+you have the tests you gave manually that will be made into jobs.
 
 ## Adding a new board
 
 If you wish to add a new board to the custom test tool, it must already be in
-LAVA (required), as well as being supported by kernel CI's images (optionnal,
+LAVA (required), as well as being supported by kernel CI's images (optional,
 you can manually provide your own files).
 
-Then just edit the `boards.py` file. It contains just a Python dictionnary, and
+Then just edit the `boards.py` file. It contains just a Python dictionary, and
 it's thus easy to add a new board:
 
 ```python
@@ -130,14 +131,18 @@ it's thus easy to add a new board:
                                       # the .cctrc file).
     'test_plan': 'boot', # What LAVA test to you want tu run (only boot is
                          # supported)
-    'tests': ['first_test', 'mmc'], # A list of test that can be (and will) be
-                                    # launched on the board.
-                                    # They will be added to the job, and must be
-                                    # existing YAML files in the custom test
-                                    # repository's tests folder (without the
-                                    # extension)
-    'tests_multinode': ['network'], # It's the same as the 'tests' option, but
-                                    # using the multinode template
+    'tests': [ # A list of tests to run.
+        {
+            'name': 'boot', # Name matching a file in the script folder of the test suite
+            'defconfigs': ['multi_v7_defconfig'], # You can override the defconfigs to use, but it's not mandatory
+            'template': 'generic_simple_job.jinja', # You can also override the template. 
+                                                    # If not, default is generic_simple_job.jinja
+            },
+        # {
+        #     'name': 'network',
+        #     'template': 'generic_multinode_job.jinja',
+        #     },
+        ],
     'notify': ['tux@free-electrons.com'], # The list of people to notify if the
                                           # board begins to fail
     },

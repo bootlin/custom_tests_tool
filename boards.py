@@ -13,7 +13,8 @@ boards = {
                 {
                     'name': 'boot', # Name matching a file in the script folder of the test suite
                     'defconfigs': ['multi_v7_defconfig'], # You can override the defconfigs to use, but it's not mandatory
-                    'template': 'generic_simple_job.jinja', # You can also override the template. If not, default is generic_simple_job.jinja
+                    'template': 'generic_simple_job.jinja', # You can also override the template.
+                                                            # If not, default is generic_simple_job.jinja
                     },
                 # {
                 #     'name': 'network',
