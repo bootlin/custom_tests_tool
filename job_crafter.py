@@ -90,7 +90,7 @@ class JobCrafter:
         # Define which test to run
         tests = []
         if self.options['tests']:
-            tests = [t for t in self.board['tests'] if t['name'] in self.options['tests']]
+            tests = [next(iter([e for e in self.board['tests'] if e['name'] == t]), {'name': t}) for t in self.options['tests']]
         else:
             tests = self.board.get("tests", [])
         for test in tests:
