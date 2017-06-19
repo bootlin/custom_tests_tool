@@ -1,4 +1,8 @@
 
+marvell = [ "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com" ]
+
 boards = {
         'alpine-db': {
             'name': 'Alpine DB', # A pretty name, just to name it
@@ -61,7 +65,7 @@ boards = {
                     'template': 'generic_multinode_job.jinja',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'armada-370-rd': {
             'name': 'Armada 370 RD',
@@ -83,7 +87,7 @@ boards = {
                     'template': 'generic_multinode_job.jinja',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'armada-3720-db': {
             'name': 'Armada 3720 DB',
@@ -98,7 +102,7 @@ boards = {
                     'name': 'boot',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'armada-3720-espressobin': {
             'name': 'Armada 3720 Espressobin',
@@ -113,7 +117,7 @@ boards = {
                     'name': 'boot',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'armada-375-db': {
             'name': 'armada-375-db',
@@ -131,7 +135,7 @@ boards = {
                     'name': 'crypto',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'armada-385-db-ap': {
             'name': 'Armada 385 DB AP',
@@ -149,7 +153,7 @@ boards = {
                     'name': 'crypto',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'armada-388-clearfog': {
             'name': 'Armada 388 Clearfog',
@@ -171,7 +175,7 @@ boards = {
                     'template': 'generic_multinode_job.jinja',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'armada-388-gp': {
             'name': 'Armada 388 GP',
@@ -193,7 +197,7 @@ boards = {
                     'template': 'generic_multinode_job.jinja',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'armada-7040-db': {
             'name': 'armada-7040-db',
@@ -208,7 +212,7 @@ boards = {
                     'name': 'boot',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'armada-8040-db': {
             'name': 'armada-8040-db',
@@ -223,7 +227,7 @@ boards = {
                     'name': 'boot',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'armada-398-db': {
             'name': 'Armada 398 DB',
@@ -238,7 +242,7 @@ boards = {
                     'name': 'boot',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'armada-xp-db': { # NFS boot
             'name': 'Armada XP DB',
@@ -260,7 +264,7 @@ boards = {
                     'template': 'generic_multinode_job.jinja',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'armada-xp-gp': { # NFS boot
             'name': 'Armada XP GP',
@@ -282,7 +286,7 @@ boards = {
                     'template': 'generic_multinode_job.jinja',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'armada-xp-linksys-mamba': {
             'name': 'armada-xp-linksys-mamba',
@@ -304,7 +308,7 @@ boards = {
                     'template': 'generic_multinode_job.jinja',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'armada-xp-openblocks-ax3-4': {
             'name': 'Armada XP Openblocks AX3 4',
@@ -326,7 +330,7 @@ boards = {
                     'template': 'generic_multinode_job.jinja',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'at91-sama5d2_xplained': {
             'name': 'at91-sama5d2_xplained',
@@ -523,7 +527,7 @@ boards = {
                     'name': 'boot',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'kirkwood-openblocks_a7': {
             'name': 'kirkwood-openblocks_a7',
@@ -538,7 +542,7 @@ boards = {
                     'name': 'boot',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'optimus-a80': {
             'name': 'optimus-a80',
@@ -568,7 +572,7 @@ boards = {
                     'name': 'boot',
                     },
                 ],
-            'notify': [],
+            'notify': marvell,
             },
         'sama53d': {
             'name': 'sama5d3 Xplained',
