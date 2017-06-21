@@ -6,7 +6,7 @@ import getpass
 from boards import boards
 from jinja2 import FileSystemLoader, Environment
 
-from utils import red, green, KCIFetcher
+from utils import red, green, ArtifactsFinder
 
 REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
 TEMPLATE_FOLDER = "jobs_templates"
@@ -115,17 +115,20 @@ class JobCrafter:
             else:
                 # No custom kernel, go fetch artifacts on kernelci.org
                 for defconfig in test.get('defconfigs', self.board['defconfigs']):
-                    kci_data = KCIFetcher(**self.options).crawl(self.board, defconfig)
+                    data = (ArtifactsFinder("https://storage.kernelci.org/",
+                            **self.options).crawl(self.board, defconfig) or
+                            ArtifactsFinder("/home/ctt/builds/",
+                            **self.options).crawl(self.board, defconfig))
                     job_name = "%s--%s--%s--%s" % (
                             self.board['device_type'],
-                            self.options["kernelci_tree"],
+                            self.options["tree"],
                             defconfig,
                             test['name']
                             )
 
-                    self.override_kernel(kci_data.get('kernel'))
-                    self.override_dtb(kci_data.get('dtb'))
-                    self.override_modules(kci_data.get('modules'))
+                    self.override_kernel(data.get('kernel'))
+                    self.override_dtb(data.get('dtb'))
+                    self.override_modules(data.get('modules'))
 
                     self.get_template_from_file(os.path.join(TEMPLATE_FOLDER,
                         test.get('template', DEFAULT_TEMPLATE)))

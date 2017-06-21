@@ -50,6 +50,7 @@ boards = {
             'tests': [
                 {
                     'name': 'crypto',
+                    'defconfigs': ['mvebu_v7_defconfig+tcrypt']
                     },
                 {
                     'name': 'sata',

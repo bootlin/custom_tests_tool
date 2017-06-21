@@ -16,7 +16,7 @@ import requests
 
 import paramiko
 
-parse_re = re.compile('href="([^./"?][^"?]*)"')
+parse_re = re.compile('href="([^./"?][^"?]*)/"')
 
 def green(str):
     return "\033[32m" + str + "\033[39m"
@@ -64,11 +64,11 @@ def get_args_config(kwargs):
     lava.add_argument('--username', default=kwargs["username"], help='The user name to talk to LAVA')
     lava.add_argument('--token', default=kwargs["token"], help='The token corresponding to the user to talk to LAVA')
 
-    kci = parser.add_argument_group("KernelCI options")
-    kci.add_argument('--api-token', default=kwargs["api_token"], help="The token to query KernelCI's API")
-    kci.add_argument('--kernelci-tree', default="mainline", help='The KernelCI tree you want to use (default: mainline)')
-    kci.add_argument('--kernelci-branch', default="master", help='The KernelCI branch you want to use (default: master)')
-    kci.add_argument('--no-kci', action='store_true',
+    artifacts = parser.add_argument_group("Artifacts options")
+    artifacts.add_argument('--api-token', default=kwargs["api_token"], help="The token to query KernelCI's API")
+    artifacts.add_argument('--tree', default="mainline", help='The tree you want to use (default: mainline)')
+    artifacts.add_argument('--branch', default="master", help='The branch you want to use (default: master)')
+    artifacts.add_argument('--no-kci', action='store_true',
             help="""Don't go fetch file from KernelCI, but rather use my provided
 files (you must then provide a kernel, a dtb, a modules.tar.xz, and a rootfs)
 This is useful if something.kernelci.org is down.
@@ -104,16 +104,11 @@ def get_config(section="ctt"):
     kwargs = get_args_config(kwargs)
     return kwargs
 
-class KCIFetcher():
-    root_url = "https://storage.kernelci.org/"
-    in_tbody = False
-    in_tr = False
-    stop_handling = False
-    latests = []
-    count = 5
+class ArtifactsFinder():
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, root_url, *args, **kwargs):
         self.kwargs = kwargs
+        self.root_url = root_url
 
     def get_image_name(board):
         if board['arch'] == 'arm':
@@ -124,7 +119,7 @@ class KCIFetcher():
 
     def get_latest_release(self):
         try:
-            r = requests.get("https://api.kernelci.org/build?limit=1&job=%s&field=kernel&sort=created_on&git_branch=%s" % (self.kwargs["kernelci_tree"], self.kwargs["kernelci_branch"]),
+            r = requests.get("https://api.kernelci.org/build?limit=1&job=%s&field=kernel&sort=created_on&git_branch=%s" % (self.kwargs["tree"], self.kwargs["branch"]),
                     headers={'Authorization': get_config()['api_token']})
             r.raise_for_status()
             return r.json()['result'][0]['kernel']
@@ -132,38 +127,36 @@ class KCIFetcher():
             print(red(repr(e)))
 
     def get_latest_full_url(self):
-        return self.root_url + self.kwargs["kernelci_tree"] + "/" + self.kwargs["kernelci_branch"] + "/" + self.get_latest_release()
+        return self.root_url + self.kwargs["tree"] + "/" + self.kwargs["branch"] + "/" + self.get_latest_release()
 
-    def crawl(self, board, defconfig, base_url=None):
-        print("Crawling KernelCI for %s" % board['name'])
-        url = base_url or self.get_latest_full_url()
+    def crawl(self, board, defconfig):
+        print("Crawling %s for %s (%s)" % (self.root_url, board['name'],
+            defconfig))
+        url = self.get_latest_full_url()
         url = '/'.join([url, board['arch']])
         if not url.endswith('/'):
             url += "/"
-        try:
-            html = urllib.request.urlopen(url).read().decode('utf-8')
-        except urllib.error.HTTPError as e:
-            print(red(repr(e)))
-            print(red("It seems that we have some problems using %s" % url))
-            return repr(e)
-        files = parse_re.findall(html)
-        dirs = []
+        if url.startswith("http"):
+            try:
+                html = urllib.request.urlopen(url).read().decode('utf-8')
+                files = parse_re.findall(html)
+            except urllib.error.HTTPError as e:
+                print(red(repr(e)))
+                print(red("It seems that we have some problems using %s" % url))
+                return repr(e)
+        else: # It seems we have a local defconfig to find
+            files = [f.name for f in os.scandir(url)]
         for name in files:
-            if defconfig == name[:-1]:
-                print("Found a kernel for %s in %s" % (board["name"], url+name))
-                common_url = url+name
+            if defconfig == name:
+                print("Found a kernel for %s in %s" % (board["name"], url + name))
+                common_url = url + name + '/'
                 return {
-                        'kernel': common_url + KCIFetcher.get_image_name(board),
+                        'kernel': common_url + ArtifactsFinder.get_image_name(board),
                         'dtb': common_url + 'dtbs/' + board['dt'] + '.dtb',
                         'modules': common_url + 'modules.tar.xz',
                         'defconfig': defconfig,
                         }
         print("Nothing found at address %s" % (url))
-
-
-
-    def get_latest_kernel(self):
-        return self.kernel_url
 
 def get_connection(**kwargs):
     u = urllib.parse.urlparse(kwargs["server"])
