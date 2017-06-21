@@ -14,12 +14,12 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz', # The rootfs to use (must exist in rootfs_path)
             'test_plan': 'boot', # boot or boot-nfs if the board can not boot with ramdisk
             'tests': [ # A list of tests to run.
-                {
-                    'name': 'boot', # Name matching a file in the script folder of the test suite
-                    'defconfigs': ['multi_v7_defconfig'], # You can override the defconfigs to use, but it's not mandatory
-                    'template': 'generic_simple_job.jinja', # You can also override the template.
-                                                            # If not, default is generic_simple_job.jinja
-                    },
+                #{
+                #    'name': 'boot', # Name matching a file in the script folder of the test suite
+                #    'defconfigs': ['multi_v7_defconfig'], # You can override the defconfigs to use, but it's not mandatory
+                #    'template': 'generic_simple_job.jinja', # You can also override the template.
+                #                                            # If not, default is generic_simple_job.jinja
+                #    },
                 # {
                 #     'name': 'network',
                 #     'template': 'generic_multinode_job.jinja',
@@ -36,9 +36,6 @@ boards = {
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
@@ -51,9 +48,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 {
                     'name': 'crypto',
                     },
@@ -77,9 +71,6 @@ boards = {
             'test_plan': 'boot',
             'tests': [
                 {
-                    'name': 'boot',
-                    },
-                {
                     'name': 'crypto',
                     },
                 {
@@ -98,9 +89,6 @@ boards = {
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': marvell,
             },
@@ -113,9 +101,6 @@ boards = {
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': marvell,
             },
@@ -128,9 +113,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 {
                     'name': 'crypto',
                     },
@@ -147,9 +129,6 @@ boards = {
             'test_plan': 'boot',
             'tests': [
                 {
-                    'name': 'boot',
-                    },
-                {
                     'name': 'crypto',
                     },
                 ],
@@ -164,9 +143,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 {
                     'name': 'crypto',
                     },
@@ -187,9 +163,6 @@ boards = {
             'test_plan': 'boot',
             'tests': [
                 {
-                    'name': 'boot',
-                    },
-                {
                     'name': 'crypto',
                     },
                 {
@@ -208,9 +181,6 @@ boards = {
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': marvell,
             },
@@ -223,9 +193,6 @@ boards = {
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': marvell,
             },
@@ -238,9 +205,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': marvell,
             },
@@ -253,9 +217,6 @@ boards = {
             'rootfs': 'rootfs_armv7.tar.gz',
             'test_plan': 'boot-nfs',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 {
                     'name': 'crypto',
                     },
@@ -276,9 +237,6 @@ boards = {
             'test_plan': 'boot-nfs',
             'tests': [
                 {
-                    'name': 'boot',
-                    },
-                {
                     'name': 'crypto',
                     },
                 {
@@ -297,9 +255,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 {
                     'name': 'crypto',
                     },
@@ -320,9 +275,6 @@ boards = {
             'test_plan': 'boot',
             'tests': [
                 {
-                    'name': 'boot',
-                    },
-                {
                     'name': 'crypto',
                     },
                 {
@@ -341,9 +293,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
@@ -356,9 +305,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 {
                     'name': 'network',
                     'template': 'generic_multinode_job.jinja',
@@ -376,9 +322,6 @@ boards = {
             'test_plan': 'boot-nfs',
             'tests': [
                 {
-                    'name': 'boot',
-                    },
-                {
                     'name': 'network',
                     'template': 'generic_multinode_job.jinja',
                     },
@@ -394,9 +337,6 @@ boards = {
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
@@ -409,9 +349,6 @@ boards = {
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 {
                     'name': 'network',
                     'template': 'generic_multinode_job.jinja',
@@ -429,9 +366,6 @@ boards = {
             'test_plan': 'boot',
             'tests': [
                 {
-                    'name': 'boot',
-                    },
-                {
                     'name': 'network',
                     'template': 'generic_multinode_job.jinja',
                     },
@@ -448,9 +382,6 @@ boards = {
             'test_plan': 'boot',
             'tests': [
                 {
-                    'name': 'boot',
-                    },
-                {
                     'name': 'network',
                     'template': 'generic_multinode_job.jinja',
                     },
@@ -466,9 +397,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
@@ -481,11 +409,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    'defconfigs': ['multi_v7_defconfig'],
-                    'template': 'generic_simple_job.jinja',
-                    },
                 {
                     'name': 'mmc',
                     'defconfigs': ['multi_v7_defconfig'],
@@ -508,9 +431,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
@@ -523,9 +443,6 @@ boards = {
             'rootfs': 'rootfs_armv5.tar.gz',
             'test_plan': 'boot-nfs',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': marvell,
             },
@@ -538,9 +455,6 @@ boards = {
             'rootfs': 'rootfs_armv5.tar.gz',
             'test_plan': 'boot-nfs',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': marvell,
             },
@@ -553,9 +467,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
@@ -568,9 +479,6 @@ boards = {
             'rootfs': 'rootfs_armv5.tar.gz',
             'test_plan': 'boot-nfs',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': marvell,
             },
@@ -583,9 +491,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 {
                     'name': 'mmc',
                     },
@@ -608,9 +513,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
@@ -623,9 +525,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
@@ -638,9 +537,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
@@ -653,9 +549,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
@@ -668,9 +561,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
@@ -683,9 +573,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
@@ -698,9 +585,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
@@ -713,9 +597,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
@@ -728,9 +609,6 @@ boards = {
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
-                {
-                    'name': 'boot',
-                    },
                 ],
             'notify': [],
             },
