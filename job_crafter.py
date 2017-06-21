@@ -30,7 +30,8 @@ class JobCrafter:
                 "lava_stream": "",
                 "device_type": "",
                 "job_name": "",
-                "notify": []
+                "notify": [],
+                "notify_on_incomplete": [],
                 }
         self.jinja_env = Environment(loader=FileSystemLoader(os.path.dirname(__file__)))
 
@@ -82,10 +83,32 @@ class JobCrafter:
 # Job handling
     def make_jobs(self):
         # Override basic values that are constant over each test
-        self.override_rootfs()
-        self.override_lava_infos()
-        self.override_device_type()
-        self.override_recipients()
+        try:
+            self.job["lava_server"] = self.options["server"]
+            self.job["lava_stream"] = self.options["stream"]
+        except: pass
+
+        # rootfs
+        self.override('rootfs', self.options['rootfs'] or
+                os.path.join(self.options["rootfs_path"], self.board["rootfs"]))
+
+        # rootfs type
+        if self.board["test_plan"] == "boot":
+            self.job["rootfs_type"] = "ramdisk"
+        elif self.board["test_plan"] == "boot-nfs":
+            self.job["rootfs_type"] = "nfsrootfs"
+        else:
+            raise Exception(red("Invalid test_plan for board %s" %
+                    self.board["name"]))
+
+        self.job["device_type"] = self.board['device_type']
+
+        for n in "notify", "notify_on_incomplete":
+            if self.options['default_notify']:
+                self.job[n] = self.board.get(n, [])
+            else:
+                self.job[n] = self.options[n]
+        print("notify recipients: Overridden")
 
         # Define which test to run
         tests = []
@@ -97,15 +120,15 @@ class JobCrafter:
             if self.options['kernel']:
                 defconfigs = ['custom_kernel']
                 # If we use a custom kernel
-                if self.kwargs["dtb"]:
-                    dt_path = os.path.abspath(self.kwargs["dtb"])
+                if self.options["dtb"]:
+                    dt_path = os.path.abspath(self.options["dtb"])
                 else:
-                    dt_path = os.path.abspath(os.path.join(self.kwargs["dtb_folder"],
+                    dt_path = os.path.abspath(os.path.join(self.options["dtb_folder"],
                         self.board['dt'] + '.dtb'))
                 data = {
-                        'kernel': self.kwargs['kernel'],
+                        'kernel': self.options['kernel'],
                         'dtb': dt_path,
-                        'modules': self.kwargs['modules'],
+                        'modules': self.options['modules'],
                         }
             else:
                 defconfigs = test.get('defconfigs', self.board['defconfigs'])
@@ -123,124 +146,40 @@ class JobCrafter:
                         test['name']
                         )
 
-                self.override_kernel(data.get('kernel'))
-                self.override_dtb(data.get('dtb'))
-                self.override_modules(data.get('modules'))
+                self.override('kernel', data.get('kernel'))
+                self.override('device_tree', data.get('dtb'))
+                self.override('modules', data.get('modules'))
 
                 self.get_template_from_file(os.path.join(TEMPLATE_FOLDER,
                     test.get('template', DEFAULT_TEMPLATE)))
 
-                self.override_tests(test['name'])
-                self.override_job_name(job_name)
+                self.job["tests"] = test['name']
+                print("tests: Overridden")
+                self.job["job_name"] = self.options['job_name'] or job_name
+                print("job name: %s" % self.job["job_name"])
+
+                # Complete job creation
                 if self.options["no_send"]:
                     self.save_job_to_file()
                 else:
                     self.send_to_lava()
 
-    def override_recipients(self):
-        print("notify recipients: Overriding")
-        for n in "notify", "notify_on_incomplete":
-            if self.options['default_notify']:
-                self.job[n] = self.board.get(n, [])
-            else:
-                self.job[n] = self.options[n]
-        print("notify recipients: Overridden")
-
-    def override_device_type(self):
-        print("device-type: Overriding")
-        self.job["device_type"] = self.board['device_type']
-        print("device-type: Overridden")
-
-    def override_rootfs(self):
-        if self.options["rootfs"]:
-            rootfs = self.options['rootfs']
-            print("rootfs: Overriding with local file")
-            local_path = os.path.abspath(rootfs)
-            remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
-            remote_path = self.handle_file(local_path, remote_path)
-            self.job["rootfs"] = "file://" + remote_path
+    def override(self, key, value=None):
+        if value:
+            print("%s: Overriding with file:" % key, value)
+            remote_path = self.handle_file(value)
+            self.job[key] = remote_path
+            print("%s: Overridden" % key)
         else:
-            print("rootfs: Using default file")
-            rootfs = os.path.join(self.options["rootfs_path"], self.board["rootfs"])
-            self.job["rootfs"] = "file://" + rootfs
-        if self.board["test_plan"] == "boot":
-            self.job["rootfs_type"] = "ramdisk"
-            print("rootfs: ramdisk overridden")
-        elif self.board["test_plan"] == "boot-nfs":
-            self.job["rootfs_type"] = "nfsrootfs"
-            print("rootfs: nfsrootfs overridden")
-        else:
-            raise Exception(red("Invalid test_plan for board %s" %
-                    self.board["name"]))
-
-    def override_dtb(self, dtb_url=None):
-        if dtb_url and not (dtb_url.startswith('http') or
-                dtb_url.startswith("file")):
-            print("DTB: Overriding with local file:", local_path)
-            remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
-            remote_path = self.handle_file(local_path, remote_path)
-            self.job["device_tree"] = "file://" + remote_path
-            print("DTB: Overridden")
-        elif dtb_url:
-            print("DTB: Overriding with remote URL:", dtb_url)
-            self.job["device_tree"] = dtb_url
-            print("DTB: Overridden")
-        else:
-            print("DTB: Nothing to override")
-
-    def override_kernel(self, kernel_url=None):
-        if kernel_url and not (kernel_url.startswith('http') or
-                kernel_url.startswith("file")):
-            local_path = os.path.abspath(self.options["kernel"])
-            print("kernel: Overriding with local file:", local_path)
-            remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
-            remote_path = self.handle_file(local_path, remote_path)
-            self.job["kernel"] = "file://" + remote_path
-            print("kernel: Overridden")
-        elif kernel_url:
-            print("kernel: Overriding with remote URL:", kernel_url)
-            self.job["kernel"] = kernel_url
-            print("kernel: Overridden")
-        else:
-            print("kernel: Nothing to override")
-
-    def override_modules(self, modules_url=None):
-        if modules_url and not (modules_url.startswith('http') or
-                modules_url.startswith("file")):
-            local_path = os.path.abspath(self.options["modules"])
-            print("modules: Overriding with local file:", local_path)
-            remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
-            remote_path = self.handle_file(local_path, remote_path)
-            self.job["modules"] = "file://" + remote_path
-            print("modules: Overridden")
-        elif modules_url:
-            print("modules: Overriding with remote URL:", modules_url)
-            self.job["modules"] = modules_url
-            print("modules: Overridden")
-        else:
-            print("modules: Nothing to override")
-
-    def override_tests(self, test):
-        print("tests: Overriding")
-        self.job["tests"] = test
-        print("tests: Overridden")
-
-    def override_lava_infos(self):
-        try:
-            self.job["lava_server"] = self.options["server"]
-            self.job["lava_stream"] = self.options["stream"]
-        except: pass
-
-    def override_job_name(self, name="job_name"):
-        if self.options.get('job_name'):
-            name = self.options.get('job_name')
-        self.job["job_name"] = name
-        print("job name: %s" % self.job["job_name"])
+            print("%s: Nothing to override" % key)
 
 # Files handling
-    def handle_file(self, local, remote):
-        if not local.startswith("http"):
+    def handle_file(self, local):
+        if not (local.startswith("http://") or local.startswith("file://") or
+                local.startswith("https://")):
+            remote = os.path.join(REMOTE_ROOT, os.path.basename(local))
             self.send_file(local, remote)
+            remote = "file://" + remote
             return remote
         else:
             return local
