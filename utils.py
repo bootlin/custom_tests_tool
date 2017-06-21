@@ -150,8 +150,12 @@ class ArtifactsFinder():
                 print(red("It seems that we have some problems using %s" % url))
                 return repr(e)
         else: # It seems we have a local defconfig to find
-            files = [f.name for f in os.scandir(url)]
-            url = "file://" + url
+            try:
+                files = [f.name for f in os.scandir(url)]
+                url = "file://" + url
+            except Exception as e:
+                print(red(repr(e)))
+                raise e
         for name in files:
             if defconfig == name:
                 print("Found a kernel for %s in %s" % (board["name"], url + name))

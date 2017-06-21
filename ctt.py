@@ -32,7 +32,7 @@ def main(**kwargs):
                 h = JobCrafter(b, kwargs)
                 h.make_jobs()
             except Exception as e:
-                print(e)
+                print(red(str(e)))
         else:
             print(red("No board named %s" % b))
 
