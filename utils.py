@@ -146,6 +146,7 @@ class ArtifactsFinder():
                 return repr(e)
         else: # It seems we have a local defconfig to find
             files = [f.name for f in os.scandir(url)]
+            url = "file://" + url
         for name in files:
             if defconfig == name:
                 print("Found a kernel for %s in %s" % (board["name"], url + name))
@@ -154,7 +155,6 @@ class ArtifactsFinder():
                         'kernel': common_url + ArtifactsFinder.get_image_name(board),
                         'dtb': common_url + 'dtbs/' + board['dt'] + '.dtb',
                         'modules': common_url + 'modules.tar.xz',
-                        'defconfig': defconfig,
                         }
         print("Nothing found at address %s" % (url))
 

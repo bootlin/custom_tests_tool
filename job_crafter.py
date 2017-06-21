@@ -95,13 +95,37 @@ class JobCrafter:
             tests = self.board.get("tests", [])
         for test in tests:
             if self.options['kernel']:
+                defconfigs = ['custom_kernel']
                 # If we use a custom kernel
-                job_name = "%s--custom_kernel--%s" % (self.board['device_type'],
-                        test['name'])
+                if self.kwargs["dtb"]:
+                    dt_path = os.path.abspath(self.kwargs["dtb"])
+                else:
+                    dt_path = os.path.abspath(os.path.join(self.kwargs["dtb_folder"],
+                        self.board['dt'] + '.dtb'))
+                data = {
+                        'kernel': self.kwargs['kernel'],
+                        'dtb': dt_path,
+                        'modules': self.kwargs['modules'],
+                        }
+            else:
+                defconfigs = test.get('defconfigs', self.board['defconfigs'])
+                # No custom kernel, go fetch artifacts on kernelci.org
+                for defconfig in defconfigs:
+                    data = (ArtifactsFinder("https://storage.kernelci.org/",
+                            **self.options).crawl(self.board, defconfig) or
+                            ArtifactsFinder("/home/ctt/builds/",
+                            **self.options).crawl(self.board, defconfig))
+            for defconfig in defconfigs:
+                job_name = "%s--%s--%s--%s" % (
+                        self.board['device_type'],
+                        self.options["tree"],
+                        defconfig,
+                        test['name']
+                        )
 
-                self.override_kernel()
-                self.override_dtb()
-                self.override_modules()
+                self.override_kernel(data.get('kernel'))
+                self.override_dtb(data.get('dtb'))
+                self.override_modules(data.get('modules'))
 
                 self.get_template_from_file(os.path.join(TEMPLATE_FOLDER,
                     test.get('template', DEFAULT_TEMPLATE)))
@@ -112,33 +136,6 @@ class JobCrafter:
                     self.save_job_to_file()
                 else:
                     self.send_to_lava()
-            else:
-                # No custom kernel, go fetch artifacts on kernelci.org
-                for defconfig in test.get('defconfigs', self.board['defconfigs']):
-                    data = (ArtifactsFinder("https://storage.kernelci.org/",
-                            **self.options).crawl(self.board, defconfig) or
-                            ArtifactsFinder("/home/ctt/builds/",
-                            **self.options).crawl(self.board, defconfig))
-                    job_name = "%s--%s--%s--%s" % (
-                            self.board['device_type'],
-                            self.options["tree"],
-                            defconfig,
-                            test['name']
-                            )
-
-                    self.override_kernel(data.get('kernel'))
-                    self.override_dtb(data.get('dtb'))
-                    self.override_modules(data.get('modules'))
-
-                    self.get_template_from_file(os.path.join(TEMPLATE_FOLDER,
-                        test.get('template', DEFAULT_TEMPLATE)))
-
-                    self.override_tests(test['name'])
-                    self.override_job_name(job_name)
-                    if self.options["no_send"]:
-                        self.save_job_to_file()
-                    else:
-                        self.send_to_lava()
 
     def override_recipients(self):
         print("notify recipients: Overriding")
@@ -177,26 +174,23 @@ class JobCrafter:
                     self.board["name"]))
 
     def override_dtb(self, dtb_url=None):
-        if self.options["dtb"] or self.options["dtb_folder"]:
-            if self.options["dtb"]:
-                local_path = os.path.abspath(self.options["dtb"])
-            else:
-                local_path = os.path.abspath(os.path.join(self.options["dtb_folder"],
-                    self.board['dt'] + '.dtb'))
+        if dtb_url and not (dtb_url.startswith('http') or
+                dtb_url.startswith("file")):
             print("DTB: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
             remote_path = self.handle_file(local_path, remote_path)
             self.job["device_tree"] = "file://" + remote_path
             print("DTB: Overridden")
         elif dtb_url:
-            print("DTB: Overriding with Kernel CI URL:", dtb_url)
+            print("DTB: Overriding with remote URL:", dtb_url)
             self.job["device_tree"] = dtb_url
             print("DTB: Overridden")
         else:
             print("DTB: Nothing to override")
 
     def override_kernel(self, kernel_url=None):
-        if self.options["kernel"]:
+        if kernel_url and not (kernel_url.startswith('http') or
+                kernel_url.startswith("file")):
             local_path = os.path.abspath(self.options["kernel"])
             print("kernel: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
@@ -204,14 +198,15 @@ class JobCrafter:
             self.job["kernel"] = "file://" + remote_path
             print("kernel: Overridden")
         elif kernel_url:
-            print("kernel: Overriding with Kernel CI URL:", kernel_url)
+            print("kernel: Overriding with remote URL:", kernel_url)
             self.job["kernel"] = kernel_url
             print("kernel: Overridden")
         else:
             print("kernel: Nothing to override")
 
     def override_modules(self, modules_url=None):
-        if self.options["modules"]:
+        if modules_url and not (modules_url.startswith('http') or
+                modules_url.startswith("file")):
             local_path = os.path.abspath(self.options["modules"])
             print("modules: Overriding with local file:", local_path)
             remote_path = os.path.join(REMOTE_ROOT, os.path.basename(local_path))
@@ -219,7 +214,7 @@ class JobCrafter:
             self.job["modules"] = "file://" + remote_path
             print("modules: Overridden")
         elif modules_url:
-            print("modules: Overriding with Kernel CI URL:", modules_url)
+            print("modules: Overriding with remote URL:", modules_url)
             self.job["modules"] = modules_url
             print("modules: Overridden")
         else:
@@ -227,7 +222,6 @@ class JobCrafter:
 
     def override_tests(self, test):
         print("tests: Overriding")
-        test = test
         self.job["tests"] = test
         print("tests: Overridden")
 
@@ -239,7 +233,7 @@ class JobCrafter:
 
     def override_job_name(self, name="job_name"):
         if self.options.get('job_name'):
-            name += "--" + self.options.get('job_name')
+            name = self.options.get('job_name')
         self.job["job_name"] = name
         print("job name: %s" % self.job["job_name"])
 
