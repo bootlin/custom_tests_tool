@@ -25,6 +25,14 @@ config = configparser.ConfigParser()
 config.read("notifications.conf")
 kwargs = dict(config["mail"])
 
+JOB_STATUS = {
+        0: "Submitted",
+        1: "Running",
+        2: "Complete",
+        3: "Incomplete",
+        4: "Canceled",
+        5: "Canceling",
+        }
 
 def main():
     username = config.get("lava", "user")
@@ -35,19 +43,27 @@ def main():
             microsecond=0)
     start_date = end_date - timedelta(hours=72)
     mail_list = {}
-    for j in server.results.query("testjob",
+    incomplete_tests = server.results.query("testjob",
+            "testjob__end_time__gt__%s,"
+            "testjob__end_time__lt__%s,"
+            "testjob__submitter__exact__custom-tests,"
+            "testjob__status__exact__Incomplete"
+            % (start_date, end_date))
+    failed_tests = server.results.query("testjob",
             "testjob__end_time__gt__%s,"
             "testjob__end_time__lt__%s,"
             "testcase__result__exact__Test failed,"
             "testjob__submitter__exact__custom-tests,"
             "testsuite__name__exact__1_custom-tests"
-            % (start_date, end_date)):
+            % (start_date, end_date))
+    for j in failed_tests + incomplete_tests:
         d = j["description"].split("--")
         job_report = "".join([
-            '{:<10}'.format(d[0]),
-            '{:<35}'.format(d[1]),
-            '{:<20}'.format(d[2]),
+            '{:<10}'.format(d[1]),
+            '{:<35}'.format(d[0]),
+            '{:<30}'.format(d[2]),
             '{:<14}'.format(d[3]),
+            '{:<12}'.format(JOB_STATUS[j["status"]]),
             "http://farm/scheduler/job/%s" % j["id"],
             ])
         board = boards.get(j["requested_device_type_id"], None)
@@ -57,7 +73,6 @@ def main():
                     mail_list[email].append(job_report)
                 else:
                     mail_list[email] = [job_report]
-    pprint(mail_list)
 
     server = smtplib.SMTP(kwargs["server"], kwargs["port"])
     server.ehlo()
@@ -68,13 +83,15 @@ def main():
         msg_list.append("".join([
             '{:<10}'.format("tree"),
             '{:<35}'.format("device"),
-            '{:<20}'.format("defconfig"),
+            '{:<30}'.format("defconfig"),
             '{:<14}'.format("test"),
+            '{:<12}'.format("job status"),
             "link",
             ])
         )
         msg_list += job_list
-        print(msg_list)
+        print("\nMessage to %s:" % user)
+        print('\n'.join(msg_list))
         msg = MIMEText(
                 "The following jobs failed during the last 24 hours:\n"
                 "\n" + '\n'.join(msg_list))
