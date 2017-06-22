@@ -50,7 +50,11 @@ boards = {
             'tests': [
                 {
                     'name': 'crypto',
-                    'defconfigs': ['mvebu_v7_defconfig+tcrypt']
+                    },
+                {
+                    'name': 'crypto-tcrypt',
+                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'template': 'generic_simple_job_10m_timeout.jinja',
                     },
                 {
                     'name': 'sata',
@@ -73,6 +77,11 @@ boards = {
             'tests': [
                 {
                     'name': 'crypto',
+                    },
+                {
+                    'name': 'crypto-tcrypt',
+                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'template': 'generic_simple_job_10m_timeout.jinja',
                     },
                 {
                     'name': 'network',
@@ -117,6 +126,11 @@ boards = {
                 {
                     'name': 'crypto',
                     },
+                {
+                    'name': 'crypto-tcrypt',
+                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'template': 'generic_simple_job_10m_timeout.jinja',
+                    },
                 ],
             'notify': marvell,
             },
@@ -132,6 +146,11 @@ boards = {
                 {
                     'name': 'crypto',
                     },
+                {
+                    'name': 'crypto-tcrypt',
+                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'template': 'generic_simple_job_10m_timeout.jinja',
+                    },
                 ],
             'notify': marvell,
             },
@@ -146,6 +165,11 @@ boards = {
             'tests': [
                 {
                     'name': 'crypto',
+                    },
+                {
+                    'name': 'crypto-tcrypt',
+                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'template': 'generic_simple_job_10m_timeout.jinja',
                     },
                 {
                     'name': 'network',
@@ -165,6 +189,11 @@ boards = {
             'tests': [
                 {
                     'name': 'crypto',
+                    },
+                {
+                    'name': 'crypto-tcrypt',
+                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'template': 'generic_simple_job_10m_timeout.jinja',
                     },
                 {
                     'name': 'network',
@@ -222,6 +251,11 @@ boards = {
                     'name': 'crypto',
                     },
                 {
+                    'name': 'crypto-tcrypt',
+                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'template': 'generic_simple_job_10m_timeout.jinja',
+                    },
+                {
                     'name': 'network',
                     'template': 'generic_multinode_job.jinja',
                     },
@@ -239,6 +273,11 @@ boards = {
             'tests': [
                 {
                     'name': 'crypto',
+                    },
+                {
+                    'name': 'crypto-tcrypt',
+                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'template': 'generic_simple_job_10m_timeout.jinja',
                     },
                 {
                     'name': 'network',
@@ -260,6 +299,11 @@ boards = {
                     'name': 'crypto',
                     },
                 {
+                    'name': 'crypto-tcrypt',
+                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'template': 'generic_simple_job_10m_timeout.jinja',
+                    },
+                {
                     'name': 'network',
                     'template': 'generic_multinode_job.jinja',
                     },
@@ -277,6 +321,11 @@ boards = {
             'tests': [
                 {
                     'name': 'crypto',
+                    },
+                {
+                    'name': 'crypto-tcrypt',
+                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'template': 'generic_simple_job_10m_timeout.jinja',
                     },
                 {
                     'name': 'network',
