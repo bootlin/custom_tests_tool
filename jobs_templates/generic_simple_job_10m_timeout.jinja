@@ -105,5 +105,18 @@ notify:
   verbosity: verbose
 {% endif %}
 
+{% if notify_on_incomplete %}
+notify:
+  recipients:
+  {%- for email in notify_on_incomplete %}
+  - to:
+     method: email
+     email: {{ email }}
+  {%- endfor %}
+  criteria:
+    status: incomplete
+  verbosity: verbose
+{% endif %}
+
 
 
