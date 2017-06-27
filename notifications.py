@@ -16,8 +16,7 @@ from email.mime.text import MIMEText
 
 from boards import boards
 
-hostname = "farm"
-
+hostname = "lava.tld"
 username = "my-user"
 token = "my-awesome-token"
 
@@ -35,6 +34,7 @@ JOB_STATUS = {
         }
 
 def main():
+    hostname = config.get("lava", "hostname")
     username = config.get("lava", "user")
     token = config.get("lava", "token")
 

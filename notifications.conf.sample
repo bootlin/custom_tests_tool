@@ -6,5 +6,6 @@ port = 587
 login = my-smtp-login
 
 [lava]
+hostname = my.lava.instance.tld
 user = my-lava-user
 token = mYlAvAAPItOkEn
