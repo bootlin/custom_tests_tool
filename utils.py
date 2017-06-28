@@ -34,9 +34,6 @@ def get_file_config(f_name=None, section="ctt"):
         try:
             kwargs['notify'] = kwargs['notify'].split(',')
         except: pass
-        try:
-            kwargs['notify_on_incomplete'] = kwargs['notify_on_incomplete'].split(',')
-        except: pass
         return kwargs
     except Exception as e:
         print(repr(e))
@@ -81,7 +78,6 @@ This is useful if something.kernelci.org is down.
     parser.add_argument('--no-send', action='store_true', help='Don\'t send the job directly, save it to output')
     parser.add_argument('--default-notify', action='store_true', help='Use the default notify list provided by the boards configuration')
     parser.add_argument('--notify', default=kwargs['notify'], nargs='+', help='List of addresses to which the notifications will be sent.')
-    parser.add_argument('--notify-on-incomplete', default=kwargs['notify_on_incomplete'], nargs='+', help='List of addresses to which the notifications will be sent if the job is incomplete.')
     parser.add_argument('-b', '--boards', default=[], nargs='+', help='List of board for which you want to create jobs')
     parser.add_argument('-l', '--list', action='store_true', help="List all the known devices")
     kwargs.update(vars(parser.parse_args()))
@@ -98,7 +94,6 @@ def get_config(section="ctt"):
             "api_token": None,
             "rootfs_path": ".",
             "notify": [],
-            "notify_on_incomplete": [],
             }
     kwargs.update(get_file_config())
     kwargs = get_args_config(kwargs)

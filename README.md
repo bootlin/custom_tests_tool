@@ -25,7 +25,6 @@ ssh_username: user-with-write-access-somewhere
 api_token: my-awesome-token
 rootfs_path: /root/buildroot-ci/out/
 notify: my.address@my.domai.ne
-notify_on_incomplete: maintainer.address@his.domai.ne
 ```
 
   * `server` is the LAVA API address.
@@ -39,12 +38,9 @@ notify_on_incomplete: maintainer.address@his.domai.ne
 server your sending the job, as long as it actually contains valid rootfs.
   * `notify` is a comma separated list of addresses where the test results will
 be sent, whatever the status of the job.
-  * `notify_on_incomplete` is a comma separated list of addresses where the test
-results will be sent if the job ends as `Incomplete`. Mostly useful for LAVA
-admins.
 
-If you don't specify `notify` or `notify_on_incomplete`, the notifications will
-be sent to the addresses listed in the `boards.py` file, in a per board basis.
+If you don't specify `notify`, the notifications will be sent to the addresses
+listed in the `boards.py` file, in a per board basis.   
 So be careful if you know that you will send a lot of tests not to flood those
 people.
 

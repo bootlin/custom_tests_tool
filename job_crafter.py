@@ -31,7 +31,6 @@ class JobCrafter:
                 "device_type": "",
                 "job_name": "",
                 "notify": [],
-                "notify_on_incomplete": [],
                 }
         self.jinja_env = Environment(loader=FileSystemLoader(os.path.dirname(__file__)))
 
@@ -103,11 +102,10 @@ class JobCrafter:
 
         self.job["device_type"] = self.board['device_type']
 
-        for n in "notify", "notify_on_incomplete":
-            if self.options['default_notify']:
-                self.job[n] = self.board.get(n, [])
-            else:
-                self.job[n] = self.options[n]
+        if self.options['default_notify']:
+            self.job["notify"] = self.board.get("notify", [])
+        else:
+            self.job["notify"] = self.options["notify"]
         print("notify recipients: Overridden")
 
         # Define which test to run

@@ -65,14 +65,6 @@
         "job_name": "{{ job_name }}",
         "logging_level": "DEBUG",
         "priority": "high",
-        "notify_on_incomplete": [
-            {% for address in notify_on_incomplete -%}
-            "{{ address }}"
-            {%- if not loop.last -%}
-            ,
-            {% endif %}
-            {%- endfor %}
-        ],
         "notify": [
             {% for address in notify -%}
             "{{ address }}"
