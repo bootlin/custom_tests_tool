@@ -118,7 +118,7 @@ class ArtifactsFinder():
         return "unknownImage"
 
     def get_latest_release(self):
-        if self.root_url.startswith('http'): # KernelCI's case
+        if "kernelci" in self.root_url: # KernelCI's case
             try:
                 r = requests.get("https://api.kernelci.org/build?limit=1&job=%s&field=kernel&sort=created_on&git_branch=%s" % (self.kwargs["tree"], self.kwargs["branch"]),
                         headers={'Authorization': get_config()['api_token']})
@@ -127,9 +127,14 @@ class ArtifactsFinder():
             except Exception as e:
                 print(red(repr(e)))
         else:
-            with open(os.path.join(self.root_url, self.kwargs['tree'],
-                self.kwargs['branch'], "latest")) as f:
-                return f.read().strip()
+            if self.root_url.startswith("http"):
+                r = requests.get("/".join([self.root_url, self.kwargs['tree'],
+                    self.kwargs['branch'], "latest"]))
+                return r.text
+            else:
+                with open(os.path.join(self.root_url, self.kwargs['tree'],
+                    self.kwargs['branch'], "latest")) as f:
+                    return f.read().strip()
 
     def get_latest_full_url(self):
         return self.root_url + self.kwargs["tree"] + "/" + self.kwargs["branch"] + "/" + self.get_latest_release()

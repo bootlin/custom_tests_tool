@@ -134,9 +134,9 @@ class JobCrafter:
                 defconfigs = test.get('defconfigs', self.board['defconfigs'])
                 # No custom kernel, go fetch artifacts on kernelci.org
                 for defconfig in defconfigs:
-                    data = (ArtifactsFinder("https://storage.kernelci.org/",
+                    data = (ArtifactsFinder("http://lava.free-electrons.com/downloads/builds/",
                             **self.options).crawl(self.board, defconfig) or
-                            ArtifactsFinder("/home/ctt/builds/",
+                            ArtifactsFinder("https://storage.kernelci.org/",
                             **self.options).crawl(self.board, defconfig))
             for defconfig in defconfigs:
                 job_name = "%s--%s--%s--%s" % (
