@@ -129,14 +129,15 @@ class JobCrafter:
                         'modules': self.options['modules'],
                         }
             else:
-                defconfigs = test.get('defconfigs', self.board['defconfigs'])
-                # No custom kernel, go fetch artifacts on kernelci.org
-                for defconfig in defconfigs:
+                defconfigs = self.options['defconfigs'] or test.get('defconfigs', self.board['defconfigs'])
+            for defconfig in defconfigs:
+                if not self.options['kernel']:
+                    # No custom kernel, go fetch artifacts on remote locations
                     data = (ArtifactsFinder("http://lava.free-electrons.com/downloads/builds/",
                             **self.options).crawl(self.board, defconfig) or
                             ArtifactsFinder("https://storage.kernelci.org/",
                             **self.options).crawl(self.board, defconfig))
-            for defconfig in defconfigs:
+
                 job_name = "%s--%s--%s--%s" % (
                         self.board['device_type'],
                         self.options["tree"],

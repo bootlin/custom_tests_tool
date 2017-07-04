@@ -65,6 +65,7 @@ def get_args_config(kwargs):
     artifacts.add_argument('--api-token', default=kwargs["api_token"], help="The token to query KernelCI's API")
     artifacts.add_argument('--tree', default="mainline", help='The tree you want to use (default: mainline)')
     artifacts.add_argument('--branch', default="master", help='The branch you want to use (default: master)')
+    artifacts.add_argument('--defconfigs', nargs='+', default=[], help='The defconfigs you want to use, instead of the device\'s default')
     artifacts.add_argument('--no-kci', action='store_true',
             help="""Don't go fetch file from KernelCI, but rather use my provided
 files (you must then provide a kernel, a dtb, a modules.tar.xz, and a rootfs)
