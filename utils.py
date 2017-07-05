@@ -149,7 +149,7 @@ class ArtifactsFinder():
             except urllib.error.HTTPError as e:
                 print(red(repr(e)))
                 print(red("It seems that we have some problems using %s" % url))
-                return repr(e)
+                return
         else: # It seems we have a local defconfig to find
             try:
                 files = [f.name for f in os.scandir(url)]
