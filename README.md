@@ -23,8 +23,9 @@ stream: /anonymous/test/
 ssh_server: farm.tld
 ssh_username: user-with-write-access-somewhere
 api_token: my-awesome-token
-rootfs_path: /root/buildroot-ci/out/
+rootfs_path: http://my.stora.ge/downloads/rootfs/
 notify: my.address@my.domai.ne
+web_ui_address: http://my.lava.instan.ce
 ```
 
   * `server` is the LAVA API address.
@@ -38,6 +39,7 @@ notify: my.address@my.domai.ne
 server your sending the job, as long as it actually contains valid rootfs.
   * `notify` is a comma separated list of addresses where the test results will
 be sent, whatever the status of the job.
+  * `web_ui_address` is the base URL of the LAVA Web UI.
 
 If you don't specify `notify`, the notifications will be sent to the addresses
 listed in the `boards.py` file, in a per board basis.   

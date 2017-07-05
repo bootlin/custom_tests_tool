@@ -72,12 +72,12 @@ class JobCrafter:
         try:
             for r in ret:
                 print(green("Job send (id: %s)" % r))
-                print("Potential working URL: ", "http://%s/scheduler/job/%s" %
-                        (self.options['ssh_server'], r))
+                print("Potential working URL: ", "%s/scheduler/job/%s" %
+                        (self.options['web_ui_address'], r))
         except:
             print(green("Job send (id: %s)" % ret))
-            print("Potential working URL: ", "http://%s/scheduler/job/%s" %
-                    (self.options['ssh_server'], ret))
+            print("Potential working URL: ", "%s/scheduler/job/%s" %
+                    (self.options['web_ui_address'], ret))
 
 # Job handling
     def make_jobs(self):
