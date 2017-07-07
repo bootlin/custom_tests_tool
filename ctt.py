@@ -9,12 +9,7 @@ from job_crafter import JobCrafter
 from utils import get_config, red
 from boards import boards
 
-
 def main(**kwargs):
-    # con = get_connection(**kwargs)
-    # print(con.dashboard.bundles("/anonymous/skia/"))
-
-
     if kwargs['list']:
         print("Board list: ")
         for b in sorted(boards.keys()):
