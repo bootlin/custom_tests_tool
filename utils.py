@@ -28,8 +28,14 @@ def get_file_config(f_name=None, section="ctt"):
     filename = f_name or os.path.expanduser('~/.cttrc')
 
     try:
+        file = open(filename)
+    except OSError as e:
+        print("Configuration file %s could not be opened: %s" % (filename, e.strerror))
+        return None
+
+    try:
         config = configparser.ConfigParser()
-        config.read(filename)
+        config.read_file(file)
         kwargs = dict(config[section])
         try:
             kwargs['notify'] = kwargs['notify'].split(',')
@@ -56,7 +62,18 @@ def get_args_config(kwargs):
     job.add_argument('-m', '--tests-multinode', default=[], nargs='+', help='The multinode tests for which you want to generate jobs')
 
     lava = parser.add_argument_group("LAVA server options")
-    lava.add_argument('--stream', default=kwargs["stream"], help='The bundle stream where to send the job')
+
+    #
+    # The stream option is only required for lava V1 jobs, therefore
+    # it's optional in our configuration file. Deal with the case
+    # where it would be missing.
+    #
+    if "stream" in kwargs:
+        default = kwargs["stream"]
+    else:
+        default = "/anonymous/test/"
+
+    lava.add_argument('--stream', default=default, help='The bundle stream where to send the job')
     lava.add_argument('--server', default=kwargs["server"], help='The LAVA server URL to send results')
     lava.add_argument('--username', default=kwargs["username"], help='The user name to talk to LAVA')
     lava.add_argument('--token', default=kwargs["token"], help='The token corresponding to the user to talk to LAVA')
@@ -85,25 +102,16 @@ This is useful if something.kernelci.org is down.
     return kwargs
 
 def get_config(section="ctt"):
-    kwargs = { # args here can be set in the .cttrc file
-            "username": None,
-            "server": None,
-            "token": None,
-            "stream": "/anonymous/test/",
-            "ssh_server": None,
-            "ssh_username": "root", # XXX that's not really good
-            "api_token": None,
-            "rootfs_path": ".",
-            "notify": [],
-            }
-    kwargs.update(get_file_config())
-    kwargs = get_args_config(kwargs)
-    return kwargs
+    config = get_file_config()
+    if config is None:
+        return None
+
+    return get_args_config(config)
 
 class ArtifactsFinder():
 
-    def __init__(self, root_url, *args, **kwargs):
-        self.kwargs = kwargs
+    def __init__(self, cfg, root_url, *args):
+        self.cfg = cfg
         self.root_url = root_url
 
     def get_image_name(board):
@@ -116,24 +124,24 @@ class ArtifactsFinder():
     def get_latest_release(self):
         if "kernelci" in self.root_url: # KernelCI's case
             try:
-                r = requests.get("https://api.kernelci.org/build?limit=1&job=%s&field=kernel&sort=created_on&git_branch=%s" % (self.kwargs["tree"], self.kwargs["branch"]),
-                        headers={'Authorization': get_config()['api_token']})
+                r = requests.get("https://api.kernelci.org/build?limit=1&job=%s&field=kernel&sort=created_on&git_branch=%s" % (self.cfg['tree'], self.cfg['branch']),
+                                 headers={'Authorization': self.cfg['api_token']})
                 r.raise_for_status()
                 return r.json()['result'][0]['kernel']
             except Exception as e:
                 print(red(repr(e)))
         else:
             if self.root_url.startswith("http"):
-                r = requests.get("/".join([self.root_url, self.kwargs['tree'],
-                    self.kwargs['branch'], "latest"]))
+                r = requests.get("/".join([self.root_url, self.cfg['tree'],
+                                           self.cfg['branch'], "latest"]))
                 return r.text
             else:
-                with open(os.path.join(self.root_url, self.kwargs['tree'],
-                    self.kwargs['branch'], "latest")) as f:
+                with open(os.path.join(self.root_url, self.cfg['tree'],
+                                       self.cfg['branch'], "latest")) as f:
                     return f.read().strip()
 
     def get_latest_full_url(self):
-        return self.root_url + self.kwargs["tree"] + "/" + self.kwargs["branch"] + "/" + self.get_latest_release()
+        return self.root_url + self.cfg["tree"] + "/" + self.cfg["branch"] + "/" + self.get_latest_release()
 
     def crawl(self, board, defconfig):
         print("Crawling %s for %s (%s)" % (self.root_url, board['name'],
@@ -168,10 +176,12 @@ class ArtifactsFinder():
                         }
         print("Nothing found at address %s" % (url))
 
-def get_connection(**kwargs):
-    u = urllib.parse.urlparse(kwargs["server"])
+def get_connection(cfg):
+    u = urllib.parse.urlparse(cfg['server'])
     url = "%s://%s:%s@%s/RPC2" % (u.scheme,
-        kwargs["username"], kwargs["token"], u.netloc)
+                                  cfg['username'],
+                                  cfg['token'],
+                                  u.netloc)
 
     # Taken from Lavabo: https://github.com/free-electrons/lavabo/blob/master/utils.py#L88
     try:

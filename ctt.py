@@ -5,34 +5,45 @@
 # Florent Jacquet <florent.jacquet@free-electrons.com>
 #
 
+import os
+import logging
+import sys
+
 from job_crafter import JobCrafter
-from utils import get_config, red
+from utils import red
 from boards import boards
+from src.CTTConfig import CTTConfig, OptionError, SectionError
 
 def main(**kwargs):
-    if kwargs['list']:
+    try:
+        config = open(os.path.expanduser('~/.cttrc'))
+    except OSError as e:
+        logging.warning("Couldn't open the configuration file: %s" % e.strerror)
+        config = None
+
+    try:
+        cfg = CTTConfig(file=config)
+    except OptionError as e:
+        logging.error("Invalid configuration: %s" % e.args)
+        sys.exit(2)
+    except SectionError as e:
+        logging.error("Invalid configuration file: %s" % e.args)
+        sys.exit(1)
+
+    if cfg['list']:
         print("Board list: ")
         for b in sorted(boards.keys()):
             print("\t - ", b)
-        return
-    if not kwargs['boards']:
-        print("No board specified, you may want to add a `-b my-board` option?")
-        print("See help for more informations")
-        return
-    if kwargs['boards'][0] == 'all': # Helper to gain some time
-        kwargs['boards'] = boards.keys()
-    for b in kwargs["boards"]:
-        if b in boards.keys():
-            try:
-                h = JobCrafter(b, kwargs)
-                h.make_jobs()
-            except Exception as e:
-                print(red(str(e)))
-        else:
-            print(red("No board named %s" % b))
 
+        sys.exit()
+
+    for b in cfg['boards']:
+        try:
+            h = JobCrafter(b, cfg)
+            h.make_jobs()
+        except Exception as e:
+            print(red(str(e)))
 
 if __name__ == "__main__":
-    kwargs = get_config()
-    main(**kwargs)
+    main()
 

@@ -16,9 +16,9 @@ class JobCrafter:
     """
     This class handle the jobs.
     """
-    def __init__(self, board, options):
+    def __init__(self, board, cfg):
         self.board = boards[board]
-        self.options = options
+        self.cfg = cfg
         self.job = {
                 "kernel": "",
                 "device_tree": "",
@@ -38,9 +38,9 @@ class JobCrafter:
         try:
             return self._device_status
         except:
-            self._device_status = utils.get_connection(**self.options).scheduler.get_device_status(
-                    self.board["device_type"] + "_01"
-                    )
+            conn = utils.get_connection(self.cfg)
+            board = "%s_01" % self.board["device_type"]
+            self._device_status = conn.scheduler.get_device_status(board)
             return self._device_status
 
 # Template handling
@@ -49,9 +49,14 @@ class JobCrafter:
         self.job_template = self.jinja_env.get_template(file)
 
     def save_job_to_file(self, ext="yaml"):
-        try: os.makedirs(self.options["output_dir"])
-        except: pass
-        file = os.path.join(self.options["output_dir"], self.job["job_name"] + "." + ext)
+        try:
+            os.makedirs(self.cfg['output_dir'])
+        except:
+            pass
+
+        file = os.path.join(self.cfg['output_dir'],
+                            self.job["job_name"] + "." + ext)
+
         with open(file, 'w') as f:
             f.write(self.job_template.render(self.job))
         print(green("File saved to %s" % file))
@@ -66,30 +71,36 @@ class JobCrafter:
             print(red(repr(e)))
             print(red("Not sending the job"))
             return
+
         print("Sending to LAVA")
+
         job_str = self.job_template.render(self.job)
-        ret = utils.get_connection(**self.options).scheduler.submit_job(job_str)
+        ret = utils.get_connection(self.cfg).scheduler.submit_job(job_str)
         try:
             for r in ret:
                 print(green("Job send (id: %s)" % r))
                 print("Potential working URL: ", "%s/scheduler/job/%s" %
-                        (self.options['web_ui_address'], r))
+                      (self.cfg['web_ui_address'], r))
         except:
             print(green("Job send (id: %s)" % ret))
             print("Potential working URL: ", "%s/scheduler/job/%s" %
-                    (self.options['web_ui_address'], ret))
+                  (self.cfg['web_ui_address'], ret))
 
 # Job handling
     def make_jobs(self):
         # Override basic values that are constant over each test
-        try:
-            self.job["lava_server"] = self.options["server"]
-            self.job["lava_stream"] = self.options["stream"]
-        except: pass
+        if 'server' in self.cfg:
+            self.job["lava_server"] = self.cfg['server']
+
+        if 'stream' in self.cfg:
+            self.job["lava_stream"] = self.cfg['stream']
 
         # rootfs
-        self.override('rootfs', self.options['rootfs'] or
-                os.path.join(self.options["rootfs_path"], self.board["rootfs"]))
+        if 'rootfs' in self.cfg:
+            self.override('rootfs', self.cfg['rootfs'])
+        else:
+            self.override('rootfs', os.path.join(self.cfg['rootfs_path'],
+                                                 self.board['rootfs']))
 
         # rootfs type
         if self.board["test_plan"] == "boot":
@@ -102,63 +113,74 @@ class JobCrafter:
 
         self.job["device_type"] = self.board['device_type']
 
-        if self.options['default_notify']:
+        if self.cfg['default_notify']:
             self.job["notify"] = self.board.get("notify", [])
         else:
-            self.job["notify"] = self.options["notify"]
+            self.job["notify"] = self.cfg['notify']
         print("notify recipients: Overridden")
 
         # Define which test to run
         tests = []
-        if self.options['tests']:
-            tests = [next(iter([e for e in self.board['tests'] if e['name'] == t]), {'name': t}) for t in self.options['tests']]
+        if 'tests' in self.cfg:
+            # WTF?
+            tests = [next(iter([e for e in self.board['tests'] if e['name'] == t]), {'name': t}) for t in self.cfg['tests']]
         else:
             tests = self.board.get("tests", [])
         for test in tests:
-            if self.options['kernel']:
+            if 'kernel' in self.cfg:
+                data = { 'kernel': self.cfg['kernel'] }
                 defconfigs = ['custom_kernel']
+
                 # If we use a custom kernel
-                if self.options["dtb"]:
-                    dt_path = os.path.abspath(self.options["dtb"])
+                if 'dtb' in self.cfg:
+                    data['dtb'] = os.path.abspath(self.cfg['dtb'])
                 else:
-                    dt_path = os.path.abspath(os.path.join(self.options["dtb_folder"],
-                        self.board['dt'] + '.dtb'))
-                data = {
-                        'kernel': self.options['kernel'],
-                        'dtb': dt_path,
-                        'modules': self.options['modules'],
-                        }
+                    data['dtb'] = os.path.abspath(os.path.join(self.cfg['dtb_folder'],
+                                                               self.board['dt'] + '.dtb'))
+
+                if 'modules' in self.cfg:
+                    data['modules'] = self.cfg['modules']
+
             else:
-                defconfigs = self.options['defconfigs'] or test.get('defconfigs', self.board['defconfigs'])
+                if 'defconfigs' in self.cfg:
+                    defconfigs = self.cfg['defconfigs']
+                else:
+                    defconfigs = test.get('defconfigs', self.board['defconfigs'])
+
             for defconfig in defconfigs:
-                if not self.options['kernel']:
+                if not 'kernel' in self.cfg:
                     # No custom kernel, go fetch artifacts on remote locations
-                    data = (ArtifactsFinder("http://lava.free-electrons.com/downloads/builds/",
-                            **self.options).crawl(self.board, defconfig) or
-                            ArtifactsFinder("https://storage.kernelci.org/",
-                            **self.options).crawl(self.board, defconfig))
+                    data = (ArtifactsFinder(self.cfg, "http://lava.free-electrons.com/downloads/builds/").crawl(self.board, defconfig) or
+                            ArtifactsFinder(self.cfg, "https://storage.kernelci.org/").crawl(self.board, defconfig))
 
                 job_name = "%s--%s--%s--%s" % (
                         self.board['device_type'],
-                        self.options["tree"],
+                        self.cfg['tree'],
                         defconfig,
                         test['name']
                         )
 
                 self.override('kernel', data.get('kernel'))
                 self.override('device_tree', data.get('dtb'))
-                self.override('modules', data.get('modules'))
+
+                # modules are optional if we have our own kernel
+                if 'modules' in data:
+                    self.override('modules', data['modules'])
 
                 self.get_template_from_file(os.path.join(TEMPLATE_FOLDER,
                     test.get('template', DEFAULT_TEMPLATE)))
 
                 self.job["tests"] = test['name']
                 print("tests: Overridden")
-                self.job["job_name"] = self.options['job_name'] or job_name
+
+                if 'job_name' in self.cfg:
+                    self.job["job_name"] = self.cfg['job_name']
+                else:
+                    self.job["job_name"] = job_name
                 print("job name: %s" % self.job["job_name"])
 
                 # Complete job creation
-                if self.options["no_send"]:
+                if self.cfg['no_send']:
                     self.save_job_to_file()
                 else:
                     self.send_to_lava()
@@ -184,7 +206,7 @@ class JobCrafter:
             return local
 
     def send_file(self, local, remote):
-        scp = utils.get_sftp(self.options["ssh_server"], 22, self.options["ssh_username"])
+        scp = utils.get_sftp(self.cfg["ssh_server"], 22, self.cfg["ssh_username"])
         print("    Sending", local, "to", remote, "... ", end='')
         try:
             scp.put(local, remote)
