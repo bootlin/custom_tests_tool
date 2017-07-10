@@ -68,7 +68,7 @@ def main():
     # Define how to process the jobs lists
     def append_job(j, test_status):
         d = j["description"].split("--")
-        pprint(j)
+        # pprint(j)
         job_report = "".join([
             '{:<10}'.format(d[1]),
             '{:<35}'.format(d[0]),
