@@ -42,29 +42,41 @@ def main():
     end_date = datetime.now().replace(hour=11, minute=0, second=0,
             microsecond=0)
     start_date = end_date - timedelta(hours=72)
-    mail_list = {}
-    incomplete_tests = server.results.query("testjob",
+
+    # Get the results
+    complete_tests = server.results.make_custom_query("testjob",
+            "testjob__end_time__gt__%s,"
+            "testjob__end_time__lt__%s,"
+            "testcase__result__exact__Test passed,"
+            "testjob__submitter__exact__custom-tests,"
+            "testsuite__name__exact__1_custom-tests"
+            % (start_date, end_date))
+    incomplete_tests = server.results.make_custom_query("testjob",
             "testjob__end_time__gt__%s,"
             "testjob__end_time__lt__%s,"
             "testjob__submitter__exact__custom-tests,"
             "testjob__status__exact__Incomplete"
             % (start_date, end_date))
-    failed_tests = server.results.query("testjob",
+    failed_tests = server.results.make_custom_query("testjob",
             "testjob__end_time__gt__%s,"
             "testjob__end_time__lt__%s,"
             "testcase__result__exact__Test failed,"
             "testjob__submitter__exact__custom-tests,"
             "testsuite__name__exact__1_custom-tests"
             % (start_date, end_date))
-    for j in failed_tests + incomplete_tests:
+
+    # Define how to process the jobs lists
+    def append_job(j, test_status):
         d = j["description"].split("--")
+        pprint(j)
         job_report = "".join([
             '{:<10}'.format(d[1]),
             '{:<35}'.format(d[0]),
             '{:<30}'.format(d[2]),
             '{:<14}'.format(d[3]),
+            '{:<14}'.format(test_status),
             '{:<12}'.format(JOB_STATUS[j["status"]]),
-            "http://farm/scheduler/job/%s" % j["id"],
+            "http://lava.free-electrons.com/scheduler/job/%s" % j["id"],
             ])
         board = boards.get(j["requested_device_type_id"], None)
         if board:
@@ -74,6 +86,16 @@ def main():
                 else:
                     mail_list[email] = [job_report]
 
+    # Process the jobs
+    mail_list = {}
+    for j in failed_tests:
+        append_job(j, "failed")
+    for j in incomplete_tests:
+        append_job(j, "unknown")
+    for j in complete_tests:
+        append_job(j, "OK")
+
+    # Now send the emails
     server = smtplib.SMTP(kwargs["server"], kwargs["port"])
     server.ehlo()
     server.starttls()
@@ -85,6 +107,7 @@ def main():
             '{:<35}'.format("device"),
             '{:<30}'.format("defconfig"),
             '{:<14}'.format("test"),
+            '{:<14}'.format("test status"),
             '{:<12}'.format("job status"),
             "link",
             ])
