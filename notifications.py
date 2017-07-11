@@ -41,7 +41,7 @@ def main():
     server = client.ServerProxy("http://%s:%s@%s/RPC2" % (username, token, hostname))
     end_date = datetime.now().replace(hour=11, minute=0, second=0,
             microsecond=0)
-    start_date = end_date - timedelta(hours=72)
+    start_date = end_date - timedelta(hours=24)
 
     # Get the results
     complete_tests = server.results.make_custom_query("testjob",
