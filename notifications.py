@@ -39,8 +39,7 @@ def main():
     token = config.get("lava", "token")
 
     server = client.ServerProxy("http://%s:%s@%s/RPC2" % (username, token, hostname))
-    end_date = datetime.now().replace(hour=11, minute=0, second=0,
-            microsecond=0)
+    end_date = datetime.now()
     start_date = end_date - timedelta(hours=24)
 
     # Get the results
