@@ -19,12 +19,6 @@ import paramiko
 
 parse_re = re.compile('href="([^./"?][^"?]*)/"')
 
-def green(str):
-    return "\033[32m" + str + "\033[39m"
-
-def red(str):
-    return "\033[31m" + str + "\033[39m"
-
 class ArtifactsFinder():
 
     def __init__(self, cfg, root_url, *args):
