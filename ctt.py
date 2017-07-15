@@ -55,6 +55,8 @@ def main(**kwargs):
         try:
             h = JobCrafter(b, cfg)
             h.make_jobs()
+        except IOError:
+            sys.exit(1)
         except Exception as e:
             logging.error(repr(e))
 

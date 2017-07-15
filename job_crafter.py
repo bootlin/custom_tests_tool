@@ -163,9 +163,19 @@ class JobCrafter:
                 logging.info("  Configuring defconfig: %s" % defconfig)
 
                 if not 'kernel' in self.cfg:
-                    # No custom kernel, go fetch artifacts on remote locations
-                    data = (ArtifactsFinder(self.cfg, "http://lava.free-electrons.com/downloads/builds/").crawl(self.board, defconfig) or
-                            ArtifactsFinder(self.cfg, "https://storage.kernelci.org/").crawl(self.board, defconfig))
+                    data = None
+
+                    for url in ("http://lava.free-electrons.com/downloads/builds/",
+                                "https://storage.kernelci.org/"):
+                        finder = ArtifactsFinder(self.cfg, url)
+                        try:
+                            data = finder.crawl(self.board, defconfig)
+                        except IOError:
+                            logging.debug("Didn't find the artifacts on server %s" % url)
+
+                    if data is None:
+                        logging.error("No artifacts available, bailing out")
+                        raise IOError
 
                 job_name = "%s--%s--%s--%s" % (
                         self.board['device_type'],

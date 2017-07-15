@@ -85,7 +85,9 @@ class ArtifactsFinder():
                         'dtb': common_url + 'dtbs/' + board['dt'] + '.dtb',
                         'modules': common_url + 'modules.tar.xz',
                         }
+
         logging.debug("Nothing found at address %s" % (url))
+        raise IOError
 
 def get_connection(cfg):
     u = urllib.parse.urlparse(cfg['server'])
