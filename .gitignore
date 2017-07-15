@@ -1,6 +1,7 @@
 env/
 jobs/
 *.log
+*.pyc
 __pycache__/
 dashboard/env
 dashboard/cache.html
