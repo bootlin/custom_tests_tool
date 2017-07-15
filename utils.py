@@ -8,6 +8,7 @@ import ssl
 import os
 import argparse
 import configparser
+import logging
 
 import sys
 import re
@@ -45,7 +46,7 @@ class ArtifactsFinder():
                 r.raise_for_status()
                 return r.json()['result'][0]['kernel']
             except Exception as e:
-                print(red(repr(e)))
+                logging.error(repr(e))
         else:
             if self.root_url.startswith("http"):
                 r = requests.get("/".join([self.root_url, self.cfg['tree'],
@@ -60,8 +61,8 @@ class ArtifactsFinder():
         return self.root_url + self.cfg["tree"] + "/" + self.cfg["branch"] + "/" + self.get_latest_release()
 
     def crawl(self, board, defconfig):
-        print("Crawling %s for %s (%s)" % (self.root_url, board['name'],
-            defconfig))
+        logging.debug("Crawling %s for %s (%s)" % (self.root_url, board['name'],
+                                                   defconfig))
         url = self.get_latest_full_url()
         url = '/'.join([url, board['arch']])
         if not url.endswith('/'):
@@ -71,26 +72,26 @@ class ArtifactsFinder():
                 html = urllib.request.urlopen(url).read().decode('utf-8')
                 files = parse_re.findall(html)
             except urllib.error.HTTPError as e:
-                print(red(repr(e)))
-                print(red("It seems that we have some problems using %s" % url))
+                logging.error(repr(e))
                 return
         else: # It seems we have a local defconfig to find
             try:
                 files = [f.name for f in os.scandir(url)]
                 url = "file://" + url
             except Exception as e:
-                print(red(repr(e)))
+                logging.error(repr(e))
                 raise e
         for name in files:
             if defconfig == name:
-                print("Found a kernel for %s in %s" % (board["name"], url + name))
+                logging.debug("Found a kernel for %s in %s" % (board["name"],
+                                                               url + name))
                 common_url = url + name + '/'
                 return {
                         'kernel': common_url + ArtifactsFinder.get_image_name(board),
                         'dtb': common_url + 'dtbs/' + board['dt'] + '.dtb',
                         'modules': common_url + 'modules.tar.xz',
                         }
-        print("Nothing found at address %s" % (url))
+        logging.debug("Nothing found at address %s" % (url))
 
 def get_connection(cfg):
     u = urllib.parse.urlparse(cfg['server'])
@@ -109,7 +110,7 @@ def get_connection(cfg):
             connection = xmlrpc.client.ServerProxy(url)
         return connection
     except (xmlrpc.client.ProtocolError, xmlrpc.client.Fault, IOError) as e:
-        print(red("Unable to connect to %s" % url))
+        logging.error("Unable to connect to %s" % url)
         sys.exit(1)
 
 # The next three function are borrowed from Lavabo, thx Oleil! :)
@@ -123,7 +124,7 @@ def get_hostkey(hostname):
         hkeytype = hkeys[hostname].keys()[0]
         return hkeys[hostname][hkeytype]
 
-    print(red("WARNING: host key unavailable"))
+    logging.warning("host key unavailable")
     return None
 
 def pkey_connect(transport, user):
@@ -135,7 +136,7 @@ def pkey_connect(transport, user):
             pass
 
 def get_sftp(hostname, port, user):
-    print("    Opening SSH connection... ", end='')
+    logging.debug("Opening SSH connection...")
     hkey = get_hostkey(hostname)
     transport = paramiko.Transport((hostname, port))
 
@@ -151,7 +152,7 @@ def get_sftp(hostname, port, user):
     if hkey is not None:
         rkey = transport.get_remote_server_key()
         if rkey.get_name() != hkey.get_name() or rkey.asbytes() != hkey.asbytes():
-            print(red("ERROR: remote host identification has changed!"))
+            logging.error("Remote host identification has changed!")
             sys.exit(1)
 
     # We don't use the connect() method directly because it can't handle
@@ -159,12 +160,12 @@ def get_sftp(hostname, port, user):
     # multiple time as a workaround because this genius calls start_client()
     pkey_connect(transport, user)
     if not transport.is_authenticated():
-        print(red("ERROR: Authentication failed."))
+        logging.error("Authentication failed")
         transport.close()
         sys.exit(1)
 
     sftp_client = transport.open_sftp_client()
-    print("Done")
+    logging.debug('Connection established')
     return sftp_client
 
 def mkdir_p(sftp, remote_directory):

@@ -3,10 +3,12 @@ import collections
 import utils
 import paramiko
 import getpass
+import logging
+
 from boards import boards
 from jinja2 import FileSystemLoader, Environment
 
-from utils import red, green, ArtifactsFinder
+from utils import ArtifactsFinder
 
 REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
 TEMPLATE_FOLDER = "jobs_templates"
@@ -45,7 +47,7 @@ class JobCrafter:
 
 # Template handling
     def get_template_from_file(self, file):
-        print("template: using %s" % file)
+        logging.debug("template: using %s" % file)
         self.job_template = self.jinja_env.get_template(file)
 
     def save_job_to_file(self, ext="yaml"):
@@ -59,32 +61,32 @@ class JobCrafter:
 
         with open(file, 'w') as f:
             f.write(self.job_template.render(self.job))
-        print(green("File saved to %s" % file))
+
+        logging.info("==> Job file saved to %s" % file)
 
     def send_to_lava(self):
         try:
             dev = self.get_device_status()
             if dev["status"] == "offline":
-                print(red("Device seems offline, not sending the job"))
+                logging.error("Device is offline, not sending the job")
                 return
         except Exception as e:
-            print(red(repr(e)))
-            print(red("Not sending the job"))
+            logging.error('Not sending the job: %s' % e)
             return
 
-        print("Sending to LAVA")
+        logging.debug("Sending to LAVA")
 
         job_str = self.job_template.render(self.job)
         ret = utils.get_connection(self.cfg).scheduler.submit_job(job_str)
         try:
             for r in ret:
-                print(green("Job send (id: %s)" % r))
-                print("Potential working URL: ", "%s/scheduler/job/%s" %
-                      (self.cfg['web_ui_address'], r))
+                logging.debug("Job sent (id: %s)" % r)
+                logging.info("==> Job URL: %s/scheduler/job/%s" %
+                             (self.cfg['web_ui_address'], r))
         except:
-            print(green("Job send (id: %s)" % ret))
-            print("Potential working URL: ", "%s/scheduler/job/%s" %
-                  (self.cfg['web_ui_address'], ret))
+            logging.debug("Job sent (id: %s)" % ret)
+            logging.info("==> Job URL: %s/scheduler/job/%s" %
+                         (self.cfg['web_ui_address'], ret))
 
 # Job handling
     def make_jobs(self):
@@ -102,6 +104,8 @@ class JobCrafter:
             self.override('rootfs', os.path.join(self.cfg['rootfs_path'],
                                                  self.board['rootfs']))
 
+        logging.info("Root filesystem path: %s" % self.job['rootfs'])
+
         # rootfs type
         if self.board["test_plan"] == "boot":
             self.job["rootfs_type"] = "ramdisk"
@@ -117,7 +121,8 @@ class JobCrafter:
             self.job["notify"] = self.board.get("notify", [])
         else:
             self.job["notify"] = self.cfg['notify']
-        print("notify recipients: Overridden")
+
+        logging.info("Notifications recipients: %s" % ", ".join(self.job['notify']))
 
         # Define which test to run
         tests = []
@@ -127,6 +132,7 @@ class JobCrafter:
         else:
             tests = self.board.get("tests", [])
         for test in tests:
+            logging.info("Configuring test: %s" % test['name'])
             if 'kernel' in self.cfg:
                 data = { 'kernel': self.cfg['kernel'] }
                 defconfigs = ['custom_kernel']
@@ -148,6 +154,8 @@ class JobCrafter:
                     defconfigs = test.get('defconfigs', self.board['defconfigs'])
 
             for defconfig in defconfigs:
+                logging.info("  Configuring defconfig: %s" % defconfig)
+
                 if not 'kernel' in self.cfg:
                     # No custom kernel, go fetch artifacts on remote locations
                     data = (ArtifactsFinder(self.cfg, "http://lava.free-electrons.com/downloads/builds/").crawl(self.board, defconfig) or
@@ -161,23 +169,26 @@ class JobCrafter:
                         )
 
                 self.override('kernel', data.get('kernel'))
+                logging.info("    Kernel path: %s" % self.job['kernel'])
+
                 self.override('device_tree', data.get('dtb'))
+                logging.info("    Device tree path: %s" % self.job['device_tree'])
 
                 # modules are optional if we have our own kernel
                 if 'modules' in data:
                     self.override('modules', data['modules'])
+                    logging.info('    Modules archive path: %s' % self.job['modules'])
 
                 self.get_template_from_file(os.path.join(TEMPLATE_FOLDER,
                     test.get('template', DEFAULT_TEMPLATE)))
 
                 self.job["tests"] = test['name']
-                print("tests: Overridden")
 
                 if 'job_name' in self.cfg:
                     self.job["job_name"] = self.cfg['job_name']
                 else:
                     self.job["job_name"] = job_name
-                print("job name: %s" % self.job["job_name"])
+                logging.debug("    Job name: %s" % self.job['modules'])
 
                 # Complete job creation
                 if self.cfg['no_send']:
@@ -185,14 +196,10 @@ class JobCrafter:
                 else:
                     self.send_to_lava()
 
-    def override(self, key, value=None):
-        if value:
-            print("%s: Overriding with file:" % key, value)
-            remote_path = self.handle_file(value)
-            self.job[key] = remote_path
-            print("%s: Overridden" % key)
-        else:
-            print("%s: Nothing to override" % key)
+    def override(self, key, value):
+        logging.debug('Overriding key "%s" with value "%s"' % (key, value))
+        remote_path = self.handle_file(value)
+        self.job[key] = remote_path
 
 # Files handling
     def handle_file(self, local):
@@ -207,11 +214,11 @@ class JobCrafter:
 
     def send_file(self, local, remote):
         scp = utils.get_sftp(self.cfg["ssh_server"], 22, self.cfg["ssh_username"])
-        print("    Sending", local, "to", remote, "... ", end='')
+        logging.info('    Sending %s to %s' % (local, remote))
         try:
             scp.put(local, remote)
         except IOError as e:
             utils.mkdir_p(scp, os.path.dirname(remote))
             scp.put(local, remote)
-        print("Done")
+        logging.info('    File %s sent' % local)
 

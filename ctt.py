@@ -10,11 +10,25 @@ import logging
 import sys
 
 from job_crafter import JobCrafter
-from utils import red
 from boards import boards
 from src.CTTConfig import CTTConfig, OptionError, SectionError
+from src.CTTFormatter import CTTFormatter
 
 def main(**kwargs):
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+
+    paramiko_logger = logging.getLogger("paramiko")
+    paramiko_logger.setLevel(logging.WARN)
+
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.INFO)
+
+    formatter = CTTFormatter()
+    handler.setFormatter(formatter)
+
+    logger.addHandler(handler)
+
     try:
         config = open(os.path.expanduser('~/.cttrc'))
     except OSError as e:
@@ -42,7 +56,7 @@ def main(**kwargs):
             h = JobCrafter(b, cfg)
             h.make_jobs()
         except Exception as e:
-            print(red(str(e)))
+            logging.error(repr(e))
 
 if __name__ == "__main__":
     main()
