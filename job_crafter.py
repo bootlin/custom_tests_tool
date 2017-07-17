@@ -77,13 +77,19 @@ class JobCrafter:
         logging.debug("Sending to LAVA")
 
         job_str = self.job_template.render(self.job)
+
+        #
+        # submit_job can return either an int (if there's one element)
+        # or a list of them (if it's a multinode job).
+        # This is crappy, but the least crappy way to handle this.
+        #
         ret = utils.get_connection(self.cfg).scheduler.submit_job(job_str)
         try:
             for r in ret:
                 logging.debug("Job sent (id: %s)" % r)
                 logging.info("==> Job URL: %s/scheduler/job/%s" %
                              (self.cfg['web_ui_address'], r))
-        except:
+        except TypeError:
             logging.debug("Job sent (id: %s)" % ret)
             logging.info("==> Job URL: %s/scheduler/job/%s" %
                          (self.cfg['web_ui_address'], ret))
