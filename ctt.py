@@ -21,6 +21,9 @@ def main(**kwargs):
     paramiko_logger = logging.getLogger("paramiko")
     paramiko_logger.setLevel(logging.WARN)
 
+    requests_logger = logging.getLogger("requests")
+    requests_logger.setLevel(logging.WARN)
+
     handler = logging.StreamHandler()
     handler.setLevel(logging.INFO)
 
