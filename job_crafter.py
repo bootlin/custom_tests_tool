@@ -170,7 +170,9 @@ class JobCrafter:
                         finder = ArtifactsFinder(self.cfg, url)
                         try:
                             data = finder.crawl(self.board, defconfig)
-                        except IOError:
+                            # If we don't get any exception, then we've got what we want
+                            break
+                        except (IOError, IndexError):
                             logging.debug("Didn't find the artifacts on server %s" % url)
 
                     if data is None:
