@@ -176,8 +176,8 @@ class JobCrafter:
                             logging.debug("Didn't find the artifacts on server %s" % url)
 
                     if data is None:
-                        logging.error("No artifacts available, bailing out")
-                        raise IOError
+                        logging.warning("No artifacts available, skipping")
+                        continue
 
                 job_name = "%s--%s--%s--%s" % (
                         self.board['device_type'],
