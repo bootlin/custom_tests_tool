@@ -62,7 +62,7 @@ class JobCrafter:
         with open(file, 'w') as f:
             f.write(self.job_template.render(self.job))
 
-        logging.info("==> Job file saved to %s" % file)
+        logging.info("  ==> Job file saved to %s" % file)
 
     def send_to_lava(self):
         try:
@@ -87,15 +87,16 @@ class JobCrafter:
         try:
             for r in ret:
                 logging.debug("Job sent (id: %s)" % r)
-                logging.info("==> Job URL: %s/scheduler/job/%s" %
+                logging.info("  ==> Job URL: %s/scheduler/job/%s" %
                              (self.cfg['web_ui_address'], r))
         except TypeError:
             logging.debug("Job sent (id: %s)" % ret)
-            logging.info("==> Job URL: %s/scheduler/job/%s" %
+            logging.info("  ==> Job URL: %s/scheduler/job/%s" %
                          (self.cfg['web_ui_address'], ret))
 
 # Job handling
     def make_jobs(self):
+        logging.info("Making jobs for %s" % self.board['device_type'])
         # Override basic values that are constant over each test
         if 'server' in self.cfg:
             self.job["lava_server"] = self.cfg['server']
@@ -110,7 +111,7 @@ class JobCrafter:
             self.override('rootfs', os.path.join(self.cfg['rootfs_path'],
                                                  self.board['rootfs']))
 
-        logging.info("Root filesystem path: %s" % self.job['rootfs'])
+        logging.info("  Root filesystem path: %s" % self.job['rootfs'])
 
         # rootfs type
         if self.board["test_plan"] == "boot":
@@ -128,7 +129,7 @@ class JobCrafter:
         else:
             self.job["notify"] = self.cfg['notify']
 
-        logging.info("Notifications recipients: %s" % ", ".join(self.job['notify']))
+        logging.info("  Notifications recipients: %s" % ", ".join(self.job['notify']))
 
         # Define which test to run
         tests = []
