@@ -394,6 +394,7 @@ boards = {
             'arch': 'arm',
             'configs': [
                 'mainline/master/multi_v7_defconfig',
+                'linux4sam/master/sama5_defconfig',
                 ],
             'dt': 'at91-sama5d2_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
@@ -408,6 +409,7 @@ boards = {
             'arch': 'arm',
             'configs': [
                 'mainline/master/multi_v7_defconfig',
+                'linux4sam/master/sama5_defconfig',
                 ],
             'dt': 'at91-sama5d4_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
@@ -444,6 +446,7 @@ boards = {
             'arch': 'arm',
             'configs': [
                 'mainline/master/multi_v5_defconfig',
+                'linux4sam/master/at91_dt_defconfig',
                 ],
             'dt': 'at91sam9261ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
@@ -458,6 +461,7 @@ boards = {
             'arch': 'arm',
             'configs': [
                 'mainline/master/multi_v5_defconfig',
+                'linux4sam/master/at91_dt_defconfig',
                 ],
             'dt': 'at91sam9m10g45ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
@@ -476,6 +480,7 @@ boards = {
             'arch': 'arm',
             'configs': [
                 'mainline/master/multi_v5_defconfig',
+                'linux4sam/master/at91_dt_defconfig',
                 ],
             'dt': 'at91sam9x25ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
@@ -494,6 +499,7 @@ boards = {
             'arch': 'arm',
             'configs': [
                 'mainline/master/multi_v5_defconfig',
+                'linux4sam/master/at91_dt_defconfig',
                 ],
             'dt': 'at91sam9x35ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
@@ -618,6 +624,7 @@ boards = {
             'arch': 'arm',
             'configs': [
                 'mainline/master/multi_v7_defconfig',
+                'linux4sam/master/sama5_defconfig',
                 ],
             'dt': 'at91-sama5d3_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
@@ -642,6 +649,7 @@ boards = {
             'arch': 'arm',
             'configs': [
                 'mainline/master/multi_v7_defconfig',
+                'linux4sam/master/sama5_defconfig',
                 ],
             'dt': 'sama5d34ek',
             'rootfs': 'rootfs_armv7.cpio.gz',
@@ -656,6 +664,7 @@ boards = {
             'arch': 'arm',
             'configs': [
                 'mainline/master/multi_v7_defconfig',
+                'linux4sam/master/sama5_defconfig',
                 ],
             'dt': 'sama5d36ek',
             'rootfs': 'rootfs_armv7.cpio.gz',
@@ -670,6 +679,7 @@ boards = {
             'arch': 'arm',
             'configs': [
                 'mainline/master/multi_v7_defconfig',
+                'linux4sam/master/sama5_defconfig',
                 ],
             'dt': 'sama5d4ek',
             'rootfs': 'rootfs_armv7.cpio.gz',
