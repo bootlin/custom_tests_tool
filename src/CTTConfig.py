@@ -133,13 +133,6 @@ class CTTConfig:
 
         if (self.__config.has_section(DEFAULT_SECTION) and
             key in self.__config[DEFAULT_SECTION]):
-                #
-                # The notify key can be there multiple times, we
-                # should return it as a string
-                #
-                if key == 'notify':
-                    return [self.__config[DEFAULT_SECTION][key]]
-
                 return self.__config[DEFAULT_SECTION][key]
 
         raise KeyError
