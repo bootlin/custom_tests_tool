@@ -184,11 +184,12 @@ class JobCrafter:
                         logging.warning("No artifacts available, skipping")
                         continue
 
-                    job_name = "%s--%s--%s--%s" % (
-                            self.board['device_type'],
-                            self.cfg['tree'],
-                            config.split('/')[-1],
-                            test['name']
+                    job_name = "%s--%s--%s--%s--%s" % (
+                            self.board['device_type'], # device type
+                            config.split('/')[0], # tree
+                            config.split('/')[1], # branch
+                            config.split('/')[2], # defconfig
+                            test['name'] # test name
                             )
                 else:
                     job_name = "%s--%s--%s" % (

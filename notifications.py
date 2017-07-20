@@ -69,13 +69,14 @@ def main():
         d = j["description"].split("--")
         # pprint(j)
         job_report = "".join([
-            '{:<10}'.format(d[1]),
-            '{:<35}'.format(d[0]),
-            '{:<30}'.format(d[2]),
-            '{:<14}'.format(d[3]),
-            '{:<14}'.format(test_status),
-            '{:<12}'.format(JOB_STATUS[j["status"]]),
-            "http://lava.free-electrons.com/scheduler/job/%s" % j["id"],
+            '{:<10}'.format(d[1][:10]), # tree
+            '{:<10}'.format(d[2][:10]), # branch
+            '{:<35}'.format(d[0][:35]), # device
+            '{:<30}'.format(d[3][:30]), # defconfig
+            '{:<14}'.format(d[4][:14]), # test
+            '{:<14}'.format(test_status), # test status
+            '{:<12}'.format(JOB_STATUS[j["status"]]), # job status
+            "http://lava.free-electrons.com/scheduler/job/%s" % j["id"], # link
             ])
         board = boards.get(j["requested_device_type_id"], None)
         if board:
