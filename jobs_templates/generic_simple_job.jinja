@@ -8,7 +8,9 @@ timeouts:
     minutes: 5
   actions:
     power-off:
-      seconds: 15
+      seconds: 25
+    tftp-deploy:
+      minutes: 8
   connection:
     minutes: 2
 priority: high
@@ -17,8 +19,6 @@ visibility: public
 # ACTION_BLOCK
 actions:
 - deploy:
-    timeout:
-      minutes: 4
     to: tftp
     {%- if kernel %}
     kernel:

@@ -21,6 +21,11 @@ timeouts:
     minutes: 10
   action:
     minutes: 5
+  actions:
+    power-off:
+      seconds: 25
+    tftp-deploy:
+      minutes: 8
   connection:
     minutes: 2
 priority: high
@@ -31,8 +36,6 @@ actions:
 - deploy:
     role:
     - board
-    timeout:
-      minutes: 4
     to: tftp
     {%- if kernel %}
     kernel:
