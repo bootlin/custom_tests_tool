@@ -138,12 +138,12 @@ class JobCrafter:
         else:
             tests = self.board.get("tests", [])
         for test in tests:
-            logging.info("Configuring test: %s" % test['name'])
+            configs = []
+            # If we use a custom kernel
             if 'kernel' in self.cfg:
                 data = { 'kernel': self.cfg['kernel'] }
-                defconfigs = ['custom_kernel']
+                configs = ['custom_kernel']
 
-                # If we use a custom kernel
                 if 'dtb' in self.cfg:
                     data['dtb'] = os.path.abspath(self.cfg['dtb'])
                 else:
@@ -153,15 +153,19 @@ class JobCrafter:
                 if 'modules' in self.cfg:
                     data['modules'] = self.cfg['modules']
 
+            # If we go fetch remote artifacts
             else:
                 if 'defconfigs' in self.cfg:
-                    defconfigs = self.cfg['defconfigs']
+                    for d in self.cfg['defconfigs']:
+                        configs.append("%s/%s/%s" % (self.cfg['tree'], self.cfg['branch'], d))
                 else:
-                    defconfigs = test.get('defconfigs', self.board['defconfigs'])
+                    configs = test.get('configs', self.board['configs'])
 
-            for defconfig in defconfigs:
-                logging.info("  Configuring defconfig: %s" % defconfig)
+            for config in configs:
+                logging.info("  Test %s on %s using %s" % (test['name'], self.board['device_type'], config))
 
+                # Go fetch remote artifacts
+                # data is already populated if we have a user supplied kernel
                 if not 'kernel' in self.cfg:
                     data = None
 
@@ -169,7 +173,7 @@ class JobCrafter:
                                 "https://storage.kernelci.org/"):
                         finder = ArtifactsFinder(self.cfg, url)
                         try:
-                            data = finder.crawl(self.board, defconfig)
+                            data = finder.crawl(self.board, config)
                             # If we don't get any exception, then we've got what we want
                             break
                         except IOError:
@@ -179,12 +183,18 @@ class JobCrafter:
                         logging.warning("No artifacts available, skipping")
                         continue
 
-                job_name = "%s--%s--%s--%s" % (
-                        self.board['device_type'],
-                        self.cfg['tree'],
-                        defconfig,
-                        test['name']
-                        )
+                    job_name = "%s--%s--%s--%s" % (
+                            self.board['device_type'],
+                            self.cfg['tree'],
+                            config.split('/')[-1],
+                            test['name']
+                            )
+                else:
+                    job_name = "%s--%s--%s" % (
+                            self.board['device_type'],
+                            config,
+                            test['name']
+                            )
 
                 self.override('kernel', data.get('kernel'))
                 logging.info("    Kernel path: %s" % self.job['kernel'])

@@ -8,7 +8,9 @@ boards = {
             'name': 'Alpine DB', # A pretty name, just to name it
             'device_type': 'alpine-db', # The device-type that LAVA knows
             'arch': 'arm', # The architecture of the board
-            'defconfigs': ['multi_v7_defconfig'], # This are the defconfigs you want to use with this board
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ], # This are the configs you want to use with this board
                                                       # It must be available in kernel CI mainline subtree
             'dt': 'alpine-db', # The DT name (without extension)
             'rootfs': 'rootfs_armv7.cpio.gz', # The rootfs to use (must exist in rootfs_path)
@@ -16,7 +18,7 @@ boards = {
             'tests': [ # A list of tests to run.
                 #{
                 #    'name': 'boot', # Name matching a file in the script folder of the test suite
-                #    'defconfigs': ['multi_v7_defconfig'], # You can override the defconfigs to use, but it's not mandatory
+                #    'configs': ['multi_v7_defconfig'], # You can override the configs to use, but it's not mandatory
                 #    'template': 'generic_simple_job.jinja', # You can also override the template.
                 #                                            # If not, default is generic_simple_job.jinja
                 #    },
@@ -31,7 +33,9 @@ boards = {
             'name': 'alpine-v2-evp',
             'device_type': 'alpine-v2-evp',
             'arch': 'arm64',
-            'defconfigs': ['defconfig'],
+            'configs': [
+                'mainline/master/defconfig',
+                ],
             'dt': 'al/alpine-v2-evp',
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
@@ -43,7 +47,9 @@ boards = {
             'name': 'armada-370-db',
             'device_type': 'armada-370-db',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'armada-370-db',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -53,7 +59,9 @@ boards = {
                     },
                 {
                     'name': 'crypto-tcrypt',
-                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'configs': [
+                        'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
+                        ],
                     'template': 'generic_simple_job_15m_timeout.jinja',
                     },
                 {
@@ -70,7 +78,9 @@ boards = {
             'name': 'Armada 370 RD',
             'device_type': 'armada-370-rd',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'armada-370-rd',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -80,7 +90,9 @@ boards = {
                     },
                 {
                     'name': 'crypto-tcrypt',
-                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'configs': [
+                        'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
+                        ],
                     'template': 'generic_simple_job_15m_timeout.jinja',
                     },
                 {
@@ -94,7 +106,9 @@ boards = {
             'name': 'Armada 3720 DB',
             'device_type': 'armada-3720-db',
             'arch': 'arm64',
-            'defconfigs': ['defconfig'],
+            'configs': [
+                'mainline/master/defconfig',
+                ],
             'dt': 'marvell/armada-3720-db',
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
@@ -106,7 +120,9 @@ boards = {
             'name': 'Armada 3720 Espressobin',
             'device_type': 'armada-3720-espressobin',
             'arch': 'arm64',
-            'defconfigs': ['defconfig'],
+            'configs': [
+                'mainline/master/defconfig',
+                ],
             'dt': 'marvell/armada-3720-espressobin',
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
@@ -118,7 +134,9 @@ boards = {
             'name': 'armada-375-db',
             'device_type': 'armada-375-db',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'armada-375-db',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -128,7 +146,9 @@ boards = {
                     },
                 {
                     'name': 'crypto-tcrypt',
-                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'configs': [
+                        'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
+                        ],
                     'template': 'generic_simple_job_15m_timeout.jinja',
                     },
                 ],
@@ -138,7 +158,9 @@ boards = {
             'name': 'Armada 385 DB AP',
             'device_type': 'armada-385-db-ap',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'armada-385-db-ap',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -148,7 +170,9 @@ boards = {
                     },
                 {
                     'name': 'crypto-tcrypt',
-                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'configs': [
+                        'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
+                        ],
                     'template': 'generic_simple_job_15m_timeout.jinja',
                     },
                 ],
@@ -158,7 +182,9 @@ boards = {
             'name': 'Armada 388 Clearfog',
             'device_type': 'armada-388-clearfog',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'armada-388-clearfog',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -168,7 +194,9 @@ boards = {
                     },
                 {
                     'name': 'crypto-tcrypt',
-                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'configs': [
+                        'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
+                        ],
                     'template': 'generic_simple_job_15m_timeout.jinja',
                     },
                 {
@@ -182,7 +210,9 @@ boards = {
             'name': 'Armada 388 GP',
             'device_type': 'armada-388-gp',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'armada-388-gp',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -192,7 +222,9 @@ boards = {
                     },
                 {
                     'name': 'crypto-tcrypt',
-                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'configs': [
+                        'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
+                        ],
                     'template': 'generic_simple_job_15m_timeout.jinja',
                     },
                 {
@@ -206,7 +238,9 @@ boards = {
             'name': 'armada-7040-db',
             'device_type': 'armada-7040-db',
             'arch': 'arm64',
-            'defconfigs': ['defconfig'],
+            'configs': [
+                'mainline/master/defconfig',
+                ],
             'dt': 'marvell/armada-7040-db',
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
@@ -218,7 +252,9 @@ boards = {
             'name': 'armada-8040-db',
             'device_type': 'armada-8040-db',
             'arch': 'arm64',
-            'defconfigs': ['defconfig'],
+            'configs': [
+                'mainline/master/defconfig',
+                ],
             'dt': 'marvell/armada-8040-db',
             'rootfs': 'rootfs_aarch64.cpio.gz',
             'test_plan': 'boot',
@@ -230,7 +266,9 @@ boards = {
             'name': 'Armada 398 DB',
             'device_type': 'armada-398-db',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'armada-398-db',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -242,7 +280,9 @@ boards = {
             'name': 'Armada XP DB',
             'device_type': 'armada-xp-db',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'armada-xp-db',
             'rootfs': 'rootfs_armv7.tar.gz',
             'test_plan': 'boot-nfs',
@@ -252,7 +292,9 @@ boards = {
                     },
                 {
                     'name': 'crypto-tcrypt',
-                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'configs': [
+                        'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
+                        ],
                     'template': 'generic_simple_job_15m_timeout.jinja',
                     },
                 {
@@ -266,7 +308,9 @@ boards = {
             'name': 'Armada XP GP',
             'device_type': 'armada-xp-gp',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'armada-xp-gp',
             'rootfs': 'rootfs_armv7.tar.gz',
             'test_plan': 'boot-nfs',
@@ -276,7 +320,9 @@ boards = {
                     },
                 {
                     'name': 'crypto-tcrypt',
-                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'configs': [
+                        'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
+                        ],
                     'template': 'generic_simple_job_15m_timeout.jinja',
                     },
                 {
@@ -290,7 +336,9 @@ boards = {
             'name': 'armada-xp-linksys-mamba',
             'device_type': 'armada-xp-linksys-mamba',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'armada-xp-linksys-mamba',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -300,7 +348,9 @@ boards = {
                     },
                 {
                     'name': 'crypto-tcrypt',
-                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'configs': [
+                        'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
+                        ],
                     'template': 'generic_simple_job_15m_timeout.jinja',
                     },
                 {
@@ -314,7 +364,9 @@ boards = {
             'name': 'Armada XP Openblocks AX3 4',
             'device_type': 'armada-xp-openblocks-ax3-4',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'armada-xp-openblocks-ax3-4',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -324,7 +376,9 @@ boards = {
                     },
                 {
                     'name': 'crypto-tcrypt',
-                    'defconfigs': ['mvebu_v7_defconfig+tcrypt'],
+                    'configs': [
+                        'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
+                        ],
                     'template': 'generic_simple_job_15m_timeout.jinja',
                     },
                 {
@@ -338,7 +392,9 @@ boards = {
             'name': 'at91-sama5d2_xplained',
             'device_type': 'at91-sama5d2_xplained',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'at91-sama5d2_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -350,7 +406,9 @@ boards = {
             'name': 'AT91 sama5d4 Xplained',
             'device_type': 'at91-sama5d4_xplained',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'at91-sama5d4_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -366,7 +424,9 @@ boards = {
             'name': 'at91rm9200ek',
             'device_type': 'at91rm9200ek',
             'arch': 'arm',
-            'defconfigs': ['at91_dt_defconfig'],
+            'configs': [
+                'mainline/master/at91_dt_defconfig',
+                ],
             'dt': 'at91rm9200ek',
             'rootfs': 'rootfs_armv4.tar.gz',
             'test_plan': 'boot-nfs',
@@ -382,7 +442,9 @@ boards = {
             'name': 'at91sam9261ek',
             'device_type': 'at91sam9261ek',
             'arch': 'arm',
-            'defconfigs': ['multi_v5_defconfig'],
+            'configs': [
+                'mainline/master/multi_v5_defconfig',
+                ],
             'dt': 'at91sam9261ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
@@ -394,7 +456,9 @@ boards = {
             'name': 'at91sam9m10g45ek',
             'device_type': 'at91sam9m10g45ek',
             'arch': 'arm',
-            'defconfigs': ['multi_v5_defconfig'],
+            'configs': [
+                'mainline/master/multi_v5_defconfig',
+                ],
             'dt': 'at91sam9m10g45ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
@@ -410,7 +474,9 @@ boards = {
             'name': 'at91sam9x25ek',
             'device_type': 'at91sam9x25ek',
             'arch': 'arm',
-            'defconfigs': ['multi_v5_defconfig'],
+            'configs': [
+                'mainline/master/multi_v5_defconfig',
+                ],
             'dt': 'at91sam9x25ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
@@ -426,7 +492,9 @@ boards = {
             'name': 'at91sam9x35ek',
             'device_type': 'at91sam9x35ek',
             'arch': 'arm',
-            'defconfigs': ['multi_v5_defconfig'],
+            'configs': [
+                'mainline/master/multi_v5_defconfig',
+                ],
             'dt': 'at91sam9x35ek',
             'rootfs': 'rootfs_armv5.cpio.gz',
             'test_plan': 'boot',
@@ -442,7 +510,9 @@ boards = {
             'name': 'beagle-xm',
             'device_type': 'beagle-xm',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'omap3-beagle-xm',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -454,19 +524,19 @@ boards = {
             'name': 'BeagleBone Black',
             'device_type': 'beaglebone-black',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'am335x-boneblack',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
                 {
                     'name': 'mmc',
-                    'defconfigs': ['multi_v7_defconfig'],
                     'template': 'generic_simple_job.jinja',
                     },
                 {
                     'name': 'network',
-                    'defconfigs': ['multi_v7_defconfig'],
                     'template': 'generic_multinode_job.jinja',
                     },
                 ],
@@ -476,7 +546,9 @@ boards = {
             'name': 'imx6q nitrogen6x',
             'device_type': 'imx6q-nitrogen6x',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'imx6q-nitrogen6x',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -488,7 +560,9 @@ boards = {
             'name': 'kirkwood-db-88f6282',
             'device_type': 'kirkwood-db-88f6282',
             'arch': 'arm',
-            'defconfigs': ['mvebu_v5_defconfig'],
+            'configs': [
+                'mainline/master/mvebu_v5_defconfig',
+                ],
             'dt': 'kirkwood-db-88f6282',
             'rootfs': 'rootfs_armv5.tar.gz',
             'test_plan': 'boot-nfs',
@@ -500,7 +574,9 @@ boards = {
             'name': 'kirkwood-openblocks_a7',
             'device_type': 'kirkwood-openblocks_a7',
             'arch': 'arm',
-            'defconfigs': ['mvebu_v5_defconfig'],
+            'configs': [
+                'mainline/master/mvebu_v5_defconfig',
+                ],
             'dt': 'kirkwood-openblocks_a7',
             'rootfs': 'rootfs_armv5.tar.gz',
             'test_plan': 'boot-nfs',
@@ -512,7 +588,9 @@ boards = {
             'name': 'optimus-a80',
             'device_type': 'optimus-a80',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'sun9i-a80-optimus',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -524,7 +602,9 @@ boards = {
             'name': 'orion5x-rd88f5182-nas',
             'device_type': 'orion5x-rd88f5182-nas',
             'arch': 'arm',
-            'defconfigs': ['multi_v5_defconfig'],
+            'configs': [
+                'mainline/master/multi_v5_defconfig',
+                ],
             'dt': 'orion5x-rd88f5182-nas',
             'rootfs': 'rootfs_armv5.tar.gz',
             'test_plan': 'boot-nfs',
@@ -536,7 +616,9 @@ boards = {
             'name': 'sama5d3 Xplained',
             'device_type': 'sama53d',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'at91-sama5d3_xplained',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -558,7 +640,9 @@ boards = {
             'name': 'sama5d34ek',
             'device_type': 'sama5d34ek',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'sama5d34ek',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -570,7 +654,9 @@ boards = {
             'name': 'sama5d36ek',
             'device_type': 'sama5d36ek',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'sama5d36ek',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -582,7 +668,9 @@ boards = {
             'name': 'sama5d4ek',
             'device_type': 'sama5d4ek',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'sama5d4ek',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -594,11 +682,17 @@ boards = {
             'name': 'sun5i r8 chip',
             'device_type': 'sun5i-r8-chip',
             'arch': 'arm',
-            'defconfigs': ['sunxi_defconfig', 'multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/sunxi_defconfig',
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'sun5i-r8-chip',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
             'tests': [
+                {
+                    'name': 'boot'
+                    }
                 ],
             'notify': [],
             },
@@ -606,7 +700,9 @@ boards = {
             'name': 'sun6i-a31-app4-evb1',
             'device_type': 'sun6i-a31-app4-evb1',
             'arch': 'arm',
-            'defconfigs': ['sunxi_defconfig'],
+            'configs': [
+                'mainline/master/sunxi_defconfig',
+                ],
             'dt': 'sun6i-a31-app4-evb1',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -618,7 +714,9 @@ boards = {
             'name': 'sun8i-a23-evb',
             'device_type': 'sun8i-a23-evb',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'sun8i-a23-evb',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -630,7 +728,9 @@ boards = {
             'name': 'sun8i-a33-sinlinx-sina33',
             'device_type': 'sun8i-a33-sinlinx-sina33',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'sun8i-a33-sinlinx-sina33',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -642,7 +742,9 @@ boards = {
             'name': 'sun8i-a83t-allwinner-h8homlet-v2',
             'device_type': 'sun8i-a83t-allwinner-h8homlet-v2',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'sun8i-a83t-allwinner-h8homlet-v2',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',
@@ -654,7 +756,9 @@ boards = {
             'name': 'OrangePi PC',
             'device_type': 'sun8i-h3-orangepi-pc',
             'arch': 'arm',
-            'defconfigs': ['multi_v7_defconfig'],
+            'configs': [
+                'mainline/master/multi_v7_defconfig',
+                ],
             'dt': 'sun8i-h3-orangepi-pc',
             'rootfs': 'rootfs_armv7.cpio.gz',
             'test_plan': 'boot',

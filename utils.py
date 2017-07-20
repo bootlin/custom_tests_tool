@@ -35,7 +35,7 @@ class ArtifactsFinder():
     def get_latest_release(self):
         if "kernelci" in self.root_url: # KernelCI's case
             try:
-                r = requests.get("https://api.kernelci.org/build?limit=1&job=%s&field=kernel&sort=created_on&git_branch=%s" % (self.cfg['tree'], self.cfg['branch']),
+                r = requests.get("https://api.kernelci.org/build?limit=1&job=%s&field=kernel&sort=created_on&git_branch=%s" % (self.tree, self.branch),
                                  headers={'Authorization': self.cfg['api_token']})
                 r.raise_for_status()
                 return r.json()['result'][0]['kernel']
@@ -43,20 +43,21 @@ class ArtifactsFinder():
                 raise IOError
         else:
             if self.root_url.startswith("http"):
-                r = requests.get("/".join([self.root_url, self.cfg['tree'],
-                                           self.cfg['branch'], "latest"]))
+                r = requests.get("/".join([self.root_url, self.tree,
+                                           self.branch, "latest"]))
                 return r.text
             else:
-                with open(os.path.join(self.root_url, self.cfg['tree'],
-                                       self.cfg['branch'], "latest")) as f:
+                with open(os.path.join(self.root_url, self.tree,
+                                       self.branch, "latest")) as f:
                     return f.read().strip()
 
     def get_latest_full_url(self):
-        return self.root_url + self.cfg["tree"] + "/" + self.cfg["branch"] + "/" + self.get_latest_release()
+        return self.root_url + self.tree + "/" + self.branch + "/" + self.get_latest_release()
 
-    def crawl(self, board, defconfig):
+    def crawl(self, board, config):
         logging.debug("Crawling %s for %s (%s)" % (self.root_url, board['name'],
-                                                   defconfig))
+                                                   config))
+        (self.tree, self.branch, defconfig) = config.split('/')
         url = self.get_latest_full_url()
         url = '/'.join([url, board['arch']])
         if not url.endswith('/'):
