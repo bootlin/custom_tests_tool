@@ -34,10 +34,13 @@ class ArtifactsFinder():
 
     def get_latest_release(self):
         if "kernelci" in self.root_url: # KernelCI's case
-            r = requests.get("https://api.kernelci.org/build?limit=1&job=%s&field=kernel&sort=created_on&git_branch=%s" % (self.cfg['tree'], self.cfg['branch']),
-                             headers={'Authorization': self.cfg['api_token']})
-            r.raise_for_status()
-            return r.json()['result'][0]['kernel']
+            try:
+                r = requests.get("https://api.kernelci.org/build?limit=1&job=%s&field=kernel&sort=created_on&git_branch=%s" % (self.cfg['tree'], self.cfg['branch']),
+                                 headers={'Authorization': self.cfg['api_token']})
+                r.raise_for_status()
+                return r.json()['result'][0]['kernel']
+            except IndexError:
+                raise IOError
         else:
             if self.root_url.startswith("http"):
                 r = requests.get("/".join([self.root_url, self.cfg['tree'],
