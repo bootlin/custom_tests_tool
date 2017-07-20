@@ -41,11 +41,6 @@ server your sending the job, as long as it actually contains valid rootfs.
 be sent, whatever the status of the job.
   * `web_ui_address` is the base URL of the LAVA Web UI.
 
-If you don't specify `notify`, the notifications will be sent to the addresses
-listed in the `boards.py` file, in a per board basis.   
-So be careful if you know that you will send a lot of tests not to flood those
-people.
-
 ## Examples
 
 Before any work, don't forget to reactivate your virtualenv to setup the Python
@@ -116,11 +111,13 @@ it's thus easy to add a new board:
     'name': 'BeagleBone Black', # A pretty name for displaying, also free
     'device_type': 'beaglebone-black', # This is the device-type as named is the
                                        # LAVA configuration
-    'defconfigs': ['multi_v7_defconfig'], # This is a list of defconfigs built
-                                          # by Kernel CI.
-                                          # This value can be found at
-                                          # https://storage.kernelci.org/mainline/master/v4.11.xxx-XXXXXX
-                                          # for example.
+    'configs': [
+        'mainline/master/multi_v7_defconfig',
+        ],  # This are the configs you want to use with this board
+            # The format is as simple as tree/branch/defconfig
+            # If a branch contains a '/' in its name, the builders
+            # generally replace it with a '_', and you need to do the
+            # same here.
     'dt': 'am335x-boneblack', # This is the DT name as found in the kernel,
                               # without the extension.
     'rootfs': 'rootfs_armv7.cpio.gz', # The name of the rootfs you want to use.
@@ -132,7 +129,9 @@ it's thus easy to add a new board:
     'tests': [ # A list of tests to run.
         {
             'name': 'boot', # Name matching a file in the script folder of the test suite
-            'defconfigs': ['multi_v7_defconfig'], # You can override the defconfigs to use, but it's not mandatory
+            'configs': [
+                'next/master/multi_v7_defconfig',
+                ], # You can override the configs to use, but it's not mandatory.
             'template': 'generic_simple_job.jinja', # You can also override the template. 
                                                     # If not, default is generic_simple_job.jinja
             },

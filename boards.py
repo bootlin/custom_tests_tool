@@ -10,8 +10,11 @@ boards = {
             'arch': 'arm', # The architecture of the board
             'configs': [
                 'mainline/master/multi_v7_defconfig',
-                ], # This are the configs you want to use with this board
-                                                      # It must be available in kernel CI mainline subtree
+                ],  # This are the configs you want to use with this board
+                    # The format is as simple as tree/branch/defconfig
+                    # If a branch contains a '/' in its name, the builders
+                    # generally replace it with a '_', and you need to do the
+                    # same here.
             'dt': 'alpine-db', # The DT name (without extension)
             'rootfs': 'rootfs_armv7.cpio.gz', # The rootfs to use (must exist in rootfs_path)
             'test_plan': 'boot', # boot or boot-nfs if the board can not boot with ramdisk

@@ -134,7 +134,16 @@ class JobCrafter:
         # Define which test to run
         tests = []
         if 'tests' in self.cfg:
-            # WTF?
+            # This is needed to generate the test list as a list of dictionaries, as in the `boards.py` file.
+            # It has two purposes:
+            #   * When a test is in not affected to a board in `boards.py`, this
+            #     simulates it in order to have the same data structure for the rest
+            #     of the code. (a list of dict, and not a list of strings)
+            #   * When a test has been affected to a board, but overrides a
+            #     default value (the template to use, for example; useful for
+            #     multinode tests), this makes sure to take that value into
+            #     account by transforming the test name given in the command line, by
+            #     the dictionary of the configuration.
             tests = [next(iter([e for e in self.board['tests'] if e['name'] == t]), {'name': t}) for t in self.cfg['tests']]
         else:
             tests = self.board.get("tests", [])
@@ -143,6 +152,7 @@ class JobCrafter:
             # If we use a custom kernel
             if 'kernel' in self.cfg:
                 data = { 'kernel': self.cfg['kernel'] }
+                # Only one custom config
                 configs = ['custom_kernel']
 
                 if 'dtb' in self.cfg:
@@ -158,8 +168,10 @@ class JobCrafter:
             else:
                 if 'defconfigs' in self.cfg:
                     for d in self.cfg['defconfigs']:
+                        # Construct the list of configs to fetch
                         configs.append("%s/%s/%s" % (self.cfg['tree'], self.cfg['branch'], d))
                 else:
+                    # Get the configs from boards.py
                     configs = test.get('configs', self.board['configs'])
 
             for config in configs:
