@@ -1,0 +1,852 @@
+{
+    "alpine-db": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "boot",
+                "configs": [
+                    {
+                        "tree": "mainline",
+                        "branch": "master",
+                        "defconfig": "multi_v7_defconfig"
+                    }
+                ],
+                "template": "generic_simple_job.jinja"
+            },
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": []
+    },
+    "alpine-v2-evp": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": []
+    },
+    "armada-370-db": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "crypto"
+            },
+            {
+                "name": "crypto-tcrypt",
+                "configs": [
+                    {
+                        "tree": "mvebu-backports",
+                        "branch": "4.12-rc6_backports",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    }
+                ],
+                "template": "generic_simple_job_long_timeout.jinja"
+            },
+            {
+                "name": "sata"
+            },
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "armada-370-rd": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "crypto"
+            },
+            {
+                "name": "crypto-tcrypt",
+                "configs": [
+                    {
+                        "tree": "mvebu-backports",
+                        "branch": "4.12-rc6_backports",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    }
+                ],
+                "template": "generic_simple_job_long_timeout.jinja"
+            },
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "armada-3720-db": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "armada-3720-espressobin": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "armada-375-db": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "crypto"
+            },
+            {
+                "name": "crypto-tcrypt",
+                "configs": [
+                    {
+                        "tree": "mvebu-backports",
+                        "branch": "4.12-rc6_backports",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    }
+                ],
+                "template": "generic_simple_job_long_timeout.jinja"
+            }
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "armada-385-db-ap": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "crypto"
+            },
+            {
+                "name": "crypto-tcrypt",
+                "configs": [
+                    {
+                        "tree": "mvebu-backports",
+                        "branch": "4.12-rc6_backports",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    }
+                ],
+                "template": "generic_simple_job_long_timeout.jinja"
+            }
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "armada-388-clearfog": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "crypto"
+            },
+            {
+                "name": "crypto-tcrypt",
+                "configs": [
+                    {
+                        "tree": "mvebu-backports",
+                        "branch": "4.12-rc6_backports",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    }
+                ],
+                "template": "generic_simple_job_long_timeout.jinja"
+            },
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "armada-388-gp": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "crypto"
+            },
+            {
+                "name": "crypto-tcrypt",
+                "configs": [
+                    {
+                        "tree": "mvebu-backports",
+                        "branch": "4.12-rc6_backports",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    }
+                ],
+                "template": "generic_simple_job_long_timeout.jinja"
+            },
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "armada-7040-db": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "armada-8040-db": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "armada-398-db": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "armada-xp-db": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "crypto"
+            },
+            {
+                "name": "crypto-tcrypt",
+                "configs": [
+                    {
+                        "tree": "mvebu-backports",
+                        "branch": "4.12-rc6_backports",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    }
+                ],
+                "template": "generic_simple_job_long_timeout.jinja"
+            },
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "armada-xp-gp": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "crypto"
+            },
+            {
+                "name": "crypto-tcrypt",
+                "configs": [
+                    {
+                        "tree": "mvebu-backports",
+                        "branch": "4.12-rc6_backports",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    }
+                ],
+                "template": "generic_simple_job_long_timeout.jinja"
+            },
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "armada-xp-linksys-mamba": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "crypto"
+            },
+            {
+                "name": "crypto-tcrypt",
+                "configs": [
+                    {
+                        "tree": "mvebu-backports",
+                        "branch": "4.12-rc6_backports",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    }
+                ],
+                "template": "generic_simple_job_long_timeout.jinja"
+            },
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "armada-xp-openblocks-ax3-4": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "crypto"
+            },
+            {
+                "name": "crypto-tcrypt",
+                "configs": [
+                    {
+                        "tree": "mvebu-backports",
+                        "branch": "4.12-rc6_backports",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    }
+                ],
+                "template": "generic_simple_job_long_timeout.jinja"
+            },
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "at91-sama5d2_xplained": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            },
+            {
+                "tree": "linux4sam",
+                "branch": "master",
+                "defconfig": "sama5_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": []
+    },
+    "at91-sama5d4_xplained": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            },
+            {
+                "tree": "linux4sam",
+                "branch": "master",
+                "defconfig": "sama5_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": []
+    },
+    "at91rm9200ek": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "at91_dt_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": []
+    },
+    "at91sam9261ek": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v5_defconfig"
+            },
+            {
+                "tree": "linux4sam",
+                "branch": "master",
+                "defconfig": "at91_dt_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": []
+    },
+    "at91sam9m10g45ek": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v5_defconfig"
+            },
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "at91_dt_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": []
+    },
+    "at91sam9x25ek": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v5_defconfig"
+            },
+            {
+                "tree": "linux4sam",
+                "branch": "master",
+                "defconfig": "at91_dt_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": []
+    },
+    "at91sam9x35ek": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v5_defconfig"
+            },
+            {
+                "tree": "linux4sam",
+                "branch": "master",
+                "defconfig": "at91_dt_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": []
+    },
+    "beagle-xm": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": []
+    },
+    "beaglebone-black": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "mmc",
+                "template": "generic_simple_job.jinja"
+            },
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": []
+    },
+    "imx6q-nitrogen6x": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": []
+    },
+    "kirkwood-db-88f6282": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "mvebu_v5_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "kirkwood-openblocks_a7": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "mvebu_v5_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "optimus-a80": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": []
+    },
+    "orion5x-rd88f5182-nas": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v5_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": [
+            "thomas.petazzoni@free-electrons.com",
+            "gregory.clement@free-electrons.com",
+            "antoine.tenart@free-electrons.com"
+        ]
+    },
+    "sama53d": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            },
+            {
+                "tree": "linux4sam",
+                "branch": "master",
+                "defconfig": "sama5_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "mmc"
+            },
+            {
+                "name": "usb"
+            },
+            {
+                "name": "network",
+                "template": "generic_multinode_job.jinja"
+            }
+        ],
+        "notify": ["florent.jacquet@free-electrons.com"]
+    },
+    "sama5d34ek": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            },
+            {
+                "tree": "linux4sam",
+                "branch": "master",
+                "defconfig": "sama5_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": []
+    },
+    "sama5d36ek": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            },
+            {
+                "tree": "linux4sam",
+                "branch": "master",
+                "defconfig": "sama5_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": []
+    },
+    "sama5d4ek": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            },
+            {
+                "tree": "linux4sam",
+                "branch": "master",
+                "defconfig": "sama5_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": []
+    },
+    "sun5i-r8-chip": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            },
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "sunxi_defconfig"
+            }
+        ],
+        "tests": [
+            {
+                "name": "boot"
+            }
+        ],
+        "notify": []
+    },
+    "sun6i-a31-app4-evb1": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "sunxi_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": []
+    },
+    "sun8i-a23-evb": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": []
+    },
+    "sun8i-a33-sinlinx-sina33": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": []
+    },
+    "sun8i-a83t-allwinner-h8homlet-v2": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": []
+    },
+    "sun8i-h3-orangepi-pc": {
+        "configs": [
+            {
+                "tree": "mainline",
+                "branch": "master",
+                "defconfig": "multi_v7_defconfig"
+            }
+        ],
+        "tests": [
+        ],
+        "notify": []
+    }
+}
