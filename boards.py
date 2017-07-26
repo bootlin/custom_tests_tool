@@ -65,7 +65,7 @@ boards = {
                     'configs': [
                         'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
                         ],
-                    'template': 'generic_simple_job_15m_timeout.jinja',
+                    'template': 'generic_simple_job_long_timeout.jinja',
                     },
                 {
                     'name': 'sata',
@@ -96,7 +96,7 @@ boards = {
                     'configs': [
                         'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
                         ],
-                    'template': 'generic_simple_job_15m_timeout.jinja',
+                    'template': 'generic_simple_job_long_timeout.jinja',
                     },
                 {
                     'name': 'network',
@@ -152,7 +152,7 @@ boards = {
                     'configs': [
                         'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
                         ],
-                    'template': 'generic_simple_job_15m_timeout.jinja',
+                    'template': 'generic_simple_job_long_timeout.jinja',
                     },
                 ],
             'notify': marvell,
@@ -176,7 +176,7 @@ boards = {
                     'configs': [
                         'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
                         ],
-                    'template': 'generic_simple_job_15m_timeout.jinja',
+                    'template': 'generic_simple_job_long_timeout.jinja',
                     },
                 ],
             'notify': marvell,
@@ -200,7 +200,7 @@ boards = {
                     'configs': [
                         'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
                         ],
-                    'template': 'generic_simple_job_15m_timeout.jinja',
+                    'template': 'generic_simple_job_long_timeout.jinja',
                     },
                 {
                     'name': 'network',
@@ -228,7 +228,7 @@ boards = {
                     'configs': [
                         'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
                         ],
-                    'template': 'generic_simple_job_15m_timeout.jinja',
+                    'template': 'generic_simple_job_long_timeout.jinja',
                     },
                 {
                     'name': 'network',
@@ -298,7 +298,7 @@ boards = {
                     'configs': [
                         'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
                         ],
-                    'template': 'generic_simple_job_15m_timeout.jinja',
+                    'template': 'generic_simple_job_long_timeout.jinja',
                     },
                 {
                     'name': 'network',
@@ -326,7 +326,7 @@ boards = {
                     'configs': [
                         'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
                         ],
-                    'template': 'generic_simple_job_15m_timeout.jinja',
+                    'template': 'generic_simple_job_long_timeout.jinja',
                     },
                 {
                     'name': 'network',
@@ -354,7 +354,7 @@ boards = {
                     'configs': [
                         'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
                         ],
-                    'template': 'generic_simple_job_15m_timeout.jinja',
+                    'template': 'generic_simple_job_long_timeout.jinja',
                     },
                 {
                     'name': 'network',
@@ -382,7 +382,7 @@ boards = {
                     'configs': [
                         'mvebu-backports/4.12-rc6_backports/mvebu_v7_defconfig+tcrypt',
                         ],
-                    'template': 'generic_simple_job_15m_timeout.jinja',
+                    'template': 'generic_simple_job_long_timeout.jinja',
                     },
                 {
                     'name': 'network',
