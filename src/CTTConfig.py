@@ -19,9 +19,9 @@ class SectionError(BaseError):
 DEFAULT_SECTION = 'ctt'
 
 mandatory_keys = [
-    'api_token',
+    'api_token', # Remove me
     'notify',
-    'rootfs_path',
+    'rootfs_path', # Remove me
     'server',
     'ssh_server',
     'ssh_username',
@@ -50,11 +50,13 @@ class CTTConfig:
     def __parse_cmdline(self):
         parser = ArgumentParser(description='Send custom job to a LAVA server')
 
+        parser.add_argument('-d', '--debug', action='store_true',
+                            help='Debug mode')
         parser.add_argument('--no-send', action='store_true',
                             help='Don\'t send the job')
-        parser.add_argument('--default-notify', action='store_true',
+        parser.add_argument('--default-notify', action='store_true', # Remove me
                             help='Use the board configuration mail recipients')
-        parser.add_argument('--notify', nargs='+',
+        parser.add_argument('--notify', nargs='+', # Remove me ?
                             help='Mail recipients of the notifications')
         parser.add_argument('-b', '--boards', nargs='+',
                             help='Board to run the test on')
@@ -64,9 +66,9 @@ class CTTConfig:
         job = parser.add_argument_group('Job handling')
         job.add_argument('--output-dir', default='jobs',
                          help='Path where the jobs will be stored')
-        job.add_argument('--rootfs-path',
+        job.add_argument('--rootfs-path', # Remove me
                          help='Path to the prebuilt rootfs images directory')
-        job.add_argument('--job-name', help='Name of the job')
+        job.add_argument('--job-name', help='Name of the job') # Remove me
 
         job.add_argument('--rootfs', help='Path to your rootfs image')
         job.add_argument('--kernel', help='Path to your kernel image')
@@ -81,7 +83,7 @@ class CTTConfig:
         lava.add_argument('--username', help='LAVA username')
         lava.add_argument('--token', help='LAVA token')
 
-        artifacts = parser.add_argument_group('Artifacts options')
+        artifacts = parser.add_argument_group('Artifacts options') # Remove me
         artifacts.add_argument('--api-token', help='KernelCI API token')
         artifacts.add_argument('--tree', default='mainline',
                                help='KernelCI tree to use')
