@@ -4,7 +4,7 @@ import getpass
 
 from jinja2 import FileSystemLoader, Environment
 
-import src.ssh_utils
+from src import ssh_utils
 
 from src.crawlers import FreeElectronsCrawler, KernelCICrawler
 from src.crawlers import RemoteAccessError
@@ -34,6 +34,8 @@ class JobCrafter(object):
                 - notify
                 - lava_server (for LAVA v1 templates)
                 - lava_stream (for LAVA v1 templates)
+
+        TODO: make some check at init time
         """
         self._boards = boards
         self._cfg = cfg
@@ -135,12 +137,12 @@ class JobCrafter(object):
             return local
 
     def send_file(self, local, remote):
-        scp = utils.get_sftp(self._cfg["ssh_server"], 22, self._cfg["ssh_username"])
-        logging.info('    Sending %s to %s' % (local, remote))
+        scp = ssh_utils.get_sftp(self._cfg["ssh_server"], 22, self._cfg["ssh_username"])
+        logging.info('      Sending %s to %s' % (local, remote))
         try:
             scp.put(local, remote)
         except IOError as e:
-            utils.mkdir_p(scp, os.path.dirname(remote))
+            ssh_utils.mkdir_p(scp, os.path.dirname(remote))
             scp.put(local, remote)
-        logging.info('    File %s sent' % local)
+        logging.info('      File %s sent' % local)
 
