@@ -6,15 +6,19 @@ import json
 import logging
 import os
 import sys
+import getpass
 
 from pprint import pprint
 
+from src import ssh_utils
 from src.CTTConfig import CTTConfig, OptionError, SectionError
 from src.CTTFormatter import CTTFormatter
 from src.rootfs_chooser import RootfsChooser, RootfsAccessError
 from src.crafter import JobCrafter
 
 class CTTLauncher:
+    __REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
+
     def __init__(self):
         self.__set_config()
         self.__set_logging()
@@ -57,6 +61,29 @@ class CTTLauncher:
 
         self.crafter = JobCrafter(self._boards_config, self._cfg)
 
+    # Files handling
+    def __handle_file(self, local):
+        if not (local.startswith("http://") or local.startswith("file://") or
+                local.startswith("https://")):
+            remote = os.path.join(CTTLauncher.__REMOTE_ROOT, os.path.basename(local))
+            self.__send_file(local, remote)
+            remote = "file://" + remote
+            return remote
+        else:
+            return local
+
+    def __send_file(self, local, remote):
+        scp = ssh_utils.get_sftp(self._cfg["ssh_server"], 22, self._cfg["ssh_username"])
+        logging.info('  Sending %s to %s' % (local, remote))
+        try:
+            scp.put(local, remote)
+        except IOError as e:
+            ssh_utils.mkdir_p(scp, os.path.dirname(remote))
+            scp.put(local, remote)
+        logging.info('  File %s sent' % local)
+
+
+    # Launcher
     def launch(self):
         for board in self._cfg['boards']:
             logging.info(board)
@@ -81,18 +108,18 @@ class CTTLauncher:
                 artifacts = {}
 
                 if 'kernel' in self._cfg:
-                    artifacts['kernel'] = self._cfg['kernel']
+                    artifacts['kernel'] = self.__handle_file(self._cfg['kernel'])
 
                 if 'dtb' in self._cfg:
-                    artifacts['dtb'] = self._cfg['dtb']
+                    artifacts['dtb'] = self.__handle_file(self._cfg['dtb'])
                 elif 'dtb_folder' in self._cfg:
-                    artifacts['dtb'] = "%s/%s.dtb" % (self._cfg['dtb_folder'],
-                            self._boards_config[board]['dt'])
+                    artifacts['dtb'] = self.__handle_file("%s/%s.dtb" % (self._cfg['dtb_folder'],
+                            self._boards_config[board]['dt']))
 
                 if 'modules' in self._cfg:
-                    artifacts['modules'] = self._cfg['modules']
+                    artifacts['modules'] = self.__handle_file(self._cfg['modules'])
 
-                artifacts['rootfs'] = rootfs
+                artifacts['rootfs'] = self.__handle_file(rootfs)
 
                 logging.info("  Making %s job" % test)
                 job_name = "%s--custom_kernel--%s" % (board, test)

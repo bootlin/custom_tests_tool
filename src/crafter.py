@@ -1,11 +1,9 @@
 import os
 import logging
-import getpass
 import json
 
 from jinja2 import FileSystemLoader, Environment
 
-from src import ssh_utils
 
 from src.crawlers import FreeElectronsCrawler, KernelCICrawler
 from src.crawlers import RemoteAccessError
@@ -16,7 +14,6 @@ class JobCrafter(object):
     """
     This class handle the jobs.
     """
-    __REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
     __TEMPLATE_FOLDER = "jobs_templates"
 
     def __init__(self, boards, cfg):
@@ -92,18 +89,18 @@ class JobCrafter(object):
 
         self.job["device_type"] = board_config['device_type']
 
-        self.override('rootfs', artifacts.get('rootfs'))
+        self.job['rootfs'] = artifacts['rootfs']
         logging.info("    Root filesystem path: %s" % self.job['rootfs'])
 
-        self.override('kernel', artifacts.get('kernel'))
+        self.job['kernel'] = artifacts['kernel']
         logging.info("    Kernel path: %s" % self.job['kernel'])
 
-        self.override('device_tree', artifacts.get('dtb'))
+        self.job['device_tree'] = artifacts['dtb']
         logging.info("    Device tree path: %s" % self.job['device_tree'])
 
         # modules are optional if we have our own kernel
         if 'modules' in artifacts:
-            self.override('modules', artifacts.get('modules'))
+            self.job['modules'] = artifacts['modules']
             logging.info('    Modules archive path: %s' % self.job['modules'])
 
         self.get_template_from_file(os.path.join(JobCrafter.__TEMPLATE_FOLDER,
@@ -121,30 +118,4 @@ class JobCrafter(object):
                                 self.job_template.render(self.job))
         for output in out:
             logging.info('  ==> Job saved to: %s' % output)
-
-    def override(self, key, value):
-        logging.debug('Overriding key "%s" with value "%s"' % (key, value))
-        remote_path = self.handle_file(value)
-        self.job[key] = remote_path
-
-# Files handling
-    def handle_file(self, local):
-        if not (local.startswith("http://") or local.startswith("file://") or
-                local.startswith("https://")):
-            remote = os.path.join(JobCrafter.__REMOTE_ROOT, os.path.basename(local))
-            self.send_file(local, remote)
-            remote = "file://" + remote
-            return remote
-        else:
-            return local
-
-    def send_file(self, local, remote):
-        scp = ssh_utils.get_sftp(self._cfg["ssh_server"], 22, self._cfg["ssh_username"])
-        logging.info('      Sending %s to %s' % (local, remote))
-        try:
-            scp.put(local, remote)
-        except IOError as e:
-            ssh_utils.mkdir_p(scp, os.path.dirname(remote))
-            scp.put(local, remote)
-        logging.info('      File %s sent' % local)
 
