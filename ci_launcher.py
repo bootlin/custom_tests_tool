@@ -7,67 +7,22 @@ import logging
 import os
 import sys
 
-from src.CTTConfig import CTTConfig, OptionError, ConfigFileError, CICmdline
+from src.CTTConfig import CICmdline
 from src.CTTFormatter import CTTFormatter
 from src.crawlers import FreeElectronsCrawler, KernelCICrawler
 from src.crawlers import RemoteAccessError, RemoteEmptyError
 from src.rootfs_chooser import RootfsChooser, RootfsAccessError
-from src.crafter import JobCrafter
+from src.launcher import BaseLauncher
 
-class CILauncher:
-    def __init__(self):
-        self._set_logging()
-        self._set_config()
-
-    def _set_logging(self):
-        self._logger = logging.getLogger()
-        self._logger.setLevel(logging.DEBUG)
-
-        requests_logger = logging.getLogger("requests")
-        requests_logger.setLevel(logging.WARN)
-
-        handler = logging.StreamHandler()
-
-        formatter = CTTFormatter()
-        handler.setFormatter(formatter)
-
-        self._logger.addHandler(handler)
+class CILauncher(BaseLauncher):
+    _CMDLINE_CLASS = CICmdline
 
     def _set_config(self):
-        ctt_root_location = os.path.abspath(os.path.dirname(
-            os.path.realpath(__file__)))
-        with open(os.path.join(ctt_root_location, "ci_tests.json")) as f:
-            self._tests_config = json.load(f)
-
-        with open(os.path.join(ctt_root_location, "boards.json")) as f:
-            self._boards_config = json.load(f)
-            # Add the name field
-            for k,v in self._boards_config.items():
-                v['name'] = k
-                v['device_type'] = k
-
-        try:
-            with open(os.path.expanduser('~/.cttrc')) as f:
-                self._cfg = CTTConfig(f, CICmdline, self._boards_config)
-        except OptionError as e:
-            logging.critical(e)
-            sys.exit(1)
-        except ConfigFileError as e:
-            logging.critical(e)
-            sys.exit(2)
-
-        if self._cfg['debug']:
-            self._logger.setLevel(logging.DEBUG)
-        else:
-            self._logger.setLevel(logging.INFO)
-
-        self.crawlers = [
+        super(CILauncher, self)._set_config()
+        self._crawlers = [
                 FreeElectronsCrawler(self._cfg),
                 KernelCICrawler(self._cfg)
             ]
-
-        # TODO: handle exceptions
-        self.crafter = JobCrafter(self._boards_config, self._cfg)
 
     def launch(self):
         for board in self._tests_config:
@@ -95,7 +50,7 @@ class CILauncher:
                 for config in configs:
                     logging.debug("  Fetching artifacts for %s" % config)
                     artifacts = None
-                    for crawler in self.crawlers:
+                    for crawler in self._crawlers:
                         try:
                             artifacts = crawler.crawl(self._boards_config[board],
                                     config['tree'], config['branch'],

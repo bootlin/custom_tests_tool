@@ -8,80 +8,32 @@ import os
 import sys
 import getpass
 
-from pprint import pprint
-
 from src import ssh_utils
-from src.CTTConfig import CTTConfig, OptionError, ConfigFileError, CTTCmdline
-from src.CTTFormatter import CTTFormatter
+from src.CTTConfig import CTTCmdline
 from src.rootfs_chooser import RootfsChooser, RootfsAccessError
-from src.crafter import JobCrafter
+from src.launcher import BaseLauncher
 
-class CTTLauncher:
+class CTTLauncher(BaseLauncher):
+    _CMDLINE_CLASS = CTTCmdline
     _REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
 
-    def __init__(self):
-        self._set_logging()
-        self._set_config()
-
     def _set_logging(self):
-        self._logger = logging.getLogger()
-        self._logger.setLevel(logging.DEBUG)
-
+        super(CTTLauncher, self)._set_logging()
         paramiko_logger = logging.getLogger("paramiko")
         paramiko_logger.setLevel(logging.WARN)
 
-        requests_logger = logging.getLogger("requests")
-        requests_logger.setLevel(logging.WARN)
-
-        handler = logging.StreamHandler()
-
-        formatter = CTTFormatter()
-        handler.setFormatter(formatter)
-
-        self._logger.addHandler(handler)
-
-    def _set_config(self):
-        ctt_root_location = os.path.abspath(os.path.dirname(
-            os.path.realpath(__file__)))
-        with open(os.path.join(ctt_root_location, "ci_tests.json")) as f:
-            self._tests_config = json.load(f)
-
-        with open(os.path.join(ctt_root_location, "boards.json")) as f:
-            self._boards_config = json.load(f)
-            # Add the name field
-            for k,v in self._boards_config.items():
-                v['name'] = k
-                v['device_type'] = k
-
-        try:
-            with open(os.path.expanduser('~/.cttrc')) as f:
-                self._cfg = CTTConfig(f, CTTCmdline, self._boards_config)
-        except OptionError as e:
-            logging.critical(e)
-            sys.exit(1)
-        except ConfigFileError as e:
-            logging.critical(e)
-            sys.exit(2)
-
-        if self._cfg['debug']:
-            self._logger.setLevel(logging.DEBUG)
-        else:
-            self._logger.setLevel(logging.INFO)
-
-        self.crafter = JobCrafter(self._boards_config, self._cfg)
-
     # Files handling
-    def __handle_file(self, local):
+    def _handle_file(self, local):
         if not (local.startswith("http://") or local.startswith("file://") or
                 local.startswith("https://")):
             remote = os.path.join(CTTLauncher._REMOTE_ROOT, os.path.basename(local))
-            self.__send_file(local, remote)
+            self._send_file(local, remote)
             remote = "file://" + remote
             return remote
         else:
             return local
 
-    def __send_file(self, local, remote):
+    def _send_file(self, local, remote):
         scp = ssh_utils.get_sftp(self._cfg["ssh_server"], 22, self._cfg["ssh_username"])
         logging.info('  Sending %s to %s' % (local, remote))
         try:
@@ -117,18 +69,18 @@ class CTTLauncher:
                 artifacts = {}
 
                 if 'kernel' in self._cfg:
-                    artifacts['kernel'] = self.__handle_file(self._cfg['kernel'])
+                    artifacts['kernel'] = self._handle_file(self._cfg['kernel'])
 
                 if 'dtb' in self._cfg:
-                    artifacts['dtb'] = self.__handle_file(self._cfg['dtb'])
+                    artifacts['dtb'] = self._handle_file(self._cfg['dtb'])
                 elif 'dtb_folder' in self._cfg:
-                    artifacts['dtb'] = self.__handle_file("%s/%s.dtb" % (self._cfg['dtb_folder'],
+                    artifacts['dtb'] = self._handle_file("%s/%s.dtb" % (self._cfg['dtb_folder'],
                             self._boards_config[board]['dt']))
 
                 if 'modules' in self._cfg:
-                    artifacts['modules'] = self.__handle_file(self._cfg['modules'])
+                    artifacts['modules'] = self._handle_file(self._cfg['modules'])
 
-                artifacts['rootfs'] = self.__handle_file(rootfs)
+                artifacts['rootfs'] = self._handle_file(rootfs)
 
                 logging.info("  Making %s job" % test)
                 job_name = "%s--custom_kernel--%s" % (board, test)
