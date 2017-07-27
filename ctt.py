@@ -11,21 +11,21 @@ import getpass
 from pprint import pprint
 
 from src import ssh_utils
-from src.CTTConfig import CTTConfig, OptionError, SectionError
+from src.CTTConfig import CTTConfig, OptionError, ConfigFileError, CTTCmdline
 from src.CTTFormatter import CTTFormatter
 from src.rootfs_chooser import RootfsChooser, RootfsAccessError
 from src.crafter import JobCrafter
 
 class CTTLauncher:
-    __REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
+    _REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
 
     def __init__(self):
-        self.__set_config()
-        self.__set_logging()
+        self._set_logging()
+        self._set_config()
 
-    def __set_logging(self):
-        logger = logging.getLogger()
-        logger.setLevel(logging.DEBUG)
+    def _set_logging(self):
+        self._logger = logging.getLogger()
+        self._logger.setLevel(logging.DEBUG)
 
         paramiko_logger = logging.getLogger("paramiko")
         paramiko_logger.setLevel(logging.WARN)
@@ -34,17 +34,13 @@ class CTTLauncher:
         requests_logger.setLevel(logging.WARN)
 
         handler = logging.StreamHandler()
-        if self._cfg['debug']:
-            handler.setLevel(logging.DEBUG)
-        else:
-            handler.setLevel(logging.INFO)
 
         formatter = CTTFormatter()
         handler.setFormatter(formatter)
 
-        logger.addHandler(handler)
+        self._logger.addHandler(handler)
 
-    def __set_config(self):
+    def _set_config(self):
         ctt_root_location = os.path.abspath(os.path.dirname(
             os.path.realpath(__file__)))
         with open(os.path.join(ctt_root_location, "ci_tests.json")) as f:
@@ -57,8 +53,20 @@ class CTTLauncher:
                 v['name'] = k
                 v['device_type'] = k
 
-        with open(os.path.expanduser('~/.cttrc')) as f:
-            self._cfg = CTTConfig(f, self._boards_config)
+        try:
+            with open(os.path.expanduser('~/.cttrc')) as f:
+                self._cfg = CTTConfig(f, CTTCmdline, self._boards_config)
+        except OptionError as e:
+            logging.critical(e)
+            sys.exit(1)
+        except ConfigFileError as e:
+            logging.critical(e)
+            sys.exit(2)
+
+        if self._cfg['debug']:
+            self._logger.setLevel(logging.DEBUG)
+        else:
+            self._logger.setLevel(logging.INFO)
 
         self.crafter = JobCrafter(self._boards_config, self._cfg)
 
@@ -66,7 +74,7 @@ class CTTLauncher:
     def __handle_file(self, local):
         if not (local.startswith("http://") or local.startswith("file://") or
                 local.startswith("https://")):
-            remote = os.path.join(CTTLauncher.__REMOTE_ROOT, os.path.basename(local))
+            remote = os.path.join(CTTLauncher._REMOTE_ROOT, os.path.basename(local))
             self.__send_file(local, remote)
             remote = "file://" + remote
             return remote

@@ -5,8 +5,9 @@
 import json
 import logging
 import os
+import sys
 
-from src.CIConfig import CIConfig, OptionError, SectionError
+from src.CTTConfig import CTTConfig, OptionError, ConfigFileError, CICmdline
 from src.CTTFormatter import CTTFormatter
 from src.crawlers import FreeElectronsCrawler, KernelCICrawler
 from src.crawlers import RemoteAccessError, RemoteEmptyError
@@ -15,41 +16,50 @@ from src.crafter import JobCrafter
 
 class CILauncher:
     def __init__(self):
-        self.__set_config()
-        self.__set_logging()
+        self._set_logging()
+        self._set_config()
 
-    def __set_logging(self):
-        logger = logging.getLogger()
-        logger.setLevel(logging.DEBUG)
+    def _set_logging(self):
+        self._logger = logging.getLogger()
+        self._logger.setLevel(logging.DEBUG)
 
         requests_logger = logging.getLogger("requests")
         requests_logger.setLevel(logging.WARN)
 
         handler = logging.StreamHandler()
-        if self._cfg['debug']:
-            handler.setLevel(logging.DEBUG)
-        else:
-            handler.setLevel(logging.INFO)
 
         formatter = CTTFormatter()
         handler.setFormatter(formatter)
 
-        logger.addHandler(handler)
+        self._logger.addHandler(handler)
 
-    def __set_config(self):
-        # TODO: handle exceptions
-        with open(os.path.expanduser('~/.cttrc')) as f:
-            self._cfg = CIConfig(f)
-
-        with open("ci_tests.json") as f:
+    def _set_config(self):
+        ctt_root_location = os.path.abspath(os.path.dirname(
+            os.path.realpath(__file__)))
+        with open(os.path.join(ctt_root_location, "ci_tests.json")) as f:
             self._tests_config = json.load(f)
 
-        with open("boards.json") as f:
+        with open(os.path.join(ctt_root_location, "boards.json")) as f:
             self._boards_config = json.load(f)
             # Add the name field
             for k,v in self._boards_config.items():
                 v['name'] = k
                 v['device_type'] = k
+
+        try:
+            with open(os.path.expanduser('~/.cttrc')) as f:
+                self._cfg = CTTConfig(f, CICmdline, self._boards_config)
+        except OptionError as e:
+            logging.critical(e)
+            sys.exit(1)
+        except ConfigFileError as e:
+            logging.critical(e)
+            sys.exit(2)
+
+        if self._cfg['debug']:
+            self._logger.setLevel(logging.DEBUG)
+        else:
+            self._logger.setLevel(logging.INFO)
 
         self.crawlers = [
                 FreeElectronsCrawler(self._cfg),
