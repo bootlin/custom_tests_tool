@@ -45,10 +45,6 @@ class CTTLauncher:
         logger.addHandler(handler)
 
     def __set_config(self):
-        ctt_root_location = os.path.abspath(os.path.dirname(__file__))
-        with open(os.path.expanduser('~/.cttrc')) as f:
-            self._cfg = CTTConfig(f)
-
         with open(os.path.join(ctt_root_location, "ci_tests.json")) as f:
             self._tests_config = json.load(f)
 
@@ -58,6 +54,11 @@ class CTTLauncher:
             for k,v in self._boards_config.items():
                 v['name'] = k
                 v['device_type'] = k
+
+        ctt_root_location = os.path.abspath(os.path.dirname(__file__))
+        with open(os.path.expanduser('~/.cttrc')) as f:
+            self._cfg = CTTConfig(f, self._boards_config)
+
 
         self.crafter = JobCrafter(self._boards_config, self._cfg)
 

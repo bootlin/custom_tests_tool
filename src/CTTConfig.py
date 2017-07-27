@@ -1,5 +1,3 @@
-import boards
-
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from configparser import ConfigParser
 
@@ -33,14 +31,14 @@ mandatory_keys = [
 
 class CTTConfig:
 
-    def __init__(self, file=None, validate=True):
+    def __init__(self, file, boards, validate=True):
+        self.__boards = boards
         self.__config = ConfigParser()
 
-        if file is not None:
-            self.__config.read_file(file)
+        self.__config.read_file(file)
 
-            if (validate):
-                self.__validate_config_file()
+        if (validate):
+            self.__validate_config_file()
 
         self.__parse_cmdline()
 
@@ -121,10 +119,10 @@ class CTTConfig:
         for board in self.__cmdline['boards']:
             # Expand all boards to what we know
             if board == 'all':
-                self.__cmdline['boards'] = list(boards.boards.keys())
+                self.__cmdline['boards'] = list(self.__boards.keys())
                 break
 
-            if board not in boards.boards.keys():
+            if board not in self.__boards.keys():
                 raise OptionError('Invalid board %s' % board)
 
     def __getitem__(self, key):
