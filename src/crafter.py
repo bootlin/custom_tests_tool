@@ -1,6 +1,7 @@
 import os
 import logging
 import getpass
+import json
 
 from jinja2 import FileSystemLoader, Environment
 
@@ -17,7 +18,6 @@ class JobCrafter(object):
     """
     __REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
     __TEMPLATE_FOLDER = "jobs_templates"
-    __DEFAULT_TEMPLATE = "generic_simple_job.jinja"
 
     def __init__(self, boards, cfg):
         """
@@ -39,6 +39,8 @@ class JobCrafter(object):
         """
         self._boards = boards
         self._cfg = cfg
+        with open(os.path.join(os.path.dirname(os.path.dirname(__file__)), "tests.json")) as f:
+            self._tests = json.load(f)
         self.job = {
                 "kernel": "",
                 "device_tree": "",
@@ -60,7 +62,7 @@ class JobCrafter(object):
 
 # Template handling
     def get_template_from_file(self, file):
-        logging.debug("template: using %s" % file)
+        logging.debug("    Template: %s" % file)
         self.job_template = self.jinja_env.get_template(file)
 
 # Job handling
@@ -105,13 +107,13 @@ class JobCrafter(object):
             logging.info('    Modules archive path: %s' % self.job['modules'])
 
         self.get_template_from_file(os.path.join(JobCrafter.__TEMPLATE_FOLDER,
-            test.get('template', JobCrafter.__DEFAULT_TEMPLATE)))
+            self._tests[test]['template']))
 
-        self.job["test"] = test['name']
+        self.job["test"] = test
 
         self.job["job_name"] = "%s--%s" % (
                 job_name,
-                test['name']
+                test
                 )
         logging.debug("    Job name: %s" % self.job['job_name'])
 

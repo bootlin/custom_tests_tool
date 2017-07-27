@@ -71,29 +71,12 @@ class CTTLauncher:
             else:
                 rootfs = self._cfg['rootfs']
 
-            if 'tests' in self._cfg:
-                # This is needed to generate the test list as a list of
-                # dictionaries, as in the `ci_tests.json` file.
-                # When a test has been affected to a board, but overrides a
-                # default value (the template to use, for example; useful for
-                # multinode tests), this makes sure to take that value into
-                # account by transforming the test name given in the command line, by
-                # the dictionary of the configuration.
-                tests = [
-                    # Try to look for the test dict in the ci_tests configuration
-                    next(
-                        iter([e for e in self._tests_config[board]['tests'] if e['name'] == t]),
-                        # Default: a simple dict with the name of the test
-                        {'name': t}
-                    )
-                    for t in self._cfg['tests']
-                ]
-            else:
+            if 'tests' not in self._cfg: # TODO Remove me when CTTCmdline is done
                 logging.critical("  No test asked, aborting")
                 sys.exit(1)
 
-            for test in tests:
-                logging.debug("  Building job(s) for %s" % test['name'])
+            for test in self._cfg['tests']:
+                logging.debug("  Building job(s) for %s" % test)
 
                 artifacts = {}
 
@@ -111,8 +94,8 @@ class CTTLauncher:
 
                 artifacts['rootfs'] = rootfs
 
-                logging.info("  Making %s job" % test['name'])
-                job_name = "%s--custom_kernel--%s" % (board, test['name'])
+                logging.info("  Making %s job" % test)
+                job_name = "%s--custom_kernel--%s" % (board, test)
                 self.crafter.make_jobs(board, artifacts, test, job_name)
 
 if __name__ == "__main__":

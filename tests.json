@@ -1,0 +1,26 @@
+{
+    "boot": {
+        "template": "generic_simple_job.jinja"
+    },
+    "sata": {
+        "template": "generic_simple_job.jinja"
+    },
+    "usb": {
+        "template": "generic_simple_job.jinja"
+    },
+    "mmc": {
+        "template": "generic_simple_job.jinja"
+    },
+    "crypto": {
+        "template": "generic_simple_job.jinja"
+    },
+    "crypto-tcrypt": {
+        "template": "generic_simple_job_long_timeout.jinja"
+    },
+    "simple-network": {
+        "template": "generic_simple_job.jinja"
+    },
+    "network": {
+        "template": "generic_multinode_job.jinja"
+    }
+}

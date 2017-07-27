@@ -102,7 +102,7 @@ class CILauncher:
                                 board, config['tree'], config['branch'],
                                 config['defconfig'], test['name']
                                 )
-                        self.crafter.make_jobs(board, artifacts, test, job_name)
+                        self.crafter.make_jobs(board, artifacts, test['name'], job_name)
 
 if __name__ == "__main__":
     CILauncher().launch()

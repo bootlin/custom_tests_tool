@@ -16,12 +16,10 @@
                         "branch": "master",
                         "defconfig": "multi_v7_defconfig"
                     }
-                ],
-                "template": "generic_simple_job.jinja"
+                ]
             },
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": []
@@ -58,15 +56,13 @@
                         "branch": "4.12-rc6_backports",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
-                ],
-                "template": "generic_simple_job_long_timeout.jinja"
+                ]
             },
             {
                 "name": "sata"
             },
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": [
@@ -95,12 +91,10 @@
                         "branch": "4.12-rc6_backports",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
-                ],
-                "template": "generic_simple_job_long_timeout.jinja"
+                ]
             },
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": [
@@ -161,8 +155,7 @@
                         "branch": "4.12-rc6_backports",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
-                ],
-                "template": "generic_simple_job_long_timeout.jinja"
+                ]
             }
         ],
         "notify": [
@@ -191,8 +184,7 @@
                         "branch": "4.12-rc6_backports",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
-                ],
-                "template": "generic_simple_job_long_timeout.jinja"
+                ]
             }
         ],
         "notify": [
@@ -221,12 +213,10 @@
                         "branch": "4.12-rc6_backports",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
-                ],
-                "template": "generic_simple_job_long_timeout.jinja"
+                ]
             },
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": [
@@ -255,12 +245,10 @@
                         "branch": "4.12-rc6_backports",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
-                ],
-                "template": "generic_simple_job_long_timeout.jinja"
+                ]
             },
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": [
@@ -337,12 +325,10 @@
                         "branch": "4.12-rc6_backports",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
-                ],
-                "template": "generic_simple_job_long_timeout.jinja"
+                ]
             },
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": [
@@ -371,12 +357,10 @@
                         "branch": "4.12-rc6_backports",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
-                ],
-                "template": "generic_simple_job_long_timeout.jinja"
+                ]
             },
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": [
@@ -405,12 +389,10 @@
                         "branch": "4.12-rc6_backports",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
-                ],
-                "template": "generic_simple_job_long_timeout.jinja"
+                ]
             },
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": [
@@ -439,12 +421,10 @@
                         "branch": "4.12-rc6_backports",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
-                ],
-                "template": "generic_simple_job_long_timeout.jinja"
+                ]
             },
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": [
@@ -485,8 +465,7 @@
         ],
         "tests": [
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": []
@@ -501,8 +480,7 @@
         ],
         "tests": [
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": []
@@ -539,8 +517,7 @@
         ],
         "tests": [
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": []
@@ -560,8 +537,7 @@
         ],
         "tests": [
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": []
@@ -581,8 +557,7 @@
         ],
         "tests": [
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": []
@@ -609,12 +584,10 @@
         ],
         "tests": [
             {
-                "name": "mmc",
-                "template": "generic_simple_job.jinja"
+                "name": "mmc"
             },
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": []
@@ -712,8 +685,7 @@
                 "name": "usb"
             },
             {
-                "name": "network",
-                "template": "generic_multinode_job.jinja"
+                "name": "network"
             }
         ],
         "notify": ["florent.jacquet@free-electrons.com"]
