@@ -9,11 +9,13 @@ class RootfsChooser(object):
 
     def get_url(self, board):
         rootfs = '%s/%s' % (self.__ROOTFS_BASE, board['rootfs'])
-        r = requests.get(rootfs)
         try:
+            r = requests.get(rootfs)
             r.raise_for_status()
-        except requests.exceptions.HTTPError:
+        except (requests.exceptions.HTTPError,
+                requests.exceptions.ConnectionError):
             raise RootfsAccessError(
                 'Rootfs not available: %s' % rootfs)
+
         return rootfs
 
