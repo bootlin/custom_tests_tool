@@ -209,7 +209,7 @@ class TestKernelCICrawler(object):
         mock.get(config_url, status_code=404)
 
         crawler = KernelCICrawler(cfg)
-        assert_raises(RemoteAccessError, crawler.crawl,
+        assert_raises(RemoteEmptyError, crawler.crawl,
                       board, self.DEFAULT_TREE, self.DEFAULT_BRANCH,
                       self.DEFAULT_DEFCONFIG)
 
@@ -245,7 +245,7 @@ class TestKernelCICrawler(object):
         mock.get(kernel_url, status_code=404)
 
         crawler = KernelCICrawler(cfg)
-        assert_raises(RemoteAccessError, crawler.crawl,
+        assert_raises(RemoteEmptyError, crawler.crawl,
                       board, self.DEFAULT_TREE, self.DEFAULT_BRANCH,
                       self.DEFAULT_DEFCONFIG)
 
@@ -283,7 +283,7 @@ class TestKernelCICrawler(object):
         mock.get(modules_url, status_code=404)
 
         crawler = KernelCICrawler(cfg)
-        assert_raises(RemoteAccessError, crawler.crawl,
+        assert_raises(RemoteEmptyError, crawler.crawl,
                       board, self.DEFAULT_TREE, self.DEFAULT_BRANCH,
                       self.DEFAULT_DEFCONFIG)
 
@@ -323,7 +323,7 @@ class TestKernelCICrawler(object):
         mock.get(dtb_url, status_code=404)
 
         crawler = KernelCICrawler(cfg)
-        assert_raises(RemoteAccessError, crawler.crawl,
+        assert_raises(RemoteEmptyError, crawler.crawl,
                       board, self.DEFAULT_TREE, self.DEFAULT_BRANCH,
                       self.DEFAULT_DEFCONFIG)
 
@@ -456,7 +456,7 @@ class TestFECrawler(object):
         mock.get(config_url, status_code=404)
 
         crawler = FreeElectronsCrawler(cfg)
-        assert_raises(RemoteAccessError, crawler.crawl,
+        assert_raises(RemoteEmptyError, crawler.crawl,
                       board, self.DEFAULT_TREE, self.DEFAULT_BRANCH,
                       self.DEFAULT_DEFCONFIG)
 
@@ -486,7 +486,7 @@ class TestFECrawler(object):
         mock.get(kernel_url, status_code=404)
 
         crawler = FreeElectronsCrawler(cfg)
-        assert_raises(RemoteAccessError, crawler.crawl,
+        assert_raises(RemoteEmptyError, crawler.crawl,
                       board, self.DEFAULT_TREE, self.DEFAULT_BRANCH,
                       self.DEFAULT_DEFCONFIG)
 
@@ -518,7 +518,7 @@ class TestFECrawler(object):
         mock.get(modules_url, status_code=404)
 
         crawler = FreeElectronsCrawler(cfg)
-        assert_raises(RemoteAccessError, crawler.crawl,
+        assert_raises(RemoteEmptyError, crawler.crawl,
                       board, self.DEFAULT_TREE, self.DEFAULT_BRANCH,
                       self.DEFAULT_DEFCONFIG)
 
@@ -552,6 +552,6 @@ class TestFECrawler(object):
         mock.get(dtb_url, status_code=404)
 
         crawler = FreeElectronsCrawler(cfg)
-        assert_raises(RemoteAccessError, crawler.crawl,
+        assert_raises(RemoteEmptyError, crawler.crawl,
                       board, self.DEFAULT_TREE, self.DEFAULT_BRANCH,
                       self.DEFAULT_DEFCONFIG)

@@ -42,36 +42,44 @@ class CTTCrawler(object):
                       (self.__class__.__name__, board['name'], defconfig))
 
         url = self._get_base_url(tree, branch, board['arch'], defconfig)
-        r = requests.get(url)
         try:
+            r = requests.get(url)
             r.raise_for_status()
         except requests.exceptions.HTTPError:
-            raise RemoteAccessError(
+            raise RemoteEmptyError(
                 'Defconfig build not available for this version')
+        except requests.exceptions.ConnectionError:
+            raise RemoteAccessError('Remote host not accessible')
 
         kernel = '%s/%s' % (url, self.__get_image_name(board))
-        r = requests.get(kernel)
         try:
+            r = requests.get(kernel)
             r.raise_for_status()
         except requests.exceptions.HTTPError:
-            raise RemoteAccessError(
+            raise RemoteEmptyError(
                 'Kernel image not available for this version')
+        except requests.exceptions.ConnectionError:
+            raise RemoteAccessError('Remote host not accessible')
 
         modules = '%s/%s' % (url, 'modules.tar.xz')
-        r = requests.get(modules)
         try:
+            r = requests.get(modules)
             r.raise_for_status()
         except requests.exceptions.HTTPError:
-            raise RemoteAccessError(
+            raise RemoteEmptyError(
                 'modules tarball not available for this version')
+        except requests.exceptions.ConnectionError:
+            raise RemoteAccessError('Remote host not accessible')
 
         dtb = '%s/dtbs/%s.dtb' % (url, board['dt'])
-        r = requests.get(dtb)
         try:
+            r = requests.get(dtb)
             r.raise_for_status()
         except requests.exceptions.HTTPError:
-            raise RemoteAccessError(
+            raise RemoteEmptyError(
                 'Device Tree not available for this version')
+        except requests.exceptions.ConnectionError:
+            raise RemoteAccessError('Remote host not accessible')
 
         return {
             'dtb': dtb,
@@ -90,11 +98,13 @@ class FreeElectronsCrawler(CTTCrawler):
 
     def _get_latest_release(self, tree, branch):
         url = '%s/%s/%s/latest' % (self.__BASE_URL, tree, branch)
-        r = requests.get(url)
         try:
+            r = requests.get(url)
             r.raise_for_status()
         except requests.exceptions.HTTPError:
-            raise RemoteAccessError('Release page not accessible')
+            raise RemoteEmptyError('Release page not accessible')
+        except requests.exceptions.ConnectionError:
+            raise RemoteAccessError('Remote host not accessible')
 
         return r.text
 
@@ -114,7 +124,9 @@ class KernelCICrawler(CTTCrawler):
                              headers={'Authorization': self._cfg['api_token']})
             r.raise_for_status()
         except requests.exceptions.HTTPError:
-            raise RemoteAccessError('Release page not accessible')
+            raise RemoteEmptyError('Release page not accessible')
+        except requests.exceptions.ConnectionError:
+            raise RemoteAccessError('Remote host not accessible')
 
         json = r.json()
         if ('result' not in json or

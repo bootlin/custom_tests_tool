@@ -55,9 +55,12 @@ class CILauncher(BaseLauncher):
                             artifacts = crawler.crawl(self._boards_config[board],
                                     config['tree'], config['branch'],
                                     config['defconfig'])
-                        except (RemoteEmptyError, RemoteAccessError):
-                            logging.debug("  No artifacts returned by crawler %s" %
-                                    crawler.__class__.__name__)
+                        except RemoteEmptyError as e:
+                            logging.debug("  No artifacts returned by crawler %s: %s" %
+                                    (crawler.__class__.__name__, e))
+                        except RemoteAccessError as e:
+                            logging.debug("  Remote unreachable for crawler %s: %s" %
+                                    (crawler.__class__.__name__, e))
                     if artifacts:
                         artifacts['rootfs'] = rootfs
                         logging.info("  Making %s job on %s -> %s -> %s" %
