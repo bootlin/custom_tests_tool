@@ -52,8 +52,13 @@
                 "name": "crypto-tcrypt",
                 "configs": [
                     {
-                        "tree": "mvebu-backports",
-                        "branch": "4.12-rc6_backports",
+                        "tree": "mainline",
+                        "branch": "master",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    },
+                    {
+                        "tree": "next",
+                        "branch": "master",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
                 ]
@@ -87,8 +92,13 @@
                 "name": "crypto-tcrypt",
                 "configs": [
                     {
-                        "tree": "mvebu-backports",
-                        "branch": "4.12-rc6_backports",
+                        "tree": "mainline",
+                        "branch": "master",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    },
+                    {
+                        "tree": "next",
+                        "branch": "master",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
                 ]
@@ -151,8 +161,13 @@
                 "name": "crypto-tcrypt",
                 "configs": [
                     {
-                        "tree": "mvebu-backports",
-                        "branch": "4.12-rc6_backports",
+                        "tree": "mainline",
+                        "branch": "master",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    },
+                    {
+                        "tree": "next",
+                        "branch": "master",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
                 ]
@@ -180,8 +195,13 @@
                 "name": "crypto-tcrypt",
                 "configs": [
                     {
-                        "tree": "mvebu-backports",
-                        "branch": "4.12-rc6_backports",
+                        "tree": "mainline",
+                        "branch": "master",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    },
+                    {
+                        "tree": "next",
+                        "branch": "master",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
                 ]
@@ -209,8 +229,13 @@
                 "name": "crypto-tcrypt",
                 "configs": [
                     {
-                        "tree": "mvebu-backports",
-                        "branch": "4.12-rc6_backports",
+                        "tree": "mainline",
+                        "branch": "master",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    },
+                    {
+                        "tree": "next",
+                        "branch": "master",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
                 ]
@@ -241,8 +266,13 @@
                 "name": "crypto-tcrypt",
                 "configs": [
                     {
-                        "tree": "mvebu-backports",
-                        "branch": "4.12-rc6_backports",
+                        "tree": "mainline",
+                        "branch": "master",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    },
+                    {
+                        "tree": "next",
+                        "branch": "master",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
                 ]
@@ -321,8 +351,13 @@
                 "name": "crypto-tcrypt",
                 "configs": [
                     {
-                        "tree": "mvebu-backports",
-                        "branch": "4.12-rc6_backports",
+                        "tree": "mainline",
+                        "branch": "master",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    },
+                    {
+                        "tree": "next",
+                        "branch": "master",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
                 ]
@@ -353,8 +388,13 @@
                 "name": "crypto-tcrypt",
                 "configs": [
                     {
-                        "tree": "mvebu-backports",
-                        "branch": "4.12-rc6_backports",
+                        "tree": "mainline",
+                        "branch": "master",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    },
+                    {
+                        "tree": "next",
+                        "branch": "master",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
                 ]
@@ -385,8 +425,13 @@
                 "name": "crypto-tcrypt",
                 "configs": [
                     {
-                        "tree": "mvebu-backports",
-                        "branch": "4.12-rc6_backports",
+                        "tree": "mainline",
+                        "branch": "master",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    },
+                    {
+                        "tree": "next",
+                        "branch": "master",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
                 ]
@@ -417,8 +462,13 @@
                 "name": "crypto-tcrypt",
                 "configs": [
                     {
-                        "tree": "mvebu-backports",
-                        "branch": "4.12-rc6_backports",
+                        "tree": "mainline",
+                        "branch": "master",
+                        "defconfig": "multi_v7_defconfig+tcrypt"
+                    },
+                    {
+                        "tree": "next",
+                        "branch": "master",
                         "defconfig": "multi_v7_defconfig+tcrypt"
                     }
                 ]
