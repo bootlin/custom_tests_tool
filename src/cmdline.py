@@ -64,7 +64,7 @@ class BaseCmdline(object):
         return False
 
 class CICmdline(BaseCmdline):
-    _MANDATORY_KEYS = []
+    _MANDATORY_KEYS = ['boards']
 
     def _parse_cmdline(self):
         parser = ArgumentParser(description='Send custom job to a LAVA server')
