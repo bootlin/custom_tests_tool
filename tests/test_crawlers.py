@@ -49,7 +49,7 @@ class TestKernelCICrawler(object):
         mock.get(url, status_code=404)
 
         crawler = KernelCICrawler(cfg)
-        assert_raises(RemoteAccessError, crawler._get_latest_release,
+        assert_raises(RemoteEmptyError, crawler._get_latest_release,
                       self.DEFAULT_TREE, self.DEFAULT_BRANCH)
 
     @requests_mock.mock()
@@ -368,7 +368,7 @@ class TestFECrawler(object):
         mock.get(url, status_code=404)
 
         crawler = FreeElectronsCrawler(cfg)
-        assert_raises(RemoteAccessError, crawler._get_latest_release,
+        assert_raises(RemoteEmptyError, crawler._get_latest_release,
                       self.DEFAULT_TREE, self.DEFAULT_BRANCH)
 
     @requests_mock.mock()
