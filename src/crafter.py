@@ -7,7 +7,7 @@ from jinja2 import FileSystemLoader, Environment
 
 from src.crawlers import FreeElectronsCrawler, KernelCICrawler
 from src.crawlers import RemoteAccessError
-from src.writers import FileWriter, LavaWriter
+from src.writers import FileWriter, LavaWriter, UnavailableError
 
 
 class JobCrafter(object):
@@ -114,8 +114,11 @@ class JobCrafter(object):
                 )
         logging.debug("    Job name: %s" % self.job['job_name'])
 
-        out = self.writer.write(board_config, job_name,
-                                self.job_template.render(self.job))
-        for output in out:
-            logging.info('  ==> Job saved to: %s' % output)
+        try:
+            out = self.writer.write(board_config, job_name,
+                                    self.job_template.render(self.job))
+            for output in out:
+                logging.info("  ==> Job saved to: %s" % output)
+        except UnavailableError as e:
+            logging.warning("  ==> Unable to send job: %s" % e)
 
