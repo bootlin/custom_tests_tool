@@ -125,6 +125,9 @@ class CTTCmdline(BaseCmdline):
 
     def _validate_cmdline(self):
         super(CTTCmdline, self)._validate_cmdline()
+        # We can always list the boards
+        if 'list' in self:
+            return
         if ('dtb' not in self and
                 'dtb_folder' not in self):
             raise OptionError("You must provide either a dtb or a dtb folder")

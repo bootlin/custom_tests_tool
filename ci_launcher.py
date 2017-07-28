@@ -36,7 +36,12 @@ class CILauncher(BaseLauncher):
             ]
 
     def launch(self):
-        for board in self._tests_config:
+        if 'list' in self._cfg:
+            print("Here are the available boards:")
+            for b in sorted(self._boards_config):
+                print("  - %s" % b)
+            return
+        for board in self._cfg['boards']:
 
             logging.info(board)
             if not self._tests_config[board]['tests']:
