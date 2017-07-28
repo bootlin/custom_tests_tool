@@ -3,14 +3,20 @@
 import io
 import random
 import string
+import json
+import os
 
 from unittest import mock
 
 from nose.tools import assert_equal, assert_false, assert_true
 from nose.tools import raises
 
-from CTTConfig import CTTConfig, OptionError, SectionError
-import boards
+from CTTConfig import CTTConfig, OptionError, ConfigFileError, CTTCmdline
+
+ctt_root_location = os.path.abspath(os.path.dirname(
+    os.path.dirname(os.path.realpath(__file__))))
+with open(os.path.join(ctt_root_location, "boards.json")) as f:
+    boards = json.load(f)
 
 #
 # TODO:
@@ -30,28 +36,8 @@ import boards
 
 config_dict = [
     {
-        'cmdline': '--api-token',
-        'in_config': True,
-        'key': 'api_token',
-    },
-    {
         'cmdline': '--boards',
         'key': 'boards',
-        'multiple': True,
-    },
-    {
-        'cmdline': '--branch',
-        'key': 'branch',
-        'default': 'master',
-    },
-    {
-        'cmdline': '--default-notify',
-        'key': 'default_notify',
-        'boolean': True,
-    },
-    {
-        'cmdline': '--defconfigs',
-        'key': 'defconfigs',
         'multiple': True,
     },
     {
@@ -67,10 +53,6 @@ config_dict = [
         'key': 'kernel',
     },
     {
-        'cmdline': '--job-name',
-        'key': 'job_name',
-    },
-    {
         'cmdline': '--list',
         'key': 'list',
         'boolean': True,
@@ -80,17 +62,11 @@ config_dict = [
         'key': 'modules',
     },
     {
-        'cmdline': '--no-kci',
-        'key': 'no_kci',
-        'boolean': True,
-    },
-    {
         'cmdline': '--no-send',
         'key': 'no_send',
         'boolean': True,
     },
     {
-        'cmdline': '--notify',
         'in_config': True,
         'key': 'notify',
         'multiple': True,
@@ -103,11 +79,6 @@ config_dict = [
     {
         'cmdline': '--rootfs',
         'key': 'rootfs',
-    },
-    {
-        'cmdline': '--rootfs-path',
-        'in_config': True,
-        'key': 'rootfs_path',
     },
     {
         'cmdline': '--server',
@@ -135,11 +106,6 @@ config_dict = [
         'key': 'token',
     },
     {
-        'cmdline': '--tree',
-        'key': 'tree',
-        'default': 'mainline',
-    },
-    {
         'cmdline': '--username',
         'in_config': True,
         'key': 'username',
@@ -156,8 +122,11 @@ def generate_random_string(length=16):
 
 
 def generate_minimal_cmdline():
-    return ['ctt', '-b', generate_random_string(), '-t',
-            generate_random_string()]
+    return ['ctt', '-b', generate_random_string(),
+            '-t', generate_random_string(),
+            '--kernel', generate_random_string(),
+            '--dtb', generate_random_string(),
+            ]
 
 
 #
@@ -189,9 +158,10 @@ def generate_config(section='ctt', ignore_key=None):
 def test_cfg_board_all():
     cfg, cmdline, values = generate_config()
 
-    with mock.patch('sys.argv', ['ctt', '-t' 'boot', '-b', 'all']):
-        ctt = CTTConfig(file = cfg)
-        assert_equal(ctt['boards'], list(boards.boards.keys()))
+    with mock.patch('sys.argv', ['ctt', '-t' 'boot', '-b', 'all', '--kernel',
+        'zImage', '--dtb', 'board.dtb']):
+        ctt = CTTConfig(cfg, CTTCmdline, boards)
+        assert_equal(ctt['boards'], list(boards.keys()))
 
 #
 # Test that the value all for the boards is properly expanded, even if
@@ -201,10 +171,13 @@ def test_cfg_board_all_multiple():
     cfg, cmdline, values = generate_config()
 
     with mock.patch('sys.argv', ['ctt', '-t' 'boot',
-                                 '-b', 'all', generate_random_string()]):
-        ctt = CTTConfig(file = cfg)
+                                 '-b', 'all',
+                                 '--kernel', generate_random_string(),
+                                 '--dtb', generate_random_string()
+                                 ]):
+        ctt = CTTConfig(cfg, CTTCmdline, boards)
 
-        assert_equal(ctt['boards'], list(boards.boards.keys()))
+        assert_equal(ctt['boards'], list(boards.keys()))
 
 
 #
@@ -216,7 +189,7 @@ def test_cfg_board_invalid():
     cfg, cmdline, values = generate_config()
 
     with mock.patch('sys.argv', cmdline):
-        ctt = CTTConfig(file = cfg)
+        ctt = CTTConfig(cfg, CTTCmdline, boards)
 
 #
 # Test that we properly report valid boards as such.
@@ -225,13 +198,16 @@ def __test_cfg_board_valid(board):
     cfg, cmdline, values = generate_config()
 
     with mock.patch('sys.argv', ['ctt', '-t', generate_random_string(),
-                                 '-b', board]):
-        ctt = CTTConfig(file = cfg)
+                                 '-b', board,
+                                 '--kernel', generate_random_string(),
+                                 '--dtb', generate_random_string()
+                                 ]):
+        ctt = CTTConfig(cfg, CTTCmdline, boards)
         assert True
 
 
 def test_cfg_board_valid():
-    for board in boards.boards.keys():
+    for board in boards.keys():
         yield __test_cfg_board_valid, board
 
 #
@@ -239,8 +215,9 @@ def test_cfg_board_valid():
 # generating an error
 #
 @raises(OptionError)
-def __test_cfg_cmdline_missing_option(cmdline):
+def __test_cfg_cmdline_missing_option(cfg, cmdline):
     argv = ['ctt']
+    cfg, _, _ = generate_config()
 
     for option in config_dict:
         if ('cmdline' in option and option['cmdline'] and
@@ -252,26 +229,27 @@ def __test_cfg_cmdline_missing_option(cmdline):
                 argv.append(generate_random_string())
 
     with mock.patch('sys.argv', argv):
-        ctt = CTTConfig()
+        ctt = CTTConfig(cfg, CTTCmdline, boards)
 
 
 def test_cfg_cmdline_missing_option():
+    cfg, _, _ = generate_config()
     for option in config_dict:
         if ('in_config' in option and option['in_config'] and
                 'cmdline' in option):
-            yield __test_cfg_cmdline_missing_option, option['cmdline']
+            yield __test_cfg_cmdline_missing_option, cfg, option['cmdline']
 
 
 #
 # Test that a mandatory value missing (in the config file) is indeed
 # generating an error
 #
-@raises(OptionError)
+@raises(ConfigFileError)
 def __test_cfg_config_missing_option(key):
     config = generate_config(ignore_key=key)[0]
 
     with mock.patch('sys.argv', ['ctt']):
-        ctt = CTTConfig(file=config)
+        ctt = CTTConfig(config, CTTCmdline, boards)
 
 
 def test_cfg_config_missing_option():
@@ -284,10 +262,10 @@ def test_cfg_config_missing_option():
 # Test that we report an error when the configuration file is missing
 # the ctt section
 #
-@raises(SectionError)
+@raises(ConfigFileError)
 def test_cfg_config_missing_section():
     config = generate_config(section='test')[0]
-    ctt = CTTConfig(file=config)
+    ctt = CTTConfig(config, CTTCmdline, boards)
 
 
 #
@@ -299,7 +277,7 @@ def test_cfg_config_missing_cmdline_only():
     cfg, cmdline, values = generate_config()
 
     with mock.patch('sys.argv', ['ctt']):
-        ctt = CTTConfig(file=cfg)
+        ctt = CTTConfig(cfg, CTTCmdline, boards)
 
 
 #
@@ -311,7 +289,7 @@ def test_config_missing_board():
     cfg, cmdline, values = generate_config()
 
     with mock.patch('sys.argv', ['ctt', '-t', generate_random_string()]):
-        ctt = CTTConfig(file=cfg)
+        ctt = CTTConfig(cfg, CTTCmdline, boards)
 
 
 #
@@ -323,16 +301,16 @@ def test_config_missing_test_board():
     cfg, cmdline, values = generate_config()
 
     with mock.patch('sys.argv', ['ctt', '-b', generate_random_string()]):
-        ctt = CTTConfig(file=cfg)
+        ctt = CTTConfig(cfg, CTTCmdline, boards)
 
 
 #
 # Test that a value not specified on the command line will either
 # return a KeyError when accessed, or return its default value
 #
-def __test_get_cmdline_missing(key, default=None):
+def __test_get_cmdline_missing(cfg, key, default=None):
     with mock.patch('sys.argv', ['ctt']):
-        ctt = CTTConfig(validate=False)
+        ctt = CTTConfig(cfg, CTTCmdline, boards, False)
         if default is not None:
             assert_equal(default, ctt[key])
         else:
@@ -344,13 +322,14 @@ def __test_get_cmdline_missing(key, default=None):
 
 
 def test_get_cmdline_missing():
+    cfg, _, _ = generate_config()
     for option in config_dict:
         if 'default' in option:
-            yield __test_get_cmdline_missing, option['key'], option['default']
+            yield __test_get_cmdline_missing, cfg, option['key'], option['default']
         elif 'boolean' in option and option['boolean']:
-            yield __test_get_cmdline_missing, option['key'], False
+            yield __test_get_cmdline_missing, cfg, option['key'], False
         else:
-            yield __test_get_cmdline_missing, option['key']
+            yield __test_get_cmdline_missing, cfg, option['key']
 
 
 #
@@ -361,7 +340,7 @@ def __test_get_config_value(key, multiple = False):
     cfg, cmdline, values = generate_config()
 
     with mock.patch('sys.argv', cmdline):
-        ctt = CTTConfig(validate=False, file=cfg)
+        ctt = CTTConfig(cfg, CTTCmdline, boards, False)
 
         if multiple:
             assert_equal(ctt[key], [values[key]])
@@ -382,37 +361,39 @@ def test_get_config_value():
 # Test that a value specified on the command line will indeed be
 # reported as there in the configuration
 #
-def __test_has_cmdline_string(cmdline, key):
+def __test_has_cmdline_string(cfg, cmdline, key):
     value = generate_random_string()
     cmdline = ['ctt', cmdline, value]
 
     with mock.patch('sys.argv', cmdline):
-        ctt = CTTConfig(validate=False)
+        ctt = CTTConfig(cfg, CTTCmdline, boards, False)
         assert_true(ctt.__contains__(key))
 
 
 def test_has_cmdline_string():
+    cfg, _, _ = generate_config()
     for option in config_dict:
         if ('cmdline' in option and
                 ('boolean' not in option or not option['boolean'])):
-            yield __test_has_cmdline_string, option['cmdline'], option['key']
+            yield __test_has_cmdline_string, cfg, option['cmdline'], option['key']
 
 
 #
 # Test that a value not specified on the command line will indeed be
 # reported as missing in the configuration
 #
-def __test_has_cmdline_missing(key):
+def __test_has_cmdline_missing(cfg, key):
     with mock.patch('sys.argv', ['ctt']):
-        ctt = CTTConfig(validate=False)
+        ctt = CTTConfig(cfg, CTTCmdline, boards, False)
         assert_false(ctt.__contains__(key))
 
 
 def test_has_cmdline_missing():
+    cfg, _, _ = generate_config()
     for option in config_dict:
         if ('default' not in option and
                 ('boolean' not in option or not option['boolean'])):
-            yield __test_has_cmdline_missing, option['key']
+            yield __test_has_cmdline_missing, cfg, option['key']
 
 #
 # Test that a value specified in the configuration file is properly
@@ -424,7 +405,7 @@ def __test_has_config_value(key):
     cfg, cmdline, values = generate_config()
 
     with mock.patch('sys.argv', cmdline):
-        ctt = CTTConfig(validate=False, file=cfg)
+        ctt = CTTConfig(cfg, CTTCmdline, boards, False)
         assert_true(ctt.__contains__(key))
 
 
@@ -453,7 +434,7 @@ def __test_override_value(key, cmdoption, multiple):
     cmdline.extend([cmdoption, new_value])
 
     with mock.patch('sys.argv', cmdline):
-        ctt = CTTConfig(validate=False, file=cfg)
+        ctt = CTTConfig(cfg, CTTCmdline, boards, False)
         assert_equal(ctt[key], test_value)
 
 
@@ -478,19 +459,20 @@ def test_override_multiple_value():
 # Test that a boolean value specified on the command line will indeed
 # return the proper value in the configuration
 #
-def __test_set_cmdline_bool(cmdline, key):
+def __test_set_cmdline_bool(cfg, cmdline, key):
     argv = ['ctt', cmdline]
 
     with mock.patch('sys.argv', argv):
-        ctt = CTTConfig(validate=False)
+        ctt = CTTConfig(cfg, CTTCmdline, boards, False)
         assert_true(ctt[key])
 
 
 def test_set_cmdline_bool():
+    cfg, _, _ = generate_config()
     for option in config_dict:
         if ('cmdline' in option and
                 ('boolean' in option and option['boolean'])):
-            yield __test_set_cmdline_bool, option['cmdline'], option['key']
+            yield __test_set_cmdline_bool, cfg, option['cmdline'], option['key']
 
 #
 # Test that a string value, that can be there multiple times,
@@ -499,7 +481,7 @@ def test_set_cmdline_bool():
 #
 
 
-def __test_set_cmdline_string_multiple(cmdline, key):
+def __test_set_cmdline_string_multiple(cfg, cmdline, key):
     argv = ['ctt', cmdline]
     value = []
 
@@ -509,16 +491,17 @@ def __test_set_cmdline_string_multiple(cmdline, key):
     argv.extend(value)
 
     with mock.patch('sys.argv', argv):
-        ctt = CTTConfig(validate=False)
+        ctt = CTTConfig(cfg, CTTCmdline, boards, False)
         assert_equal(value, ctt[key])
 
 
 def test_set_cmdline_string_multiple():
+    cfg, _, _ = generate_config()
     for option in config_dict:
         if ('cmdline' in option and
             ('multiple' in option and option['multiple']) and
                 ('boolean' not in option or not option['boolean'])):
-            yield (__test_set_cmdline_string_multiple, option['cmdline'],
+            yield (__test_set_cmdline_string_multiple, cfg, option['cmdline'],
                    option['key'])
 
 #
@@ -528,19 +511,20 @@ def test_set_cmdline_string_multiple():
 #
 
 
-def __test_set_cmdline_string_single(cmdline, key):
+def __test_set_cmdline_string_single(cfg, cmdline, key):
     value = generate_random_string()
     argv = ['ctt', cmdline, value]
 
     with mock.patch('sys.argv', argv):
-        ctt = CTTConfig(validate=False)
+        ctt = CTTConfig(cfg, CTTCmdline, boards, False)
         assert_equal(value, ctt[key])
 
 
 def test_set_cmdline_string_single():
+    cfg, _, _ = generate_config()
     for option in config_dict:
         if ('cmdline' in option and
             ('multiple' not in option or not option['multiple']) and
                 ('boolean' not in option or not option['boolean'])):
-            yield (__test_set_cmdline_string_single, option['cmdline'],
+            yield (__test_set_cmdline_string_single, cfg, option['cmdline'],
                    option['key'])

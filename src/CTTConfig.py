@@ -32,17 +32,20 @@ class CTTConfig:
 
     def __init__(self, file, cmdline_class, boards, validate=True):
         self._config = ConfigParser()
-
         self._config.read_file(file)
 
-        self._cmdline = cmdline_class(boards, validate)
+        self._cmdline = {}
+
         if cmdline_class == CTTCmdline:
             self._MANDATORY_KEYS = self._CTT_MANDATORY_KEYS
         elif cmdline_class == CICmdline:
             self._MANDATORY_KEYS = self._CI_MANDATORY_KEYS
 
         if (validate):
-            self.__validate()
+            self.__validate_config_file()
+
+        self._cmdline = cmdline_class(boards, validate)
+
 
     def __validate_config_file(self):
         if not self._config.has_section(DEFAULT_SECTION):
@@ -50,9 +53,6 @@ class CTTConfig:
         for option in self._MANDATORY_KEYS:
             if not self.__contains__(option):
                 raise ConfigFileError('Missing %s option in config file' % option)
-
-    def __validate(self):
-        self.__validate_config_file()
 
     def __getitem__(self, key):
         if key in self._cmdline:
