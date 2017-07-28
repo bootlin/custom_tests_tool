@@ -14,6 +14,12 @@ from src.rootfs_chooser import RootfsChooser, RootfsAccessError
 from src.launcher import BaseLauncher
 
 class CTTLauncher(BaseLauncher):
+    """
+    This class implements the BaseLauncher interface to launch manual custom
+    tests.
+    It is be able to upload the provided artifacts through SSH before crafting
+    the job.
+    """
     _CMDLINE_CLASS = CTTCmdline
     _REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
 

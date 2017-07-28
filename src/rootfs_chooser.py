@@ -5,6 +5,10 @@ class RootfsAccessError(Exception):
     pass
 
 class RootfsChooser(object):
+    """
+    This class basically crafts and checks the URL for the rootfs given a board
+    dictionary containing at least the `rootfs` key.
+    """
     __ROOTFS_BASE = 'http://lava.free-electrons.com/downloads/rootfs'
 
     def get_url(self, board):

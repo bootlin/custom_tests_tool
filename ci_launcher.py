@@ -15,13 +15,18 @@ from src.rootfs_chooser import RootfsChooser, RootfsAccessError
 from src.launcher import BaseLauncher
 
 class CILauncher(BaseLauncher):
+    """
+    This class implements the BaseLauncher interface to launch automatic CI
+    tests.
+    It fetches the artifacts from the different crawlers, and gets the test to
+    run from the `ci_tests.json` file.
+    """
     _CMDLINE_CLASS = CICmdline
 
     def _set_config(self):
         super(CILauncher, self)._set_config()
         ctt_root_location = os.path.abspath(os.path.dirname(
             os.path.realpath(__file__)))
-        print(ctt_root_location)
 
         with open(os.path.join(ctt_root_location, "ci_tests.json")) as f:
             self._tests_config = json.load(f)
@@ -65,7 +70,7 @@ class CILauncher(BaseLauncher):
                             logging.debug("  No artifacts returned by crawler %s: %s" %
                                     (crawler.__class__.__name__, e))
                         except RemoteAccessError as e:
-                            logging.debug("  Remote unreachable for crawler %s: %s" %
+                            logging.warning("  Remote unreachable for crawler %s: %s" %
                                     (crawler.__class__.__name__, e))
                     if artifacts:
                         artifacts['rootfs'] = rootfs

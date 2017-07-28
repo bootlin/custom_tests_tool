@@ -13,15 +13,31 @@ class UnavailableError(BaseError):
 
 
 class Writer(object):
+    """
+    This class is responsible for saving the job somewhere. It must be
+    subclassed to implement the `write` method.
+
+    It take in its constructor a dictionary-like object to contain the needed
+    informations to save the jobs. The actual mandatory keys depends on the
+    implementation of the write method.
+    """
 
     def __init__(self, cfg):
         self._cfg = cfg
 
     def write(self, board, name, job):
+        """
+        The write method takes the board structure (dict), a name (string), and
+        the job (string) in argument.
+        """
         raise NotImplementedError('Missing write method')
 
 
 class FileWriter(Writer):
+    """
+    This class writes the job to the filesystem, in the directory given in the
+    `output_dir` of the configuration attribute.
+    """
 
     def write(self, board, name, job):
         try:
@@ -40,6 +56,15 @@ class FileWriter(Writer):
 
 
 class LavaWriter(Writer):
+    """
+    This class saves the job by sending it to LAVA.
+    It needs the following keys in its configuration:
+        - `server`: the xmlrpc address of the LAVA API.
+        - `username`: the LAVA username to use to send the job.
+        - `token`: the LAVA token to get authorization in the API.
+        - `web_ui_address`: a string containing the base URL of LAVA to display
+          a nice link by appending the job ID once submitted.
+    """
 
     def __init__(self, cfg):
         self._cfg = cfg

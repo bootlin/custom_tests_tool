@@ -8,6 +8,11 @@ from src.CTTConfig import CTTConfig, OptionError, ConfigFileError, CICmdline
 from src.crafter import JobCrafter
 
 class BaseLauncher(object):
+    """
+    This class makes the basic stages of initialization, such as logging and
+    configuration, but must be subclassed to add at least a `_CMDLINE_CLASS`
+    attribute, and a `launch` method.
+    """
     def __init__(self):
         self._set_logging()
         self._set_config()
@@ -54,5 +59,8 @@ class BaseLauncher(object):
 
         # TODO: handle exceptions
         self.crafter = JobCrafter(self._boards_config, self._cfg)
+
+    def launch(self):
+        raise NotImplementedError("Missing launching function")
 
 

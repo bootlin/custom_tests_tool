@@ -14,6 +14,23 @@ DEFAULT_SECTION = 'ctt'
 
 
 class CTTConfig:
+    """
+    A CTTConfig basically behaves like a dictionary, but makes all the needed
+    validation in its constructor.
+    It needs three mandatory arguments to initialize:
+        - A file object containing the config file (cttrc)
+        - A class implementing the BaseCmdline class
+        - A dictionary object of the boards to make the validation (boards.json)
+    A fourth optional boolean argument can be passed to allow or not the
+    validation. It defaults to True (allow).
+
+    When the file validation fails, this class throws an ConfigFileError
+    exception.
+    This class doesn't catch the Cmdline exceptions.
+    """
+
+# XXX Those dict would be better in specific FileConfig classes, following the
+# same model as Cmdline, and letting CTTConfig to stay generic
     _CI_MANDATORY_KEYS = [
         'server', # LAVA server
         'token', # LAVA token

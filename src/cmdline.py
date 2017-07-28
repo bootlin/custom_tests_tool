@@ -4,6 +4,20 @@ class OptionError(Exception):
     pass
 
 class BaseCmdline(object):
+    """
+    A Cmdline object basically behaves like a dictionary, but makes all the
+    needed validation in its constructor.
+    It needs one mandatory argument to initialize: a dictionary object of the
+    boards to make the validation (boards.json)
+    A second optional boolean argument can be passed to allow or not the
+    validation. It defaults to True (allow).
+
+    This class must be subclassed to implement its _parse_cmdline method, to
+    describe the wanted command line arguments.
+
+    When the argument validation fails, this class throws an OptionError
+    exception.
+    """
     def __init__(self, boards, validate=True):
         self._boards = boards
         self._parse_cmdline()

@@ -19,8 +19,18 @@ class RemoteAccessError(BaseError):
 
 
 class CTTCrawler(object):
+    """
+    This is the base Crawler class. A crawler is an object able to fetch
+    artifacts from remote location, given a board, and the tree/branch/defconfig
+    combination.
+    """
 
     def __init__(self, cfg):
+        """
+        `cfg` is any object behaving like a dictionary, and containing at least
+        the `api_token`
+        TODO: move me to the KernelCICrawler, since it's used only there.
+        """
         self._cfg = cfg
 
     def __get_image_name(self, board):
@@ -38,6 +48,26 @@ class CTTCrawler(object):
         raise NotImplementedError('Missing base URL retrieval function')
 
     def crawl(self, board, tree, branch, defconfig):
+        """
+        This is the main crawling function.
+
+        It returns a dictionary containing the `dtb`, `kernel`, and `modules`
+        keys, with their corresponding URLs in values.
+
+        It takes four mandatory arguments:
+        - `board`: a dictionary containing at least the following board
+          informations:
+            "beaglebone-black": {
+                "name": "Beaglebone black",
+                "arch": "arm",
+                "dt": "am335x-boneblack",
+            },
+        - `tree`: a string containing the name of the asked tree to look for.
+        - `branch`: a string containing the name of the asked branch to look
+          for.
+        - `defconfig`: a string containing the name of the asked defconfig to
+          look for.
+        """
         logging.debug('%s: Looking for artifacts for board %s, defconfig %s' %
                       (self.__class__.__name__, board['name'], defconfig))
 
@@ -89,6 +119,9 @@ class CTTCrawler(object):
 
 
 class FreeElectronsCrawler(CTTCrawler):
+    """
+    A Free Electrons specific crawler.
+    """
     __BASE_URL = 'http://lava.free-electrons.com/downloads/builds/'
 
     def _get_base_url(self, tree, branch, arch, defconfig):
@@ -110,6 +143,9 @@ class FreeElectronsCrawler(CTTCrawler):
 
 
 class KernelCICrawler(CTTCrawler):
+    """
+    A KernelCI specific crawler.
+    """
     __BASE_URL = 'https://storage.kernelci.org/'
     __RELEASE_URL = 'https://api.kernelci.org/build?limit=1&job=%s&field=kernel&sort=created_on&git_branch=%s'
 
