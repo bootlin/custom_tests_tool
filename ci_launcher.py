@@ -19,6 +19,12 @@ class CILauncher(BaseLauncher):
 
     def _set_config(self):
         super(CILauncher, self)._set_config()
+        ctt_root_location = os.path.abspath(os.path.dirname(
+            os.path.realpath(__file__)))
+        print(ctt_root_location)
+
+        with open(os.path.join(ctt_root_location, "ci_tests.json")) as f:
+            self._tests_config = json.load(f)
         self._crawlers = [
                 FreeElectronsCrawler(self._cfg),
                 KernelCICrawler(self._cfg)

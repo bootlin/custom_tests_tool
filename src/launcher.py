@@ -29,8 +29,6 @@ class BaseLauncher(object):
     def _set_config(self):
         ctt_root_location = os.path.abspath(os.path.dirname(
             os.path.dirname(os.path.realpath(__file__))))
-        with open(os.path.join(ctt_root_location, "ci_tests.json")) as f:
-            self._tests_config = json.load(f)
 
         with open(os.path.join(ctt_root_location, "boards.json")) as f:
             self._boards_config = json.load(f)
