@@ -54,12 +54,12 @@
                     {
                         "tree": "mainline",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     },
                     {
                         "tree": "next",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     }
                 ]
             },
@@ -94,12 +94,12 @@
                     {
                         "tree": "mainline",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     },
                     {
                         "tree": "next",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     }
                 ]
             },
@@ -183,12 +183,12 @@
                     {
                         "tree": "mainline",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     },
                     {
                         "tree": "next",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     }
                 ]
             }
@@ -217,12 +217,12 @@
                     {
                         "tree": "mainline",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     },
                     {
                         "tree": "next",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     }
                 ]
             }
@@ -251,12 +251,12 @@
                     {
                         "tree": "mainline",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     },
                     {
                         "tree": "next",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     }
                 ]
             },
@@ -288,12 +288,12 @@
                     {
                         "tree": "mainline",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     },
                     {
                         "tree": "next",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     }
                 ]
             },
@@ -393,12 +393,12 @@
                     {
                         "tree": "mainline",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     },
                     {
                         "tree": "next",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     }
                 ]
             },
@@ -430,12 +430,12 @@
                     {
                         "tree": "mainline",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     },
                     {
                         "tree": "next",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     }
                 ]
             },
@@ -467,12 +467,12 @@
                     {
                         "tree": "mainline",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     },
                     {
                         "tree": "next",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     }
                 ]
             },
@@ -504,12 +504,12 @@
                     {
                         "tree": "mainline",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     },
                     {
                         "tree": "next",
                         "branch": "master",
-                        "defconfig": "multi_v7_defconfig+tcrypt"
+                        "defconfig": "mvebu_v7_defconfig+tcrypt"
                     }
                 ]
             },
