@@ -1,26 +1,34 @@
 {
     "boot": {
-        "template": "generic_simple_job.jinja"
+        "template": "generic_simple_job.jinja",
+        "timeout": 10
     },
     "sata": {
-        "template": "generic_simple_job.jinja"
+        "template": "generic_simple_job.jinja",
+        "timeout": 10
     },
     "usb": {
-        "template": "generic_simple_job.jinja"
+        "template": "generic_simple_job.jinja",
+        "timeout": 10
     },
     "mmc": {
-        "template": "generic_simple_job.jinja"
+        "template": "generic_simple_job.jinja",
+        "timeout": 10
     },
     "crypto": {
-        "template": "generic_simple_job.jinja"
+        "template": "generic_simple_job.jinja",
+        "timeout": 10
     },
     "crypto-tcrypt": {
-        "template": "generic_simple_job_long_timeout.jinja"
+        "template": "generic_simple_job.jinja",
+        "timeout": 18
     },
     "simple-network": {
-        "template": "generic_simple_job.jinja"
+        "template": "generic_simple_job.jinja",
+        "timeout": 10
     },
     "network": {
-        "template": "generic_multinode_job.jinja"
+        "template": "generic_multinode_job.jinja",
+        "timeout": 10
     }
 }

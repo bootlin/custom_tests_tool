@@ -104,6 +104,7 @@ class CTTCmdline(BaseCmdline):
         job.add_argument('--output-dir', default='jobs',
                          help='Path where the jobs will be stored')
 
+        job.add_argument('--timeout', help='Set a manual timeout for your job.')
         job.add_argument('--rootfs', help='Path to your rootfs image')
         job.add_argument('--kernel', help='Path to your kernel image')
         job.add_argument('--dtb', help='Path to your dtb')

@@ -3,7 +3,7 @@ job_name: {{ job_name}}
 
 timeouts:
   job:
-    minutes: 10
+    minutes: {{ timeout }}
   action:
     minutes: 5
   actions:
@@ -67,7 +67,7 @@ actions:
 # TEST_BLOCK
 - test:
     timeout:
-      minutes: 5
+      minutes: {{ timeout }}
     definitions:
     - repository:
         metadata:

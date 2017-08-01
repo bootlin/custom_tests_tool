@@ -9,16 +9,12 @@ protocols:
       laptop:
         request: lava-start
         expect_role: board
-        timeout:
-          minutes: 5
         device_type: dummy-ssh
         count: 1
-    timeout:
-      minutes: 6
 
 timeouts:
   job:
-    minutes: 10
+    minutes: {{ timeout }}
   action:
     minutes: 5
   actions:
@@ -104,7 +100,7 @@ actions:
     role:
     - laptop
     timeout:
-      minutes: 10
+      minutes: {{ timeout }}
     definitions:
     - repository: git://github.com/free-electrons/test_suite.git
       from: git
@@ -118,7 +114,7 @@ actions:
     role:
     - board
     timeout:
-      minutes: 10
+      minutes: {{ timeout }}
     definitions:
     - repository:
         metadata:

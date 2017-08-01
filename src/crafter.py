@@ -39,6 +39,7 @@ class JobCrafter(object):
         with open(os.path.join(os.path.dirname(os.path.dirname(__file__)), "tests.json")) as f:
             self._tests = json.load(f)
         self.job = {
+                "timeout": 0,
                 "kernel": "",
                 "device_tree": "",
                 "rootfs": "",
@@ -64,6 +65,25 @@ class JobCrafter(object):
 
 # Job handling
     def make_jobs(self, board_name, artifacts, test, job_name="default_job_name"):
+        """
+        The main method building up the jobs.
+
+        `board_name`: string
+            The name of the board to build the job for. Must correspond to one
+            the keys in boards.json
+        `artifacts`: dict
+            A dictionary containing the URL to the artifacts, with the following
+            keys:
+                - kernel
+                - dtb
+                - rootfs
+                - modules (optional)
+        `test`: string
+            The name of the test to build the job for. Must correspond to one of
+            the keys in tests.json
+        `job_name`: string
+            A name to give to the job.
+        """
         # Get easier access to board config
         board_config = self._boards[board_name]
 
@@ -105,6 +125,11 @@ class JobCrafter(object):
 
         self.get_template_from_file(os.path.join(JobCrafter.__TEMPLATE_FOLDER,
             self._tests[test]['template']))
+
+        if 'timeout' in self._cfg: # Give priority to the command line
+            self.job["timeout"] = self._cfg['timeout']
+        else:
+            self.job["timeout"] = self._tests[test]['timeout']
 
         self.job["test"] = test
 
