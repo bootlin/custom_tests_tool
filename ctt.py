@@ -52,7 +52,7 @@ class CTTLauncher(BaseLauncher):
 
     # Launcher
     def launch(self):
-        if 'list' in self._cfg:
+        if self._cfg['list']:
             print("Here are the available boards:")
             for b in sorted(self._boards_config):
                 print("  - %s" % b)
