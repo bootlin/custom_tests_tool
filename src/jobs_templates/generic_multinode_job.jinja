@@ -9,6 +9,8 @@ protocols:
       laptop:
         request: lava-start
         expect_role: board
+        timeout:
+          minutes: 5
         device_type: dummy-ssh
         count: 1
 
@@ -108,7 +110,7 @@ actions:
       name: custom-tests
       parameters:
         DEVICE: "dummy-ssh"
-        TEST: "{{ tests }}"
+        TEST: "{{ test }}"
 
 - test:
     role:
