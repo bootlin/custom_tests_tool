@@ -203,12 +203,6 @@
         "rootfs": "rootfs_armv7.cpio.gz",
         "test_plan": "boot"
     },
-    "sama5d4ek": {
-        "arch": "arm",
-        "dt": "sama5d4ek",
-        "rootfs": "rootfs_armv7.cpio.gz",
-        "test_plan": "boot"
-    },
     "sun5i-r8-chip": {
         "arch": "arm",
         "dt": "sun5i-r8-chip",
