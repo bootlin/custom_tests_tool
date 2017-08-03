@@ -1,6 +1,9 @@
 import logging
 import requests
 
+import time
+from datetime import datetime, timedelta
+
 
 class BaseError(Exception):
     pass
@@ -147,7 +150,8 @@ class KernelCICrawler(CTTCrawler):
     A KernelCI specific crawler.
     """
     __BASE_URL = 'https://storage.kernelci.org/'
-    __RELEASE_URL = 'https://api.kernelci.org/build?limit=1&job=%s&field=kernel&sort=created_on&git_branch=%s'
+    __RELEASE_URL = 'https://api.kernelci.org/build?'\
+            'limit=1&job=%s&field=kernel&field=created_on&sort=created_on&git_branch=%s'
 
     def _get_base_url(self, tree, branch, arch, defconfig):
         return '%s/%s/%s/%s/%s/%s' % (self.__BASE_URL, tree, branch,
@@ -170,4 +174,10 @@ class KernelCICrawler(CTTCrawler):
                 'kernel' not in json['result'][0]):
             raise RemoteEmptyError('No release found')
 
+        current_time = datetime.utcfromtimestamp(time.time())
+        build_time = datetime.utcfromtimestamp(json['result'][0]['created_on']['$date']/1000)
+        if current_time - build_time > timedelta(hours=24):
+            raise RemoteEmptyError('Release found is too old')
+
         return json['result'][0]['kernel']
+
