@@ -1,5 +1,5 @@
 [mail]
-mail = my.email@domain.tld
+from = my.email@domain.tld
 password = my_Passw0rd
 server = smtp.domain.tld
 port = 587
