@@ -7,7 +7,7 @@ import logging
 import os
 import sys
 
-from src.CTTConfig import CICmdline, CIConfig
+from src.Config import CICmdline, CIConfig
 from src.CTTFormatter import CTTFormatter
 from src.crawlers import FreeElectronsCrawler, KernelCICrawler
 from src.crawlers import RemoteAccessError, RemoteEmptyError

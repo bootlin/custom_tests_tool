@@ -4,7 +4,7 @@ import os
 import sys
 
 from src.CTTFormatter import CTTFormatter
-from src.CTTConfig import CTTConfig, OptionError, ConfigFileError, CICmdline
+from src.Config import OptionError, ConfigFileError
 from src.crafter import JobCrafter
 
 class BaseLauncher(object):

@@ -9,7 +9,7 @@ import sys
 import getpass
 
 from src import ssh_utils
-from src.CTTConfig import CTTCmdline, CTTConfig
+from src.Config import CTTCmdline, CTTConfig
 from src.rootfs_chooser import RootfsChooser, RootfsAccessError
 from src.launcher import BaseLauncher
 

@@ -11,7 +11,7 @@ from unittest import mock
 from nose.tools import assert_equal, assert_false, assert_true
 from nose.tools import raises
 
-from CTTConfig import CTTConfig, OptionError, ConfigFileError, CTTCmdline
+from Config import CTTConfig, OptionError, ConfigFileError, CTTCmdline
 
 ctt_root_location = os.path.abspath(os.path.dirname(
     os.path.dirname(os.path.realpath(__file__))))
