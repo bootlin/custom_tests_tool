@@ -88,13 +88,13 @@ Then just edit the `boards.json` file. It contains just a list of dictionaries, 
 it's thus easy to add a new board:
 
 ```
-'beaglebone-black': { # The key must be the device type name as known to LAVA
-    'arch': 'arm', # The architecture of the board as found in the kernel
-    'dt': 'am335x-boneblack', # This is the DT name as found in the kernel,
-                              # without the extension.
-    'rootfs': 'rootfs_armv7.cpio.gz', # The name of the rootfs you want to use.
-    'test_plan': 'boot' # What LAVA test to you want to run (usually boot or boot-nfs)
-    },
+"beaglebone-black": {                 # The key must be the device type name as known to LAVA
+    "arch": "arm",                    # The architecture of the board as found in the kernel
+    "dt": "am335x-boneblack",         # This is the DT name as found in the kernel,
+                                      # without the extension.
+    "rootfs": "rootfs_armv7.cpio.gz", # The name of the rootfs you want to use.
+    "test_plan": "boot"               # What LAVA test to you want to run (usually boot or boot-nfs)
+    }
 ```
 
 ### A new test
