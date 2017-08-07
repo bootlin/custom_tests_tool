@@ -55,11 +55,12 @@ Will give you list of supported boards.
 
 ### Sending a job
 
-`./ctt.py -b sun8i-h3-orangepi-pc beaglebone-black -t usb --kernel /path/to/my/kernel/zImage --dtb /path/to/dt.dtb`
+`./ctt.py -b sun8i-h3-orangepi-pc beaglebone-black -t usb --kernel
+/path/to/my/kernel/zImage --dtb /path/to/dt.dtb`
 
 Will upload a custom kernel and DT, and create the `usb` job using them.
 
-The same way you can use `--rootfs`, `--modules` to override the corresponding 
+The same way you can use `--rootfs`, `--modules` to override the corresponding
 files, but they are not mandatory.
 
 If you submit jobs for multiple boards, and all your DTB files are in the same
@@ -68,12 +69,13 @@ conditions should be met in a standard Linux work tree), you can use the
 `--dtb-folder` option in order to let *ctt* guess which local file to use.
 
 Be careful when you upload multiple time the same file name, since the storage
-is made on a per-user basis: you risk to override your own previous file.   
-To prevent this, just name your file differently.
+is made on a per-user basis: you risk to override your own previous file.   To
+prevent this, just name your file differently.
 
 ### Manually launching daily CI
 
-You have to use the `ci_launcher.py` command to achieve that: `./ci_launcher.py -b all`
+You have to use the `ci_launcher.py` command to achieve that: `./ci_launcher.py
+-b all`
 
 
 ## Adding boards, tests, daily jobs...
@@ -81,11 +83,11 @@ You have to use the `ci_launcher.py` command to achieve that: `./ci_launcher.py 
 ### A new board
 
 If you wish to add a new board to the custom test tool, it must already be in
-LAVA (required), as well as being supported by kernel CI's images (optional,
-you can manually provide your own files).
+LAVA (required), as well as being supported by kernel CI's images (optional, you
+can manually provide your own files).
 
-Then just edit the `boards.json` file. It contains just a list of dictionaries, and
-it's thus easy to add a new board:
+Then just edit the `boards.json` file. It contains just a list of dictionaries,
+and it's thus easy to add a new board:
 
 ```json
 "beaglebone-black": {
@@ -104,7 +106,8 @@ it's thus easy to add a new board:
 
 ### A new test
 
-Simply add its description in `tests.json`. You must specify the template and the timeout.
+Simply add its description in `tests.json`. You must specify the template and
+the timeout.
 
 ```json
 "boot": {
@@ -113,10 +116,17 @@ Simply add its description in `tests.json`. You must specify the template and th
 }
 ```
 
+  * The key must be an existing script in the `scripts` folder of the
+[test\_suite](https://github.com/free-electrons/test_suite) repository, without
+the extension.
+  * *template*: This must be an existing template in the `./src/jobs_templates/`
+folder.
+  * *timeout*: The timeout of the job, in minutes.
+
 ### The daily jobs and the notifications
 
-To add a new board/test/tree/branch/defconfig configuration to test every day, 
-or to subscribe to the daily notifications of a board, you have to look at the 
+To add a new board/test/tree/branch/defconfig configuration to test every day,
+or to subscribe to the daily notifications of a board, you have to look at the
 `ci_tests.json` file, and add something like this:
 
 ```json
@@ -138,5 +148,13 @@ or to subscribe to the daily notifications of a board, you have to look at the
 },
 
 ```
+
+  * The key must be a LAVA device-type existing in `boards.json`.
+  * *configs*: A list of tree/branch/defconfig used by default for the tests.
+  * *tests*: A list of tests. `name` is mandatory. You can add a `config` key
+there too, with the same structure as the main one, to override which
+configuration should be run for this test.
+  * *notify*: A list of email addresses that will get daily summaries for this
+board.
 
 
