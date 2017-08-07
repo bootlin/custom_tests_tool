@@ -19,11 +19,9 @@ $ cat ~/.cttrc
 server: https://my.lava.instan.ce/RPC2
 username: <lava_username>
 token: MyAwEsOmELAVAtOkEn
-stream: /anonymous/test/
 ssh_server: farm.tld
 ssh_username: user-with-write-access-somewhere
 api_token: my-awesome-token
-rootfs_path: http://my.stora.ge/downloads/rootfs/
 notify: my.address@my.domai.ne
 web_ui_address: http://my.lava.instan.ce
 ```
@@ -31,52 +29,41 @@ web_ui_address: http://my.lava.instan.ce
   * `server` is the LAVA API address.
   * `username` is the LAVA username you will use to send jobs.
   * `token` is the LAVA token corresponding to the previous username.
-  * `stream` is the LAVA bundle stream to store the jobs results.
   * `ssh_server` is used to upload custom files on the server running LAVA.
   * `ssh_username` is the username you will use to upload file to the server.
   * `api_token` is needed to access KernelCI's API.
-  * `rootfs_path` is where you store your rootfs. It can be a path local to the
-server your sending the job, as long as it actually contains valid rootfs.
   * `notify` is a comma separated list of addresses where the test results will
 be sent, whatever the status of the job.
   * `web_ui_address` is the base URL of the LAVA Web UI.
 
-## Examples
+## Examples
 
 Before any work, don't forget to reactivate your virtualenv to setup the Python
 environment: `source env/bin/activate`
 
-#### Help
+### Help
 
 `./ctt.py -h`
 
 Will give you exhaustive help on any option.
 
-#### Listing boards
+### Listing boards
 
 `./ctt.py -l`
 
 Will give you list of supported boards.
 
-#### Sending simple job
+### Sending a job
 
-`./ctt.py -b sun8i-h3-orangepi-pc beaglebone-black`
+`./ctt.py -b sun8i-h3-orangepi-pc beaglebone-black -t usb --kernel /path/to/my/kernel/zImage --dtb /path/to/dt.dtb`
 
-Will launch the default job on the OrangePi PC and Beaglebone Black. The default
-job consists in running the test suite using the latest mainline kernel provided
-by Kernel CI.
+Will upload a custom kernel and DT, and create the `usb` job using them.
 
-#### Customizing boot files
-
-`./ctt.py -b sun8i-h3-orangepi-pc beaglebone-black --kernel ../path/to/my/kernel/zImage`
-
-Will do quite the same but will upload a custom kernel instead of using KernelCI's one.
-
-The same way you can use `--rootfs`, `--dtb`, `--modules` to override the
-corresponding files.
+The same way you can use `--rootfs`, `--modules` to override the corresponding 
+files, but they are not mandatory.
 
 If you submit jobs for multiple boards, and all your DTB files are in the same
-folder, and they are named as described in the `boards.py` file (every
+folder, and they are named as described in the `boards.json` file (every
 conditions should be met in a standard Linux work tree), you can use the
 `--dtb-folder` option in order to let *ctt* guess which local file to use.
 
@@ -84,64 +71,67 @@ Be careful when you upload multiple time the same file name, since the storage
 is made on a per-user basis: you risk to override your own previous file.   
 To prevent this, just name your file differently.
 
-#### Customizing tests
+### Manually launching daily CI
 
-`./ctt.py -b armada-370-db -t sata`
+You have to use the `ci_launcher.py` command to achieve that: `./ci_launcher.py -b all`
 
-Will send only the *sata* test on the Armada 370 DB.
-`-t` or `--tests` is a list, so you can give as much tests as you want. The
-tests need to be available for the given board(s) in the `boards.py` file.
 
-Using this option will override the tests list in the `boards.py` file, so that
-you have the tests you gave manually that will be made into jobs.
+## Adding boards, tests, daily jobs...
 
-## Adding a new board
+### A new board
 
 If you wish to add a new board to the custom test tool, it must already be in
 LAVA (required), as well as being supported by kernel CI's images (optional,
 you can manually provide your own files).
 
-Then just edit the `boards.py` file. It contains just a Python dictionary, and
+Then just edit the `boards.json` file. It contains just a list of dictionaries, and
 it's thus easy to add a new board:
 
-```python
+```
 'beaglebone-black': { # The key must be the device type name as known to LAVA
-                      # for the daily notifications to work.
-                      # Otherwise, it's free to choose
-    'name': 'BeagleBone Black', # A pretty name for displaying, also free
-    'device_type': 'beaglebone-black', # This is the device-type as named is the
-                                       # LAVA configuration
-    'configs': [
-        'mainline/master/multi_v7_defconfig',
-        ],  # This are the configs you want to use with this board
-            # The format is as simple as tree/branch/defconfig
-            # If a branch contains a '/' in its name, the builders
-            # generally replace it with a '_', and you need to do the
-            # same here.
+    'arch': 'arm', # The architecture of the board as found in the kernel
     'dt': 'am335x-boneblack', # This is the DT name as found in the kernel,
                               # without the extension.
     'rootfs': 'rootfs_armv7.cpio.gz', # The name of the rootfs you want to use.
-                                      # It must be available under the
-                                      # --rootfs-path option (or rootfs_path in
-                                      # the .cctrc file).
-    'test_plan': 'boot', # What LAVA test to you want tu run (only boot is
-                         # supported)
-    'tests': [ # A list of tests to run.
-        {
-            'name': 'boot', # Name matching a file in the script folder of the test suite
-            'configs': [
-                'next/master/multi_v7_defconfig',
-                ], # You can override the configs to use, but it's not mandatory.
-            'template': 'generic_simple_job.jinja', # You can also override the template. 
-                                                    # If not, default is generic_simple_job.jinja
-            },
-        # {
-        #     'name': 'network',
-        #     'template': 'generic_multinode_job.jinja',
-        #     },
-        ],
-    'notify': ['tux@free-electrons.com'], # The list of people to notify if the
-                                          # board begins to fail
+    'test_plan': 'boot' # What LAVA test to you want to run (usually boot or boot-nfs)
     },
 ```
+
+### A new test
+
+Simply add its description in `tests.json`. You must specify the template and the timeout.
+
+```json
+"boot": {
+    "template": "generic_simple_job.jinja",
+    "timeout": 10
+}
+```
+
+### The daily jobs and the notifications
+
+To add a new board/test/tree/branch/defconfig configuration to test every day, 
+or to subscribe to the daily notifications of a board, you have to look at the 
+`ci_tests.json` file, and add something like this:
+
+```json
+"beaglebone-black": {
+    "configs": [
+        { "tree": "mainline", "branch": "master", "defconfig": "multi_v7_defconfig" },
+        { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "multi_v7_defconfig" },
+        { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
+        { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
+        { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" }
+    ],
+    "tests": [
+        { "name": "mmc" },
+        { "name": "network" }
+    ],
+    "notify": [
+        "tux@domain.tld"
+    ]
+},
+
+```
+
 
