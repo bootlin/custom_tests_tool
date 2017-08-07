@@ -84,6 +84,11 @@ class JobCrafter(object):
         `job_name`: string
             A name to give to the job.
         """
+        # Verify that the test exists
+        if test not in self._tests.keys():
+            logging.warning("  Test %s does not exists" % test)
+            return
+
         # Get easier access to board config
         board_config = self._boards[board_name]
 

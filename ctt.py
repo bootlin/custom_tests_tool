@@ -71,7 +71,7 @@ class CTTLauncher(BaseLauncher):
             else:
                 rootfs = self._cfg['rootfs']
 
-            if 'tests' not in self._cfg: # TODO Remove me when CTTCmdline is done
+            if 'tests' not in self._cfg:
                 logging.critical("  No test asked, aborting")
                 sys.exit(1)
 
