@@ -7,7 +7,7 @@ import logging
 import os
 import sys
 
-from src.CTTConfig import CICmdline
+from src.CTTConfig import CICmdline, CIConfig
 from src.CTTFormatter import CTTFormatter
 from src.crawlers import FreeElectronsCrawler, KernelCICrawler
 from src.crawlers import RemoteAccessError, RemoteEmptyError
@@ -22,6 +22,7 @@ class CILauncher(BaseLauncher):
     run from the `ci_tests.json` file.
     """
     _CMDLINE_CLASS = CICmdline
+    _CONFIG_CLASS = CIConfig
 
     def _set_config(self):
         super(CILauncher, self)._set_config()

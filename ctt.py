@@ -9,7 +9,7 @@ import sys
 import getpass
 
 from src import ssh_utils
-from src.CTTConfig import CTTCmdline
+from src.CTTConfig import CTTCmdline, CTTConfig
 from src.rootfs_chooser import RootfsChooser, RootfsAccessError
 from src.launcher import BaseLauncher
 
@@ -21,6 +21,7 @@ class CTTLauncher(BaseLauncher):
     the job.
     """
     _CMDLINE_CLASS = CTTCmdline
+    _CONFIG_CLASS = CTTConfig
     _REMOTE_ROOT = os.path.join("/tmp/ctt/", getpass.getuser())
 
     def _set_logging(self):

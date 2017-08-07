@@ -13,9 +13,9 @@ DEFAULT_SECTION = 'ctt'
 
 
 
-class CTTConfig:
+class Config:
     """
-    A CTTConfig basically behaves like a dictionary, but makes all the needed
+    A Config basically behaves like a dictionary, but makes all the needed
     validation in its constructor.
     It needs three mandatory arguments to initialize:
         - A file object containing the config file (cttrc)
@@ -27,36 +27,17 @@ class CTTConfig:
     When the file validation fails, this class throws an ConfigFileError
     exception.
     This class doesn't catch the Cmdline exceptions.
+
+    This class must be overridden to define the _MANDATORY_KEYS list and be
+    usable.
     """
 
-# XXX Those dict would be better in specific FileConfig classes, following the
-# same model as Cmdline, and letting CTTConfig to stay generic
-    _CI_MANDATORY_KEYS = [
-        'server', # LAVA server
-        'token', # LAVA token
-        'username', # LAVA user name
-        'api_token', # KCI token
-    ]
-    _CTT_MANDATORY_KEYS = [
-        'server', # LAVA server
-        'token', # LAVA token
-        'username', # LAVA user name
-        'ssh_server', # SSH server to push artifacts
-        'ssh_username', # SSH user name
-        'web_ui_address', # To print nice links
-        'notify', # To get emails
-    ]
 
     def __init__(self, file, cmdline_class, boards, validate=True):
         self._config = ConfigParser()
         self._config.read_file(file)
 
         self._cmdline = {}
-
-        if cmdline_class == CTTCmdline:
-            self._MANDATORY_KEYS = self._CTT_MANDATORY_KEYS
-        elif cmdline_class == CICmdline:
-            self._MANDATORY_KEYS = self._CI_MANDATORY_KEYS
 
         if (validate):
             self.__validate_config_file()
@@ -97,3 +78,22 @@ class CTTConfig:
             return True
 
         return False
+
+class CTTConfig(Config):
+    _MANDATORY_KEYS = [
+        'server', # LAVA server
+        'token', # LAVA token
+        'username', # LAVA user name
+        'ssh_server', # SSH server to push artifacts
+        'ssh_username', # SSH user name
+        'web_ui_address', # To print nice links
+        'notify', # To get emails
+    ]
+
+class CIConfig(Config):
+    _MANDATORY_KEYS = [
+        'server', # LAVA server
+        'token', # LAVA token
+        'username', # LAVA user name
+        'api_token', # KCI token
+    ]

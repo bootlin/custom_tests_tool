@@ -44,7 +44,8 @@ class BaseLauncher(object):
 
         try:
             with open(os.path.expanduser('~/.cttrc')) as f:
-                self._cfg = CTTConfig(f, self._CMDLINE_CLASS, self._boards_config)
+                self._cfg = self._CONFIG_CLASS(f, self._CMDLINE_CLASS,
+                        self._boards_config)
         except OptionError as e:
             logging.critical(e)
             sys.exit(1)
