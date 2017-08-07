@@ -1,5 +1,6 @@
 import requests
 import requests_mock
+import time
 from nose.tools import assert_equal, assert_raises
 
 from crawlers import FreeElectronsCrawler, KernelCICrawler
@@ -23,7 +24,8 @@ class TestKernelCICrawler(object):
     def test_check_release(self, mock):
         url = self.RELEASE_URL % (self.DEFAULT_TREE, self.DEFAULT_BRANCH)
         response = {
-            'result': [{'kernel': self.DEFAULT_RELEASE}],
+            'result': [{'kernel': self.DEFAULT_RELEASE,
+                    'created_on': {'$date': time.time()*1000}}],
         }
         cfg = {
             'api_token': self.DEFAULT_API_TOKEN,
@@ -118,7 +120,8 @@ class TestKernelCICrawler(object):
                                           self.DEFAULT_ARCH,
                                           self.DEFAULT_DEFCONFIG)
         response = {
-            'result': [{'kernel': self.DEFAULT_RELEASE}],
+                'result': [{'kernel': self.DEFAULT_RELEASE,
+                    'created_on': {'$date': time.time()*1000}}],
         }
         cfg = {
             'api_token': self.DEFAULT_API_TOKEN,
@@ -136,6 +139,33 @@ class TestKernelCICrawler(object):
                                                      self.DEFAULT_DEFCONFIG))
 
     @requests_mock.mock()
+    def test_check_release_url_too_old(self, mock):
+        url = self.RELEASE_URL % (self.DEFAULT_TREE, self.DEFAULT_BRANCH)
+        base_url = '%s/%s/%s/%s/%s/%s' % (self.BASE_URL,
+                                          self.DEFAULT_TREE,
+                                          self.DEFAULT_BRANCH,
+                                          self.DEFAULT_RELEASE,
+                                          self.DEFAULT_ARCH,
+                                          self.DEFAULT_DEFCONFIG)
+        response = {
+                'result': [{'kernel': self.DEFAULT_RELEASE,
+                    'created_on': {'$date': (time.time() - 26*3600)*1000}}],
+        }
+        cfg = {
+            'api_token': self.DEFAULT_API_TOKEN,
+        }
+        headers = {
+            'Authorization': self.DEFAULT_API_TOKEN,
+        }
+
+        mock.get(url, json=response, request_headers=headers)
+
+        crawler = KernelCICrawler(cfg)
+        assert_raises(RemoteEmptyError, crawler._get_base_url,
+                      self.DEFAULT_TREE, self.DEFAULT_BRANCH,
+                      self.DEFAULT_ARCH, self.DEFAULT_DEFCONFIG)
+
+    @requests_mock.mock()
     def test_check_artifacts_all(self, mock):
         release_url = self.RELEASE_URL % (self.DEFAULT_TREE,
                                           self.DEFAULT_BRANCH)
@@ -149,7 +179,8 @@ class TestKernelCICrawler(object):
         modules_url = '%s/%s' % (config_url, self.DEFAULT_MODULES)
         dtb_url = '%s/dtbs/%s.dtb' % (config_url, self.DEFAULT_DTB)
         release_response = {
-            'result': [{'kernel': self.DEFAULT_RELEASE}],
+            'result': [{'kernel': self.DEFAULT_RELEASE,
+                    'created_on': {'$date': time.time()*1000}}],
         }
         release_headers = {
             'Authorization': self.DEFAULT_API_TOKEN,
@@ -190,7 +221,8 @@ class TestKernelCICrawler(object):
                                             self.DEFAULT_ARCH,
                                             self.DEFAULT_DEFCONFIG)
         release_response = {
-            'result': [{'kernel': self.DEFAULT_RELEASE}],
+            'result': [{'kernel': self.DEFAULT_RELEASE,
+                    'created_on': {'$date': time.time()*1000}}],
         }
         release_headers = {
             'Authorization': self.DEFAULT_API_TOKEN,
@@ -225,7 +257,8 @@ class TestKernelCICrawler(object):
                                             self.DEFAULT_DEFCONFIG)
         kernel_url = '%s/%s' % (config_url, self.DEFAULT_IMAGE)
         release_response = {
-            'result': [{'kernel': self.DEFAULT_RELEASE}],
+            'result': [{'kernel': self.DEFAULT_RELEASE,
+                    'created_on': {'$date': time.time()*1000}}],
         }
         release_headers = {
             'Authorization': self.DEFAULT_API_TOKEN,
@@ -262,7 +295,8 @@ class TestKernelCICrawler(object):
         kernel_url = '%s/%s' % (config_url, self.DEFAULT_IMAGE)
         modules_url = '%s/%s' % (config_url, self.DEFAULT_MODULES)
         release_response = {
-            'result': [{'kernel': self.DEFAULT_RELEASE}],
+            'result': [{'kernel': self.DEFAULT_RELEASE,
+                    'created_on': {'$date': time.time()*1000}}],
         }
         release_headers = {
             'Authorization': self.DEFAULT_API_TOKEN,
@@ -301,7 +335,8 @@ class TestKernelCICrawler(object):
         modules_url = '%s/%s' % (config_url, self.DEFAULT_MODULES)
         dtb_url = '%s/dtbs/%s.dtb' % (config_url, self.DEFAULT_DTB)
         release_response = {
-            'result': [{'kernel': self.DEFAULT_RELEASE}],
+            'result': [{'kernel': self.DEFAULT_RELEASE,
+                    'created_on': {'$date': time.time()*1000}}],
         }
         release_headers = {
             'Authorization': self.DEFAULT_API_TOKEN,
@@ -349,7 +384,8 @@ class TestFECrawler(object):
             'api_token': self.DEFAULT_API_TOKEN,
         }
 
-        mock.get(url, text=self.DEFAULT_RELEASE)
+        mock.get(url, text=self.DEFAULT_RELEASE, headers={'last-modified':
+                 time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime())})
 
         crawler = FreeElectronsCrawler(cfg)
         assert_equal(self.DEFAULT_RELEASE,
@@ -386,13 +422,38 @@ class TestFECrawler(object):
             'api_token': self.DEFAULT_API_TOKEN,
         }
 
-        mock.get(url, text=self.DEFAULT_RELEASE)
+        mock.get(url, text=self.DEFAULT_RELEASE, headers={'last-modified':
+                 time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime())})
 
         crawler = FreeElectronsCrawler(cfg)
         assert_equal(base_url, crawler._get_base_url(self.DEFAULT_TREE,
                                                      self.DEFAULT_BRANCH,
                                                      self.DEFAULT_ARCH,
                                                      self.DEFAULT_DEFCONFIG))
+
+    @requests_mock.mock()
+    def test_check_release_url_too_old(self, mock):
+        url = '%s/%s/%s/latest' % (self.BASE_URL,
+                                   self.DEFAULT_TREE,
+                                   self.DEFAULT_BRANCH)
+        base_url = '%s/%s/%s/%s/%s/%s' % (self.BASE_URL,
+                                          self.DEFAULT_TREE,
+                                          self.DEFAULT_BRANCH,
+                                          self.DEFAULT_RELEASE,
+                                          self.DEFAULT_ARCH,
+                                          self.DEFAULT_DEFCONFIG)
+        cfg = {
+            'api_token': self.DEFAULT_API_TOKEN,
+        }
+
+        mock.get(url, text=self.DEFAULT_RELEASE, headers={'last-modified':
+                 time.strftime("%a, %d %b %Y %H:%M:%S GMT",
+                               time.gmtime(time.time() - 26*3600))})
+
+        crawler = FreeElectronsCrawler(cfg)
+        assert_raises(RemoteEmptyError, crawler._get_base_url,
+                      self.DEFAULT_TREE, self.DEFAULT_BRANCH,
+                      self.DEFAULT_ARCH, self.DEFAULT_DEFCONFIG)
 
     @requests_mock.mock()
     def test_check_artifacts_all(self, mock):
@@ -417,7 +478,8 @@ class TestFECrawler(object):
             'api_token': self.DEFAULT_API_TOKEN,
         }
 
-        mock.get(release_url, text=self.DEFAULT_RELEASE)
+        mock.get(release_url, text=self.DEFAULT_RELEASE, headers={'last-modified':
+                 time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime())})
         mock.get(config_url)
         mock.get(kernel_url)
         mock.get(modules_url)
@@ -452,7 +514,8 @@ class TestFECrawler(object):
             'api_token': self.DEFAULT_API_TOKEN,
         }
 
-        mock.get(release_url, text=self.DEFAULT_RELEASE)
+        mock.get(release_url, text=self.DEFAULT_RELEASE, headers={'last-modified':
+                 time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime())})
         mock.get(config_url, status_code=404)
 
         crawler = FreeElectronsCrawler(cfg)
@@ -481,7 +544,8 @@ class TestFECrawler(object):
             'api_token': self.DEFAULT_API_TOKEN,
         }
 
-        mock.get(release_url, text=self.DEFAULT_RELEASE)
+        mock.get(release_url, text=self.DEFAULT_RELEASE, headers={'last-modified':
+                 time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime())})
         mock.get(config_url)
         mock.get(kernel_url, status_code=404)
 
@@ -512,7 +576,8 @@ class TestFECrawler(object):
             'api_token': self.DEFAULT_API_TOKEN,
         }
 
-        mock.get(release_url, text=self.DEFAULT_RELEASE)
+        mock.get(release_url, text=self.DEFAULT_RELEASE, headers={'last-modified':
+                 time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime())})
         mock.get(config_url)
         mock.get(kernel_url)
         mock.get(modules_url, status_code=404)
@@ -545,7 +610,8 @@ class TestFECrawler(object):
             'api_token': self.DEFAULT_API_TOKEN,
         }
 
-        mock.get(release_url, text=self.DEFAULT_RELEASE)
+        mock.get(release_url, text=self.DEFAULT_RELEASE, headers={'last-modified':
+                 time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime())})
         mock.get(config_url)
         mock.get(kernel_url)
         mock.get(modules_url)
