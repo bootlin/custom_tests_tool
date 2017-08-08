@@ -9,7 +9,7 @@ from crawlers import RemoteAccessError, RemoteEmptyError
 
 class TestKernelCICrawler(object):
     BASE_URL = 'https://storage.kernelci.org/'
-    RELEASE_URL = 'https://api.kernelci.org/build?limit=1&job=%s&field=kernel&sort=created_on&git_branch=%s'
+    RELEASE_URL = 'https://api.kernelci.org/build?limit=1&job=%s&field=kernel&field=created_on&sort=created_on&git_branch=%s'
     DEFAULT_API_TOKEN = 'foobar42'
     DEFAULT_ARCH = 'arm'
     DEFAULT_BRANCH = 'master'

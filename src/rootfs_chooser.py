@@ -15,11 +15,12 @@ class RootfsChooser(object):
     __ROOTFS_BASE = 'http://lava.free-electrons.com/downloads/rootfs'
 
     def get_url(self, board):
-        if board['test_plan'] == "boot":
-            rootfs = '%s/%s.cpio.gz' % (self.__ROOTFS_BASE, board['rootfs'])
-        elif board['test_plan'] == "boot-nfs":
-            rootfs = '%s/%s.tar.gz' % (self.__ROOTFS_BASE, board['rootfs'])
-        else:
+        try:
+            if board['test_plan'] == "boot":
+                rootfs = '%s/%s.cpio.gz' % (self.__ROOTFS_BASE, board['rootfs'])
+            elif board['test_plan'] == "boot-nfs":
+                rootfs = '%s/%s.tar.gz' % (self.__ROOTFS_BASE, board['rootfs'])
+        except:
             raise RootfsConfigError("Unable to guess rootfs type to use.")
         try:
             r = requests.get(rootfs)
