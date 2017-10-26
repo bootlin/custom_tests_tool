@@ -149,12 +149,6 @@
         "rootfs": "rootfs_armv7",
         "test_plan": "boot"
     },
-    "beaglebone-black": {
-        "arch": "arm",
-        "dt": "am335x-boneblack",
-        "rootfs": "rootfs_armv7",
-        "test_plan": "boot"
-    },
     "imx6q-nitrogen6x": {
         "arch": "arm",
         "dt": "imx6q-nitrogen6x",
