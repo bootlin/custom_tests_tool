@@ -478,20 +478,6 @@
         ],
         "notify": []
     },
-    "beaglebone-black": {
-        "configs": [
-            { "tree": "mainline", "branch": "master", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" }
-        ],
-        "tests": [
-            { "name": "mmc" },
-            { "name": "network" }
-        ],
-        "notify": []
-    },
     "imx6q-nitrogen6x": {
         "configs": [
             { "tree": "mainline", "branch": "master", "defconfig": "multi_v7_defconfig" },
