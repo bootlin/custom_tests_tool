@@ -10,6 +10,10 @@ virtualenv --python=python3 env
 source env/bin/activate
 pip install -r requirements.txt
 ```
+
+Note: If you have Python2 and Python3 installed in your system, you must use `pip3`
+to install dependencies because this tool needs Python3's modules.
+
   * That file can help you a lot not providing every argument every time you run
 the script:
 
