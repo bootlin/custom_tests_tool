@@ -48,7 +48,8 @@
                 ]
             },
             { "name": "sata" },
-            { "name": "network" }
+            { "name": "network" },
+            { "name": "nand" }
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
