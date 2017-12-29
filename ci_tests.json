@@ -525,7 +525,7 @@
     },
     "orion5x-rd88f5182-nas": {
         "configs": [
-            { "tree": "mainline", "branch": "master", "defconfig": "multi_v5_defconfig" },
+            { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v5_defconfig" },
             { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "mvebu_v5_defconfig" },
             { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v5_defconfig" },
             { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v5_defconfig" },
