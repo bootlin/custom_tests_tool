@@ -39,6 +39,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
+            { "name": "boot" },
             { "name": "crypto" },
             { "name": "crypto-tcrypt",
                 "configs": [
@@ -73,6 +74,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
+            { "name": "boot" },
             { "name": "crypto" },
             { "name": "crypto-tcrypt",
                 "configs": [
@@ -144,6 +146,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
+            { "name": "boot" },
             { "name": "crypto" },
             { "name": "crypto-tcrypt",
                 "configs": [
@@ -175,6 +178,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
+            { "name": "boot" },
             { "name": "crypto" },
             { "name": "crypto-tcrypt",
                 "configs": [
@@ -203,6 +207,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
+            { "name": "boot" },
             { "name": "crypto" },
             { "name": "crypto-tcrypt",
                 "configs": [
@@ -234,6 +239,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
+            { "name": "boot" },
             { "name": "crypto" },
             { "name": "crypto-tcrypt",
                 "configs": [
@@ -303,6 +309,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
+            { "name": "boot" },
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
@@ -328,6 +335,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
+            { "name": "boot" },
             { "name": "crypto" },
             { "name": "crypto-tcrypt",
                 "configs": [
@@ -361,6 +369,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
+            { "name": "boot" },
             { "name": "crypto" },
             { "name": "crypto-tcrypt",
                 "configs": [
@@ -392,6 +401,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
+            { "name": "boot" },
             { "name": "crypto" },
             { "name": "crypto-tcrypt",
                 "configs": [
@@ -425,6 +435,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
+            { "name": "boot" },
             { "name": "crypto" },
             { "name": "crypto-tcrypt",
                 "configs": [
@@ -604,6 +615,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v5_defconfig" }
         ],
         "tests": [
+            { "name": "boot" },
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
@@ -622,6 +634,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v5_defconfig" }
         ],
         "tests": [
+            { "name": "boot" },
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
@@ -652,6 +665,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v5_defconfig" }
         ],
         "tests": [
+            { "name": "boot" },
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
