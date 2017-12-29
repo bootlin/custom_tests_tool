@@ -94,14 +94,12 @@
         "configs": [
             { "tree": "mainline", "branch": "master", "defconfig": "defconfig" },
             { "tree": "next", "branch": "master", "defconfig": "defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "defconfig" },
+            { "tree": "mvebu-backports", "branch": "backport-4.14", "defconfig": "defconfig" },
+            { "tree": "mvebu-backports", "branch": "devel-4.14/all", "defconfig": "defconfig" }
         ],
         "tests": [
-            { "name": "boot",
-                "configs": [
-                    { "tree": "mvebu-backports", "branch": "4.12-rc6_backports", "defconfig": "defconfig" }
-                ]
-            }
+            { "name": "boot" },
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
@@ -113,14 +111,12 @@
         "configs": [
             { "tree": "mainline", "branch": "master", "defconfig": "defconfig" },
             { "tree": "next", "branch": "master", "defconfig": "defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "defconfig" },
+            { "tree": "mvebu-backports", "branch": "backport-4.14", "defconfig": "defconfig" },
+            { "tree": "mvebu-backports", "branch": "devel-4.14/all", "defconfig": "defconfig" }
         ],
         "tests": [
-            { "name": "boot",
-                "configs": [
-                    { "tree": "mvebu-backports", "branch": "4.12-rc6_backports", "defconfig": "defconfig" }
-                ]
-            }
+            { "name": "boot" },
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
@@ -259,14 +255,12 @@
         "configs": [
             { "tree": "mainline", "branch": "master", "defconfig": "defconfig" },
             { "tree": "next", "branch": "master", "defconfig": "defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "defconfig" },
+            { "tree": "mvebu-backports", "branch": "backport-4.14", "defconfig": "defconfig" },
+            { "tree": "mvebu-backports", "branch": "devel-4.14/all", "defconfig": "defconfig" }
         ],
         "tests": [
-            { "name": "boot",
-                "configs": [
-                    { "tree": "mvebu-backports", "branch": "4.12-rc6_backports", "defconfig": "defconfig" }
-                ]
-            }
+            { "name": "boot" },
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
@@ -278,14 +272,12 @@
         "configs": [
             { "tree": "mainline", "branch": "master", "defconfig": "defconfig" },
             { "tree": "next", "branch": "master", "defconfig": "defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "defconfig" },
+            { "tree": "mvebu-backports", "branch": "backport-4.14", "defconfig": "defconfig" },
+            { "tree": "mvebu-backports", "branch": "devel-4.14/all", "defconfig": "defconfig" },
         ],
         "tests": [
-            { "name": "boot",
-                "configs": [
-                    { "tree": "mvebu-backports", "branch": "4.12-rc6_backports", "defconfig": "defconfig" }
-                ]
-            }
+            { "name": "boot" },
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
