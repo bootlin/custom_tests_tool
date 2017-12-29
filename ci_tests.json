@@ -28,7 +28,13 @@
             { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" },
+            { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
             { "name": "crypto" },
@@ -54,7 +60,13 @@
             { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" },
+            { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
             { "name": "crypto" },
@@ -115,7 +127,13 @@
             { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" },
+            { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
             { "name": "crypto" },
@@ -138,7 +156,13 @@
             { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" },
+            { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
             { "name": "crypto" },
@@ -160,7 +184,11 @@
             { "tree": "mainline", "branch": "master", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" },
+            { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
             { "name": "crypto" },
@@ -184,7 +212,12 @@
             { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" },
+            { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
             { "name": "crypto" },
@@ -244,7 +277,12 @@
             { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" },
+            { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
         ],
@@ -261,7 +299,13 @@
             { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" },
+            { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
             { "name": "crypto" },
@@ -286,7 +330,13 @@
             { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" },
+            { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
             { "name": "crypto" },
@@ -310,7 +360,12 @@
             { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" },
+            { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
             { "name": "crypto" },
@@ -335,7 +390,13 @@
             { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
             { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" }
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" },
+            { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "mvebu_v7_defconfig" },
+            { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
             { "name": "crypto" },
