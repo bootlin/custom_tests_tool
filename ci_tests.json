@@ -371,10 +371,10 @@
     "at91rm9200ek": {
         "configs": [
             { "tree": "mainline", "branch": "master", "defconfig": "at91_dt_defconfig" },
-            { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
-            { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" }
+            { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "at91_dt_defconfig" },
+            { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "at91_dt_defconfig" },
+            { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "at91_dt_defconfig" },
+            { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "at91_dt_defconfig" }
         ],
         "tests": [
             { "name": "network" }
