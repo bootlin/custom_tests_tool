@@ -90,6 +90,9 @@ class LavaWriter(Writer):
         if dev['status'] == "offline":
             logging.error("Device is offline, not sending the job")
             raise UnavailableError('LAVA device is offline')
+        elif dev['status'] == "retired":
+            logging.error("Device is retired, not sending the job")
+            raise UnavailableError('LAVA device is offline')
 
         value = list()
         #
