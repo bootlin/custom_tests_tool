@@ -99,7 +99,7 @@
             { "tree": "mvebu-backports", "branch": "devel-4.14/all", "defconfig": "defconfig" }
         ],
         "tests": [
-            { "name": "boot" },
+            { "name": "boot" }
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
@@ -116,7 +116,7 @@
             { "tree": "mvebu-backports", "branch": "devel-4.14/all", "defconfig": "defconfig" }
         ],
         "tests": [
-            { "name": "boot" },
+            { "name": "boot" }
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
@@ -260,7 +260,7 @@
             { "tree": "mvebu-backports", "branch": "devel-4.14/all", "defconfig": "defconfig" }
         ],
         "tests": [
-            { "name": "boot" },
+            { "name": "boot" }
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
@@ -274,10 +274,10 @@
             { "tree": "next", "branch": "master", "defconfig": "defconfig" },
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "defconfig" },
             { "tree": "mvebu-backports", "branch": "backport-4.14", "defconfig": "defconfig" },
-            { "tree": "mvebu-backports", "branch": "devel-4.14/all", "defconfig": "defconfig" },
+            { "tree": "mvebu-backports", "branch": "devel-4.14/all", "defconfig": "defconfig" }
         ],
         "tests": [
-            { "name": "boot" },
+            { "name": "boot" }
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
@@ -301,7 +301,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v7_defconfig" }
         ],
         "tests": [
-            { "name": "boot" },
+            { "name": "boot" }
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
@@ -607,7 +607,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v5_defconfig" }
         ],
         "tests": [
-            { "name": "boot" },
+            { "name": "boot" }
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
@@ -626,7 +626,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v5_defconfig" }
         ],
         "tests": [
-            { "name": "boot" },
+            { "name": "boot" }
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
@@ -657,7 +657,7 @@
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "mvebu_v5_defconfig" }
         ],
         "tests": [
-            { "name": "boot" },
+            { "name": "boot" }
         ],
         "notify": [
             "thomas.petazzoni@free-electrons.com",
