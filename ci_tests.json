@@ -97,7 +97,7 @@
             { "tree": "next", "branch": "master", "defconfig": "defconfig" },
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "defconfig" },
             { "tree": "mvebu-backports", "branch": "backport-4.14", "defconfig": "defconfig" },
-            { "tree": "mvebu-backports", "branch": "devel-4.14/all", "defconfig": "defconfig" }
+            { "tree": "mvebu-backports", "branch": "devel-4.14_all", "defconfig": "defconfig" }
         ],
         "tests": [
             { "name": "boot" }
@@ -114,7 +114,7 @@
             { "tree": "next", "branch": "master", "defconfig": "defconfig" },
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "defconfig" },
             { "tree": "mvebu-backports", "branch": "backport-4.14", "defconfig": "defconfig" },
-            { "tree": "mvebu-backports", "branch": "devel-4.14/all", "defconfig": "defconfig" }
+            { "tree": "mvebu-backports", "branch": "devel-4.14_all", "defconfig": "defconfig" }
         ],
         "tests": [
             { "name": "boot" }
@@ -258,7 +258,7 @@
             { "tree": "next", "branch": "master", "defconfig": "defconfig" },
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "defconfig" },
             { "tree": "mvebu-backports", "branch": "backport-4.14", "defconfig": "defconfig" },
-            { "tree": "mvebu-backports", "branch": "devel-4.14/all", "defconfig": "defconfig" }
+            { "tree": "mvebu-backports", "branch": "devel-4.14_all", "defconfig": "defconfig" }
         ],
         "tests": [
             { "name": "boot" }
@@ -275,7 +275,7 @@
             { "tree": "next", "branch": "master", "defconfig": "defconfig" },
             { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "defconfig" },
             { "tree": "mvebu-backports", "branch": "backport-4.14", "defconfig": "defconfig" },
-            { "tree": "mvebu-backports", "branch": "devel-4.14/all", "defconfig": "defconfig" }
+            { "tree": "mvebu-backports", "branch": "devel-4.14_all", "defconfig": "defconfig" }
         ],
         "tests": [
             { "name": "boot" }
