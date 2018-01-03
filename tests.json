@@ -16,7 +16,7 @@
         "timeout": 10
     },
     "nand": {
-        "template": "generic_simple_job.jinja",
+        "template": "custom_simple_job.jinja",
         "timeout": 10
     },
     "crypto": {
