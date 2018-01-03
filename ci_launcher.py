@@ -54,7 +54,7 @@ class CILauncher(BaseLauncher):
                 logging.warning(e)
                 continue
             for test in self._tests_config[board]['tests']:
-                logging.info("  Building job(s) for %s" % test['name'])
+                logging.info(" Building job(s) for %s" % test['name'])
 
                 # Check if configs has been overridden by test
                 if 'configs' in test:
