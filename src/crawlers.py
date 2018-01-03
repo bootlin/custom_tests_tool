@@ -140,8 +140,6 @@ class FreeElectronsCrawler(CTTCrawler):
             current_time = datetime.utcfromtimestamp(time.time())
             build_time = datetime.strptime(r.headers['Last-Modified'],
                     "%a, %d %b %Y %H:%M:%S GMT")
-            if current_time - build_time > timedelta(hours=25):
-                raise RemoteEmptyError('Release found is too old')
         except requests.exceptions.HTTPError:
             raise RemoteEmptyError('Release page not accessible')
         except requests.exceptions.ConnectionError:
@@ -181,8 +179,6 @@ class KernelCICrawler(CTTCrawler):
 
         current_time = datetime.utcfromtimestamp(time.time())
         build_time = datetime.utcfromtimestamp(json['result'][0]['created_on']['$date']/1000)
-        if current_time - build_time > timedelta(hours=25):
-            raise RemoteEmptyError('Release found is too old')
 
         return json['result'][0]['kernel']
 
