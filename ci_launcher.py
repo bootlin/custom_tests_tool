@@ -54,7 +54,7 @@ class CILauncher(BaseLauncher):
                 logging.warning(e)
                 continue
             for test in self._tests_config[board]['tests']:
-                logging.debug("  Building job(s) for %s" % test['name'])
+                logging.info("  Building job(s) for %s" % test['name'])
 
                 # Check if configs has been overridden by test
                 if 'configs' in test:
@@ -65,7 +65,7 @@ class CILauncher(BaseLauncher):
                     logging.debug("  Using default configs: %s" % configs)
 
                 for config in configs:
-                    logging.debug("  Fetching artifacts for %s" % config)
+                    logging.info("  Fetching artifacts for %s" % config)
                     artifacts = None
                     for crawler in self._crawlers:
                         try:
@@ -88,6 +88,9 @@ class CILauncher(BaseLauncher):
                                 config['defconfig'], test['name']
                                 )
                         self.crafter.make_jobs(board, artifacts, test['name'], job_name)
+                    else:
+                        logging.error("  No artifacts found")
+
 
 if __name__ == "__main__":
     CILauncher().launch()
