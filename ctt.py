@@ -58,6 +58,7 @@ class CTTLauncher(BaseLauncher):
             for b in sorted(self._boards_config):
                 print("  - %s" % b)
             return
+        all_jobs = list()
         for board in self._cfg['boards']:
             logging.info(board)
 
@@ -96,7 +97,9 @@ class CTTLauncher(BaseLauncher):
 
                 logging.info("  Making %s job" % test)
                 job_name = "%s--custom_kernel--%s" % (board, test)
-                self.crafter.make_jobs(board, artifacts, test, job_name)
+                jobs = self.crafter.make_jobs(board, artifacts, test, job_name)
+                if jobs:
+                    all_jobs += jobs
 
 if __name__ == "__main__":
     CTTLauncher().launch()
