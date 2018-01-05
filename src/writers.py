@@ -103,10 +103,8 @@ class LavaWriter(Writer):
         ret = self._con.scheduler.submit_job(job)
         try:
             for r in ret:
-                value.append('%s/scheduler/job/%s' %
-                             (self._cfg['web_ui_address'], r))
+                value.append(r)
         except TypeError:
-            value.append('%s/scheduler/job/%s' %
-                         (self._cfg['web_ui_address'], ret))
+            value.append(ret)
 
         return value

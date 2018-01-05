@@ -145,10 +145,14 @@ class JobCrafter(object):
         logging.debug("    Job name: %s" % self.job['job_name'])
 
         try:
-            out = self.writer.write(board_config, job_name,
-                                    self.job_template.render(self.job))
-            for output in out:
-                logging.info("  ==> Job saved to: %s" % output)
+            jobs = self.writer.write(board_config, job_name,
+                                     self.job_template.render(self.job))
+            for j in jobs:
+                logging.info("  ==> Job saved to: '%s/scheduler/job/%s'" %
+                             (self._cfg['web_ui_address'], j))
+
         except UnavailableError as e:
             logging.warning("  ==> Unable to send job: %s" % e)
+            jobs = None
 
+        return jobs
