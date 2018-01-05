@@ -156,3 +156,9 @@ class JobCrafter(object):
             jobs = None
 
         return jobs
+
+    def wait_jobs(self, jobs):
+        statuses = dict()
+        for j in jobs:
+            statuses[j] = self.writer.wait(j)
+        return statuses
