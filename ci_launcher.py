@@ -64,6 +64,14 @@ class CILauncher(BaseLauncher):
                     configs = self._tests_config[board]['configs']
                     logging.debug("  Using default configs: %s" % configs)
 
+                # Check if we need to exclude some configs
+                if 'exclude_configs' in test:
+                    exclude_configs = test['exclude_configs']
+                    logging.debug("  Configs excluded: %s" % exclude_configs)
+                    for exclude in exclude_configs:
+                        configs.remove(exclude)
+                    logging.debug("  Using new configs: %s" % configs)
+
                 for config in configs:
                     logging.info("  Fetching artifacts for %s" % config)
                     artifacts = None
