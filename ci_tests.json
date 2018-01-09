@@ -82,7 +82,15 @@
         ],
         "tests": [
             { "name": "boot" },
-            { "name": "crypto" },
+            { "name": "crypto",
+                "exclude_configs": [
+                    { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" }
+                ]
+            },
             { "name": "crypto-tcrypt",
                 "configs": [
                     { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig+tcrypt" },
@@ -149,7 +157,15 @@
         ],
         "tests": [
             { "name": "boot" },
-            { "name": "crypto" },
+            { "name": "crypto",
+                "exclude_configs": [
+                    { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" }
+                ]
+            },
             { "name": "crypto-tcrypt",
                 "configs": [
                     { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig+tcrypt" },
@@ -180,7 +196,14 @@
         ],
         "tests": [
             { "name": "boot" },
-            { "name": "crypto" },
+            { "name": "crypto",
+                "exclude_configs": [
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" }
+                ]
+            },
             { "name": "crypto-tcrypt",
                 "configs": [
                     { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig+tcrypt" },
@@ -209,7 +232,12 @@
         ],
         "tests": [
             { "name": "boot" },
-            { "name": "crypto" },
+            { "name": "crypto",
+                "exclude_configs": [
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" }
+                ]
+            },
             { "name": "crypto-tcrypt",
                 "configs": [
                     { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig+tcrypt" },
@@ -241,7 +269,14 @@
         ],
         "tests": [
             { "name": "boot" },
-            { "name": "crypto" },
+            { "name": "crypto",
+                 "exclude_configs": [
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" }
+                ]
+            },
             { "name": "crypto-tcrypt",
                 "configs": [
                     { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig+tcrypt" },
@@ -332,7 +367,15 @@
         ],
         "tests": [
             { "name": "boot" },
-            { "name": "crypto" },
+            { "name": "crypto",
+                 "exclude_configs": [
+                    { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" }
+                ]
+            },
             { "name": "crypto-tcrypt",
                 "configs": [
                     { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig+tcrypt" },
@@ -365,7 +408,15 @@
         ],
         "tests": [
             { "name": "boot" },
-            { "name": "crypto" },
+            { "name": "crypto",
+                 "exclude_configs": [
+                    { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" }
+                ]
+            },
             { "name": "crypto-tcrypt",
                 "configs": [
                     { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig+tcrypt" },
@@ -397,7 +448,14 @@
         ],
         "tests": [
             { "name": "boot" },
-            { "name": "crypto" },
+            { "name": "crypto",
+                "exclude_configs": [
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" }
+                ]
+            },
             { "name": "crypto-tcrypt",
                 "configs": [
                     { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig+tcrypt" },
@@ -430,7 +488,15 @@
         ],
         "tests": [
             { "name": "boot" },
-            { "name": "crypto" },
+            { "name": "crypto",
+                "exclude_configs": [
+                    { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "mvebu_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "mvebu_v7_defconfig" }
+                ]
+            },
             { "name": "crypto-tcrypt",
                 "configs": [
                     { "tree": "mainline", "branch": "master", "defconfig": "mvebu_v7_defconfig+tcrypt" },
