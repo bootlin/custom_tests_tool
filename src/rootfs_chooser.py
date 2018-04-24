@@ -26,9 +26,9 @@ class RootfsChooser(object):
             r = requests.get(rootfs)
             r.raise_for_status()
         except (requests.exceptions.HTTPError,
-                requests.exceptions.ConnectionError):
+                requests.exceptions.ConnectionError) as err:
             raise RootfsAccessError(
-                'Rootfs not available: %s' % rootfs)
+                    'Rootfs not available: %s (err: %s)' % (rootfs, err))
 
         return rootfs
 
