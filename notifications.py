@@ -98,8 +98,8 @@ class Job(object):
     def has_passed_test(self):
         tests = lava_api.results.make_custom_query("testcase",
                 "testjob__id__exact__%s,"
-                "testcase__name__exact__%s"
-                % (self.id, self.test))
+                "testsuite__name__endswith__%s"
+                % (self.id, "custom-tests"))
         if not tests:
             return False
         return not bool(tests[0]['result'])
