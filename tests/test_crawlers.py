@@ -337,7 +337,7 @@ class TestKernelCICrawler(object):
 
 
 class TestFECrawler(object):
-    BASE_URL = 'http://lava.free-electrons.com/downloads/builds/'
+    BASE_URL = 'http://lava.bootlin.com/downloads/builds/'
     DEFAULT_API_TOKEN = 'foobar42'
     DEFAULT_ARCH = 'arm'
     DEFAULT_BRANCH = 'master'

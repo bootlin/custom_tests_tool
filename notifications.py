@@ -66,7 +66,7 @@ class Job(object):
             '{:<25}'.format(self.device[:22] + '..' if len(self.device) > 22 else self.device),
             '{:<30}'.format(self.defconfig[:27] + '..' if len(self.defconfig) > 27 else self.defconfig),
             '{:<12}'.format(self.test[:9] + '..' if len(self.test) > 9 else self.test),
-            "http://lava.free-electrons.com/scheduler/job/%s" % self.id,
+            "http://lava.bootlin.com/scheduler/job/%s" % self.id,
             ])
 
     def __init__(self, job):

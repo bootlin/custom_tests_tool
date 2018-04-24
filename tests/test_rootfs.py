@@ -6,7 +6,7 @@ from rootfs_chooser import RootfsChooser, RootfsAccessError, RootfsConfigError
 
 
 class TestRootfsChooser(object):
-    BASE_URL = 'http://lava.free-electrons.com/downloads/rootfs'
+    BASE_URL = 'http://lava.bootlin.com/downloads/rootfs'
     DEFAULT_ROOTFS = 'rootfs_armv7'
 
     @requests_mock.mock()

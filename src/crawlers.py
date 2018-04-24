@@ -125,7 +125,7 @@ class FreeElectronsCrawler(CTTCrawler):
     """
     A Free Electrons specific crawler.
     """
-    __BASE_URL = 'http://lava.free-electrons.com/downloads/builds/'
+    __BASE_URL = 'http://lava.bootlin.com/downloads/builds/'
 
     def _get_base_url(self, tree, branch, arch, defconfig):
         return '%s/%s/%s/%s/%s/%s' % (self.__BASE_URL, tree, branch,
