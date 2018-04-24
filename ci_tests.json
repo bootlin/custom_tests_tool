@@ -56,7 +56,17 @@
             },
             { "name": "sata" },
             { "name": "network" },
-            { "name": "nand" }
+            { "name": "nand",
+                "exclude_configs": [
+                    { "tree": "mainline", "branch": "master", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "next", "branch": "master", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-3.16.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.1.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.4.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.9.y", "defconfig": "multi_v7_defconfig" },
+                    { "tree": "stable", "branch": "linux-4.14.y", "defconfig": "multi_v7_defconfig" }
+                ]
+            }
         ],
         "notify": [
             "thomas.petazzoni@bootlin.com",
