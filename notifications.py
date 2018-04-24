@@ -46,7 +46,7 @@ with open(os.path.join(ctt_root_location, "ci_tests.json")) as f:
 lava_api = client.ServerProxy("http://%s:%s@%s/RPC2" % (
     config.get("lava", "user"),
     config.get("lava", "token"),
-    config.get("lava", "hostname")))
+    config.get("lava", "hostname")), allow_none=True)
 
 # Define a Job class to ease processing
 class Job(object):
@@ -124,7 +124,7 @@ def main():
             "testjob__end_time__gt__%s,"
             "testjob__end_time__lt__%s,"
             "testjob__submitter__exact__custom-tests"
-            % (start_date, end_date))
+            % (start_date, end_date), None)
 
     # Build mail_list
     for job in all_jobs:
